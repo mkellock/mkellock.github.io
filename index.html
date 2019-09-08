@@ -29,7 +29,6 @@
 						<p>Welcome to my online space!<br>
 							Here you'll find some basic info about me, and what I'm currently working
 							on...</p>
-						<P>Hey guys!!</P>
 					</div>
 				</div>
 				<nav>
@@ -491,56 +490,92 @@
 									switching.</p>
 								<h4>Description</h4>
 								<p>The key features of the application will be:</p>
-<h5>Appointment management</h5>
-<ul>
-<li>The application will show any currently running appointment and how long it has left to go</li>
-<li>The next appointment time, a countdown to the commencement of that appointment, and where it is</li>
-<li>A list of subsequent appointments for the rest of the day</li>
-</ul>
-<h5>Messages</h5>
-<ul>
-<li>The number of unread IM notifications for multiple providers by total, and from contacts regularly interacted with. Some of these IM providers may include Slack, Microsoft Teams, Facebook Messenger, and others</li>
-<li>The number of unread email messages by total, and from contacts regularly interacted with. Some of these email providers and technologies may include, POP, IMAP, Gmail, Office 365, and others</li>
-</ul>
-<h5>Development work items</h5>
-<ul>
-<li>Pull requests waiting on source code PaaS platforms. Some of these PaaS providers might include GitHub, Bitbucket, CodeCommit, and others</li>
-<li>Hooks into Jira to show assigned items broken up by status (e.g. backlog, development, testing, etc.)</li>
-</ul>
-<h5>To do items</h5>
-<ul>
-<li>Assigned and incomplete task items from SaaS task platforms. Some of these platforms might include Trello, Todoist, Office 365, Gmail, and others</li>
-</ul>
-<h5>Geo-location relevant information</h5>
-<ul>
-<li>Can be set either by the browser&rsquo;s location or manually via user settings</li>
-<li>The current date, time, and weather</li>
-<li>The current day&rsquo;s weather forecast</li>
-<li>The next three-day weather forecast</li>
-<li>A local and international news ticker, with configurable source sites, and content categories</li>
-</ul>
-<p>Security and usability will be a permanent concern for the application. To ensure the application is usable and desirable, the application will need:</p>
-<h5>Multiple layers of best-practice security</h5>
-<ul>
-<li>Allow logging in via social providers via OpenID Connect best practice (e.g. login with Google, Facebook, Microsoft, GitHub, etc.)</li>
-<li>The application should store no credentials unless completely necessary, thus authentication to SaaS and PaaS platforms should be through OAuth 2.0 flows, ensuring API access is done with the user's approval</li>
-<li>Where credential storage is needed (e.g. POP and IMAP synchronisation), securely storing reversibly encrypted credentials will be done outside the application, and in a secure HSM or equivalent device. Keys to the encrypted storage should be rotated on a regular basis and individual to the user</li>
-<li>The application should support local privacy laws, such as HIPPA, GDPR and ISO/IEC 27001</li>
-<li>All data synchronisation with third-party providers should be down outside the publicly accessible application, in a private subnet</li>
-</ul>
-<h5>Accessible on multiple devices, and by multiple user profiles</h5>
-<ul>
-<li>The site must have a reactive UI, so that the site works on multiple devices, of varying resolution and aspect ratios</li>
-<li>Have a touch and desktop interface, so that the functionality is accessible on portable devices, as easily as it is on desktops</li>
-<li>Support impaired users through modern web development practices, making the site accessible by those with low vision or poor motor control</li>
-<li>Support native languages in countries the application is available in, such as English, Chinese, Hindi, Japanese, French, German, and Italian</li>
-</ul>
-<h5>As close to zero downtime as possible</h5>
-<ul>
-<li>Utilising the auto-healing features of cloud platforms, such as PaaS services like Kubernetes, or FaaS services like AWS Lambda</li>
-<li>Geographically dispersed deployment, ensuring that if one datacentre goes offline, others can compensate for the load</li>
-<li>Scaling to demand, ensuring that application resources directly correlate with the usage patterns. This will additionally reduce cost, as the application will use minimal resources, especially in low demand periods such as weekends</li>
-</ul>
+								<h5>Appointment management</h5>
+								<ul>
+									<li>The application will show any currently running appointment and how
+										long it has left to go</li>
+									<li>The next appointment time, a countdown to the commencement of that
+										appointment, and where it is</li>
+									<li>A list of subsequent appointments for the rest of the day</li>
+								</ul>
+								<h5>Messages</h5>
+								<ul>
+									<li>The number of unread IM notifications for multiple providers by
+										total, and from contacts regularly interacted with. Some of these IM
+										providers may include Slack, Microsoft Teams, Facebook Messenger, and
+										others</li>
+									<li>The number of unread email messages by total, and from contacts
+										regularly interacted with. Some of these email providers and
+										technologies may include, POP, IMAP, Gmail, Office 365, and others</li>
+								</ul>
+								<h5>Development work items</h5>
+								<ul>
+									<li>Pull requests waiting on source code PaaS platforms. Some of these
+										PaaS providers might include GitHub, Bitbucket, CodeCommit, and others</li>
+									<li>Hooks into Jira to show assigned items broken up by status (e.g.
+										backlog, development, testing, etc.)</li>
+								</ul>
+								<h5>To do items</h5>
+								<ul>
+									<li>Assigned and incomplete task items from SaaS task platforms. Some
+										of these platforms might include Trello, Todoist, Office 365, Gmail,
+										and others</li>
+								</ul>
+								<h5>Geo-location relevant information</h5>
+								<ul>
+									<li>Can be set either by the browser&rsquo;s location or manually via
+										user settings</li>
+									<li>The current date, time, and weather</li>
+									<li>The current day&rsquo;s weather forecast</li>
+									<li>The next three-day weather forecast</li>
+									<li>A local and international news ticker, with configurable source
+										sites, and content categories</li>
+								</ul>
+								<p>Security and usability will be a permanent concern for the
+									application. To ensure the application is usable and desirable, the
+									application will need:</p>
+								<h5>Multiple layers of best-practice security</h5>
+								<ul>
+									<li>Allow logging in via social providers via OpenID Connect best
+										practice (e.g. login with Google, Facebook, Microsoft, GitHub, etc.)</li>
+									<li>The application should store no credentials unless completely
+										necessary, thus authentication to SaaS and PaaS platforms should be
+										through OAuth 2.0 flows, ensuring API access is done with the user's
+										approval</li>
+									<li>Where credential storage is needed (e.g. POP and IMAP
+										synchronisation), securely storing reversibly encrypted credentials
+										will be done outside the application, and in a secure HSM or
+										equivalent device. Keys to the encrypted storage should be rotated on
+										a regular basis and individual to the user</li>
+									<li>The application should support local privacy laws, such as HIPPA,
+										GDPR and ISO/IEC 27001</li>
+									<li>All data synchronisation with third-party providers should be down
+										outside the publicly accessible application, in a private subnet</li>
+								</ul>
+								<h5>Accessible on multiple devices, and by multiple user profiles</h5>
+								<ul>
+									<li>The site must have a reactive UI, so that the site works on
+										multiple devices, of varying resolution and aspect ratios</li>
+									<li>Have a touch and desktop interface, so that the functionality is
+										accessible on portable devices, as easily as it is on desktops</li>
+									<li>Support impaired users through modern web development practices,
+										making the site accessible by those with low vision or poor motor
+										control</li>
+									<li>Support native languages in countries the application is available
+										in, such as English, Chinese, Hindi, Japanese, French, German, and
+										Italian</li>
+								</ul>
+								<h5>As close to zero downtime as possible</h5>
+								<ul>
+									<li>Utilising the auto-healing features of cloud platforms, such as
+										PaaS services like Kubernetes, or FaaS services like AWS Lambda</li>
+									<li>Geographically dispersed deployment, ensuring that if one
+										datacentre goes offline, others can compensate for the load</li>
+									<li>Scaling to demand, ensuring that application resources directly
+										correlate with the usage patterns. This will additionally reduce cost,
+										as the application will use minimal resources, especially in low
+										demand periods such as weekends</li>
+								</ul>
 								<h4>Skills Required</h4>
 								<ul>
 									<li>Experience in git</li>
