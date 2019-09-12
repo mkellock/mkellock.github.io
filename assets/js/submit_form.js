@@ -20,6 +20,7 @@ function submit_form() {
 		type: 'post',
 		dataType: 'json',
 		contentType: 'application/json',
+		crossDomain: true,
 		success: function(data) {
 			//$('#message_result').html('Your message has been sent!');
 		},
