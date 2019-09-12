@@ -18,21 +18,21 @@ function submit_form() {
 	$.ajax({
 		url: 'https://api.mattkellock.com/contactform',
 		type: 'post',
-		dataType: 'json',
 		contentType: 'application/json',
 		crossDomain: true,
+		dataType: 'json',
 		success: function(data) {
-			//$('#message_result').html('Your message has been sent!');
+			$('#message_result').html('Your message has been sent!');
 		},
 		error: function(data) {
 			$('#message_result').html('There was an error sending your message, please try again');
-
-			$('#name').prop('disabled', false);
-			$('#email').prop('disabled', false);
-			$('#message').prop('disabled', false);
-			$('submit').prop('disabled', false);
-			$('reset').prop('disabled', false);
 		},
 		data: JSON.stringify(message)
 	});
+
+	$('#name').prop('disabled', false);
+	$('#email').prop('disabled', false);
+	$('#message').prop('disabled', false);
+	$('submit').prop('disabled', false);
+	$('reset').prop('disabled', false);
 }
