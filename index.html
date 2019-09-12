@@ -424,24 +424,27 @@
 						<!-- Contact -->
 						<article id="contact">
 							<h2 class="major">Contact</h2>
-							<form method="post" action="#">
+							<form id="contactform" onsubmit="submit_form(); return false;" action="">
 								<div class="fields">
+									<div class="field">
+										<div id="message_result"></div>
+									</div>
 									<div class="field half">
 										<label for="name">Name</label>
-										<input type="text" name="name" id="name" />
+										<input type="text" id="name" placeholder="John Doe" required="required" />
 									</div>
 									<div class="field half">
 										<label for="email">Email</label>
-										<input type="text" name="email" id="email" />
+										<input type="email" id="email" placeholder="john@email.com" required="required" />
 									</div>
 									<div class="field">
 										<label for="message">Message</label>
-										<textarea name="message" id="message" rows="4"></textarea>
+										<textarea id="message" rows="4" placeholder="Message" required="required"></textarea>
 									</div>
 								</div>
 								<ul class="actions">
-									<li><input type="submit" value="Send Message" class="primary" /></li>
-									<li><input type="reset" value="Reset" /></li>
+									<li><input id="submit" type="submit" value="Send Message" class="primary" /></li>
+									<li><input id="reset" type="reset" value="Reset" /></li>
 								</ul>
 							</form>
 							<ul class="icons">
@@ -903,7 +906,7 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 
 						<!-- Footer -->
 						<footer id="footer">
-							<p class="copyright">&copy; Matt Kellock 2019. <a href="#credits">Credits</a></p>
+							<p class="copyright">&copy; Matt Kellock 2019. <a href="#credits">Credits</a> <a href="#elements">Elements</a></p>
 						</footer>
 
 					</div>
@@ -917,6 +920,7 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 					<script src="assets/js/breakpoints.min.js"></script>
 					<script src="assets/js/util.js"></script>
 					<script src="assets/js/main.js"></script>
-
+					<script src="assets/js/jquery.validate.min.js"></script>
+					<script src="assets/js/submit_form.js"></script>
 				</body>
 			</html>
