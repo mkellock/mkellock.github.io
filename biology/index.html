@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Year 9 Biology Challenge!</title>
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* --- CSS Variables for Theming --- */
+        :root {
+            --bg-color: #f0f4f8;
+            --text-color: #333;
+            --container-bg: #ffffff;
+            --container-shadow: rgba(0, 0, 0, 0.1);
+            --header-color: #2c3e50;
+            --subheader-color: #34495e;
+            --button-bg: #3498db;
+            --button-text: #ffffff;
+            --button-hover-bg: #2980b9;
+            --button-disabled-bg: #bdc3c7;
+            --option-bg: #ecf0f1;
+            --option-text: #34495e;
+            --option-hover-bg: #dfe6e9;
+            --option-selected-bg: #dbe4f0;
+            --option-selected-border: #a9cce3;
+            --correct-bg: #d4efdf;
+            --correct-border: #2ecc71;
+            --correct-text: #27ae60;
+            --incorrect-bg: #f9eaea;
+            --incorrect-border: #e74c3c;
+            --incorrect-text: #c0392b;
+            --progress-bg: #ecf0f1;
+            --progress-bar-bg: #2ecc71;
+            --results-bg: #eafaf1;
+            --results-border: #c8e6c9;
+            --results-score-high: #27ae60;
+            --results-score-low: #e74c3c;
+            --stats-bg: #f8f9f9;
+            --stats-border: #e0e0e0;
+            --chart-grid-color: rgba(0, 0, 0, 0.1);
+            --chart-label-color: #555;
+            --theme-toggle-bg: #7f8c8d;
+            --theme-toggle-hover: #95a5a6;
+            --streamer-colors: #ff4b5c, #f9a825, #ffee58, #4caf50, #2196f3, #9c27b0;
+            /* Palette for streamers */
+            --firework-colors: #ffeb3b, #ff9800, #f44336, #e91e63, #9c27b0, #2196f3, #4caf50;
+            /* Bright firework colors */
+        }
+
+        body.dark-mode {
+            --bg-color: #2c3e50;
+            --text-color: #ecf0f1;
+            --container-bg: #34495e;
+            --container-shadow: rgba(0, 0, 0, 0.3);
+            --header-color: #ecf0f1;
+            --subheader-color: #bdc3c7;
+            --button-bg: #5dade2;
+            --button-text: #1c2833;
+            --button-hover-bg: #85c1e9;
+            --button-disabled-bg: #707b7c;
+            --option-bg: #566573;
+            --option-text: #ecf0f1;
+            --option-hover-bg: #5d6d7e;
+            --option-selected-bg: #798a9c;
+            --option-selected-border: #aab7b8;
+            --correct-bg: #2e8b57;
+            --correct-border: #58d68d;
+            --correct-text: #d1f2eb;
+            --incorrect-bg: #a93226;
+            --incorrect-border: #f1948a;
+            --incorrect-text: #fdedec;
+            --progress-bg: #566573;
+            --progress-bar-bg: #2ecc71;
+            --results-bg: #2c5a43;
+            --results-border: #3b7a57;
+            --results-score-high: #58d68d;
+            --results-score-low: #f1948a;
+            --stats-bg: #4a6072;
+            --stats-border: #566573;
+            --chart-grid-color: rgba(255, 255, 255, 0.15);
+            --chart-label-color: #bdc3c7;
+            --theme-toggle-bg: #bdc3c7;
+            --theme-toggle-hover: #ecf0f1;
+            --streamer-colors: #ff8a80, #ffd180, #ffff8d, #b9f6ca, #8c9eff, #ea80fc;
+            /* Lighter palette for dark mode */
+            --firework-colors: #fff176, #ffb74d, #e57373, #f06292, #ba68c8, #90caf9, #a5d6a7;
+            /* Lighter firework colors */
+        }
+
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
+            /* Needed for absolute positioning of animation container */
+            overflow-x: hidden;
+            /* Prevent horizontal scroll from animations */
+        }
+
+        .theme-toggle-button {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background-color: var(--theme-toggle-bg);
+            color: var(--bg-color);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        .theme-toggle-button:hover {
+            background-color: var(--theme-toggle-hover);
+        }
+
+        .container {
+            background-color: var(--container-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px var(--container-shadow);
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+            margin-top: 50px;
+            z-index: 10;
+            /* Keep container above background effects */
+            position: relative;
+            /* Establish stacking context */
+        }
+
+        h1 {
+            color: var(--header-color);
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: var(--subheader-color);
+            margin-bottom: 20px;
+        }
+
+        button {
+            /* General button styling */
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            margin: 10px 5px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: var(--button-hover-bg);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button:disabled {
+            background-color: var(--button-disabled-bg);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Quiz Area Styles */
+        #quiz-area {
+            margin-top: 20px;
+            position: relative;
+        }
+
+        /* --- Animation Container --- */
+        #animation-container {
+            position: fixed;
+            /* Fixed to viewport */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            /* Doesn't block interactions */
+            z-index: 5;
+            /* Behind container but above body */
+        }
+
+        /* --- Streamer Styles --- */
+        .streamer {
+            position: absolute;
+            top: -10px;
+            /* Start slightly off-screen */
+            width: 8px;
+            /* Width of streamer */
+            height: 100vh;
+            /* Fall full height */
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--streamer-color, #fff));
+            /* Fade at bottom */
+            opacity: 0;
+            transform-origin: top center;
+            animation: fallAndFade 2.5s ease-in forwards;
+            /* Adjust duration as needed */
+        }
+
+        @keyframes fallAndFade {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            90% {
+                transform: translateY(100vh) rotate(var(--rotate-end, 0deg));
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(100vh) rotate(var(--rotate-end, 0deg));
+                opacity: 0;
+            }
+        }
+
+        /* --- Fireworks Styles --- */
+        .firework-particle {
+            position: absolute;
+            width: 5px;
+            /* Smaller particles for fireworks */
+            height: 5px;
+            background-color: var(--particle-color, yellow);
+            /* Default, will be set by JS */
+            border-radius: 50%;
+            opacity: 1;
+            /* Animation will be set by JS to control direction */
+            animation: fireworkExplode 0.8s ease-out forwards;
+        }
+
+        @keyframes fireworkExplode {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                /* Target position set by JS using CSS variables */
+                transform: translate(var(--tx, 0), var(--ty, 0)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* --- End Animation Styles --- */
+
+
+        #progress-container {
+            width: 100%;
+            background-color: var(--progress-bg);
+            border-radius: 10px;
+            margin-bottom: 25px;
+            height: 15px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--progress-bar-bg);
+            border-radius: 10px 0 0 10px;
+            transition: width 0.3s ease-in-out;
+        }
+
+        #progress-text {
+            font-size: 14px;
+            color: var(--subheader-color);
+            margin-bottom: 5px;
+            text-align: right;
+            padding-right: 5px;
+        }
+
+        #question-container {
+            font-size: 1.3em;
+            margin-bottom: 25px;
+            color: var(--subheader-color);
+            min-height: 50px;
+        }
+
+        #options-container button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 15px;
+            text-align: left;
+            background-color: var(--option-bg);
+            color: var(--option-text);
+            border: 2px solid transparent;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        #options-container button:hover:not(:disabled) {
+            background-color: var(--option-hover-bg);
+        }
+
+        #options-container button.selected {
+            background-color: var(--option-selected-bg);
+            border-color: var(--option-selected-border);
+        }
+
+        #options-container button.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: var(--correct-text);
+            animation: pulseCorrect 0.5s;
+        }
+
+        #options-container button.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+            color: var(--incorrect-text);
+            animation: pulseIncorrect 0.5s;
+        }
+
+        #feedback-container {
+            margin-top: 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+            min-height: 30px;
+            position: relative;
+        }
+
+        .feedback-correct {
+            color: var(--correct-text);
+            animation: fadeInScale 0.6s ease-out;
+        }
+
+        .feedback-incorrect {
+            color: var(--incorrect-text);
+            animation: fadeIn 0.5s;
+        }
+
+        #next-btn {
+            background-color: var(--progress-bar-bg);
+            margin-top: 20px;
+        }
+
+        #next-btn:hover {
+            background-color: var(--correct-text);
+        }
+
+        /* Results Area Styles */
+        #results-area {
+            margin-top: 30px;
+            padding: 25px;
+            background-color: var(--results-bg);
+            border-radius: 10px;
+            border: 1px solid var(--results-border);
+        }
+
+        #score-percentage {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: var(--results-score-high);
+            margin: 10px 0;
+        }
+
+        #results-area.low-score #score-percentage {
+            color: var(--results-score-low);
+        }
+
+        #results-feedback {
+            font-size: 1.2em;
+            color: var(--text-color);
+        }
+
+        /* Stats Area Styles */
+        #stats-area {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--stats-bg);
+            border-radius: 10px;
+            border: 1px solid var(--stats-border);
+            max-width: 650px;
+            width: 100%;
+        }
+
+        #stats-area h3 {
+            color: var(--subheader-color);
+            margin-bottom: 15px;
+        }
+
+        #score-chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        /* Simple Button/Feedback Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulseCorrect {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4);
+            }
+
+            70% {
+                transform: scale(1.02);
+                box-shadow: 0 0 0 10px rgba(46, 204, 113, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+            }
+        }
+
+        @keyframes pulseIncorrect {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4);
+            }
+
+            70% {
+                transform: scale(1.02);
+                box-shadow: 0 0 0 10px rgba(231, 76, 60, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            70% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Utility */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Animation Container -->
+    <div id="animation-container"></div>
+
+    <!-- Theme toggle button -->
+    <button id="theme-toggle" class="theme-toggle-button">Toggle Theme</button>
+
+    <div class="container">
+        <h1>Year 9 Biology Challenge!</h1>
+
+        <!-- Start/Intro Area -->
+        <div id="start-area">
+            <h2>Test Your Knowledge!</h2>
+            <p>Ready for 20 questions on the Nervous, Endocrine, and Immune Systems? Answer correctly for a celebration!</p>
+            <button id="start-btn">Start Quiz</button>
+            <button id="show-stats-btn">View Progress</button>
+        </div>
+
+        <!-- Quiz Area -->
+        <div id="quiz-area" class="hidden">
+            <div id="progress-text">Question 1 / 20</div>
+            <div id="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div id="question-container">Question text goes here...</div>
+            <div id="options-container"></div>
+            <div id="feedback-container"></div>
+            <button id="next-btn" disabled>Check Answer</button>
+        </div>
+
+        <!-- Results Area -->
+        <div id="results-area" class="hidden">
+            <h2>Quiz Complete!</h2>
+            <div id="score-display">Your score: <span id="final-score">0</span> / 20</div>
+            <div id="score-percentage">0%</div>
+            <div id="results-feedback">Feedback message here.</div>
+            <button id="try-again-btn">Try Another Round!</button>
+            <button id="view-stats-results-btn">View Progress Chart</button>
+        </div>
+
+        <!-- Stats Area -->
+        <div id="stats-area" class="hidden">
+            <h3>Your Progress Over Time</h3>
+            <p id="stats-message"></p>
+            <div id="score-chart-container"><canvas id="score-chart"></canvas></div>
+            <button id="back-to-start-btn">Back</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DOM Elements ---
+        const themeToggleButton = document.getElementById('theme-toggle');
+        const bodyElement = document.body;
+        const animationContainer = document.getElementById('animation-container'); // For animations
+
+        const startArea = document.getElementById('start-area');
+        const quizArea = document.getElementById('quiz-area');
+        const resultsArea = document.getElementById('results-area');
+        const statsArea = document.getElementById('stats-area');
+        const startBtn = document.getElementById('start-btn');
+        const showStatsBtn = document.getElementById('show-stats-btn');
+        const backToStartBtn = document.getElementById('back-to-start-btn');
+        const viewStatsResultsBtn = document.getElementById('view-stats-results-btn');
+        const progressText = document.getElementById('progress-text');
+        const progressBar = document.getElementById('progress-bar');
+        const questionContainer = document.getElementById('question-container');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackContainer = document.getElementById('feedback-container');
+        const nextBtn = document.getElementById('next-btn');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const scorePercentageDisplay = document.getElementById('score-percentage');
+        const resultsFeedback = document.getElementById('results-feedback');
+        const tryAgainBtn = document.getElementById('try-again-btn');
+        const statsMessage = document.getElementById('stats-message');
+        const scoreChartCtx = document.getElementById('score-chart').getContext('2d');
+        let scoreChart = null;
+
+        // --- Quiz State ---
+        let allQuestions = []; // <--- PASTE YOUR QUESTION ARRAY HERE
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let selectedAnswer = null;
+        let answerChecked = false;
+        const questionsPerQuiz = 20;
+        const passRate = 85;
+
+        // --- Question Bank (Placeholder - Needs ~200 questions!) ---
+        allQuestions = [
+            // --- Nervous System Questions (Targeting NS SCs 1-8) ---
+
+            // NS SC 1: Transmission Models
+            { question: "Which part of a neuron typically receives signals from other neurons?", options: ["Dendrites", "Axon", "Myelin Sheath", "Axon Terminal"], answer: "Dendrites" },
+            { question: "Which part of a neuron transmits electrical signals away from the cell body, often over long distances?", options: ["Axon", "Dendrite", "Synapse", "Nucleus"], answer: "Axon" },
+            { question: "What is the primary role of the myelin sheath surrounding an axon?", options: ["Insulate the axon & speed up signal transmission", "Receive signals", "Release neurotransmitters", "Store energy"], answer: "Insulate the axon & speed up signal transmission" },
+            { question: "What is the small gap between the axon terminal of one neuron and the dendrite of another called?", options: ["Synapse", "Myelin Gap", "Node of Ranvier", "Cell Body"], answer: "Synapse" },
+            { question: "How is information typically transmitted across a synapse?", options: ["Release of chemical neurotransmitters", "Direct electrical jump", "Hormones", "Physical contact"], answer: "Release of chemical neurotransmitters" },
+            { question: "Within a single neuron, information is transmitted primarily as a(n) ___ signal.", options: ["Electrical", "Chemical", "Hormonal", "Mechanical"], answer: "Electrical" },
+            { question: "Between two neurons (at the synapse), information is transmitted primarily as a(n) ___ signal.", options: ["Chemical", "Electrical", "Magnetic", "Physical"], answer: "Chemical" },
+
+            // NS SC 2: CNS vs PNS
+            { question: "What are the two main components of the Central Nervous System (CNS)?", options: ["Brain and Spinal Cord", "Nerves and Ganglia", "Muscles and Glands", "Sense Organs"], answer: "Brain and Spinal Cord" },
+            { question: "What does the Peripheral Nervous System (PNS) consist of?", options: ["Nerves extending outside the brain and spinal cord", "Brain and Spinal Cord only", "Interneurons only", "Effectors only"], answer: "Nerves extending outside the brain and spinal cord" },
+            { question: "What is the primary role of the CNS?", options: ["Processing information and coordinating responses", "Detecting stimuli only", "Transmitting signals throughout the body", "Carrying out responses only"], answer: "Processing information and coordinating responses" },
+            { question: "What is the primary role of the PNS?", options: ["Transmitting signals between the CNS and the rest of the body", "Processing complex thoughts", "Protecting the brain", "Producing reflexes only"], answer: "Transmitting signals between the CNS and the rest of the body" },
+
+            // NS SC 3: Sense Organs to Brain Communication
+            { question: "Which type of cell detects stimuli in sense organs?", options: ["Receptor cells", "Motor neurons", "Interneurons", "Effector cells"], answer: "Receptor cells" },
+            { question: "Which type of neuron carries signals from sense organs (receptors) towards the CNS?", options: ["Sensory Neuron", "Motor Neuron", "Interneuron", "Relay Neuron (Interneuron)"], answer: "Sensory Neuron" },
+            { question: "In the model of sense organ communication, where is the information ultimately processed for conscious awareness?", options: ["Brain (CNS)", "Spinal Cord (CNS)", "Sensory Neuron", "Receptor Cell"], answer: "Brain (CNS)" },
+
+            // NS SC 4: Stimulus-Response Model
+            { question: "In the stimulus-response model, what is the 'stimulus'?", options: ["A detectable change in the environment", "The body's reaction", "The control center", "The message pathway"], answer: "A detectable change in the environment" },
+            { question: "What is the role of the 'receptor' in the stimulus-response model?", options: ["Detect the stimulus", "Carry out the response", "Process the information", "Transmit signal from CNS"], answer: "Detect the stimulus" },
+            { question: "What acts as the control centre (processing information) in the stimulus-response model?", options: ["CNS (Brain or Spinal Cord)", "Receptor", "Effector", "Sensory Neuron"], answer: "CNS (Brain or Spinal Cord)" },
+            { question: "What is the role of the 'effector' in the stimulus-response model?", options: ["Carry out the response (muscle/gland)", "Detect the stimulus", "Process information", "Transmit signal to CNS"], answer: "Carry out the response (muscle/gland)" },
+            { question: "What is the 'response' in the stimulus-response model?", options: ["The action performed by the effector", "The initial change detected", "The signal pathway", "The control center"], answer: "The action performed by the effector" },
+            { question: "What is the correct sequence in the stimulus-response pathway?", options: ["Stimulus -> Receptor -> CNS -> Effector -> Response", "Receptor -> Stimulus -> Effector -> CNS -> Response", "Stimulus -> CNS -> Receptor -> Response -> Effector", "Response -> Effector -> CNS -> Receptor -> Stimulus"], answer: "Stimulus -> Receptor -> CNS -> Effector -> Response" },
+
+            // NS SC 5: Reflex vs Conscious Responses
+            { question: "What is a key difference in the *speed* of reflex actions compared to conscious responses?", options: ["Reflexes are generally much faster", "Conscious responses are generally much faster", "They have the same speed", "Speed depends only on the stimulus"], answer: "Reflexes are generally much faster" },
+            { question: "What is a key difference in the *control* of reflex actions versus conscious responses?", options: ["Reflexes are involuntary, conscious responses are voluntary", "Reflexes are voluntary, conscious responses are involuntary", "Both are always voluntary", "Both are always involuntary"], answer: "Reflexes are involuntary, conscious responses are voluntary" },
+            { question: "Which part of the CNS is the primary integration center for many simple reflex actions?", options: ["Spinal Cord", "Cerebrum", "Cerebellum", "Hypothalamus"], answer: "Spinal Cord" },
+            { question: "Which part of the CNS is primarily involved in initiating conscious responses?", options: ["Cerebrum (Brain)", "Spinal Cord", "Brainstem", "Reflex Arc"], answer: "Cerebrum (Brain)" },
+            { question: "Which of the following is the best example of a reflex action?", options: ["Pulling hand away from a hot stove", "Deciding what to eat for lunch", "Learning to ride a bicycle", "Writing your name"], answer: "Pulling hand away from a hot stove" },
+            { question: "Which of the following is the best example of a conscious response?", options: ["Choosing to raise your hand", "Knee-jerk reaction at the doctor", "Blinking when something flies near your eye", "Heart beating faster when scared"], answer: "Choosing to raise your hand" },
+
+            // NS SC 6: Scenario Analysis
+            { question: "Scenario: You touch a very hot surface and quickly pull your hand away. What is the stimulus?", options: ["High temperature", "Pulling hand away", "Muscle contraction", "Pain signal"], answer: "High temperature" },
+            { question: "Scenario: You touch a very hot surface and quickly pull your hand away. What is the response?", options: ["Pulling hand away (muscle contraction)", "High temperature", "Feeling pain", "Nerve signal"], answer: "Pulling hand away (muscle contraction)" },
+            { question: "Scenario: Touching a hot surface and quickly pulling away involves a reflex. Where is the signal primarily processed for this *quick* action?", options: ["Spinal Cord", "Cerebrum", "Cerebellum", "The skin receptor"], answer: "Spinal Cord" },
+            { question: "Scenario: You see a friend and decide to wave. What is the stimulus?", options: ["Seeing your friend (light input)", "Waving action", "Muscle movement", "The thought 'wave'"], answer: "Seeing your friend (light input)" },
+            { question: "Scenario: You see a friend and decide to wave. Where is the decision to wave processed?", options: ["Brain (Cerebrum)", "Spinal Cord", "The eye", "The arm muscles"], answer: "Brain (Cerebrum)" },
+            { question: "Scenario: You step on a sharp object and immediately lift your foot. Is this primarily a reflex or a conscious response?", options: ["Reflex action", "Conscious response", "Hormonal response", "Immune response"], answer: "Reflex action" },
+
+            // NS SC 7: Brain Parts & Functions
+            { question: "Which major part of the brain is responsible for conscious thought, memory, and interpreting senses?", options: ["Cerebrum", "Cerebellum", "Brainstem", "Spinal Cord"], answer: "Cerebrum" },
+            { question: "Which part of the brain, located towards the back, is primarily responsible for coordinating movement and balance?", options: ["Cerebellum", "Cerebrum", "Hypothalamus", "Medulla (Brainstem)"], answer: "Cerebellum" },
+            { question: "Which part of the brain connects to the spinal cord and controls vital involuntary functions like breathing and heart rate?", options: ["Brainstem (Medulla)", "Cerebrum", "Cerebellum", "Pituitary Gland"], answer: "Brainstem (Medulla)" },
+            { question: "What is the main role of the spinal cord in the nervous system?", options: ["Transmit signals between brain and body & control reflexes", "Control conscious thought", "Regulate hormones", "Coordinate balance"], answer: "Transmit signals between brain and body & control reflexes" },
+            { question: "Which brain structure acts as a major link between the nervous system and the endocrine system, controlling the pituitary gland?", options: ["Hypothalamus", "Cerebellum", "Medulla", "Corpus Callosum"], answer: "Hypothalamus" },
+            { question: "Which gland, controlled by the hypothalamus, is often called the 'master gland' of the endocrine system?", options: ["Pituitary Gland", "Thyroid Gland", "Adrenal Gland", "Pineal Gland"], answer: "Pituitary Gland" },
+
+            // NS SC 8: Brain Protection
+            { question: "What hard, bony structure provides the primary protection for the brain?", options: ["Skull", "Vertebrae", "Rib cage", "Meninges"], answer: "Skull" },
+            { question: "What are the protective membranes surrounding the brain and spinal cord called?", options: ["Meninges", "Myelin Sheaths", "Pleura", "Pericardium"], answer: "Meninges" },
+            { question: "What fluid circulates around the brain and spinal cord, providing cushioning and shock absorption?", options: ["Cerebrospinal Fluid (CSF)", "Blood", "Lymph", "Synovial Fluid"], answer: "Cerebrospinal Fluid (CSF)" },
+
+            // --- Endocrine System Questions (Targeting ES SCs 1-2) ---
+
+            // ES SC 1: Hormones & Control
+            { question: "What are hormones?", options: ["Chemical messengers transported by blood", "Electrical signals in nerves", "Immune system cells", "Physical barriers"], answer: "Chemical messengers transported by blood" },
+            { question: "Where are hormones typically produced in the body?", options: ["Endocrine glands", "Nerve cells", "Muscles", "Sense organs"], answer: "Endocrine glands" },
+            { question: "How do hormones travel from the gland where they are produced to their target cells?", options: ["Through the bloodstream", "Along nerve fibres", "Through ducts", "By diffusion only"], answer: "Through the bloodstream" },
+            { question: "Why do hormones only affect specific 'target' cells?", options: ["Target cells have specific matching receptors", "Blood only goes to target cells", "Nerves guide the hormones", "Target cells are closer"], answer: "Target cells have specific matching receptors" },
+            { question: "Which system uses hormones released into the bloodstream to send messages?", options: ["Endocrine system", "Nervous system", "Immune system", "Digestive system"], answer: "Endocrine system" },
+
+            // ES SC 2: Nervous & Endocrine for Homeostasis
+            { question: "What is homeostasis?", options: ["Maintaining a stable internal environment", "A fast reflex action", "The immune response", "Digesting food"], answer: "Maintaining a stable internal environment" },
+            { question: "How does the speed of the endocrine system generally compare to the nervous system?", options: ["Endocrine is slower", "Endocrine is faster", "They are the same speed", "Only nervous system has speed"], answer: "Endocrine is slower" },
+            { question: "How does the duration of response generally compare between the endocrine and nervous systems?", options: ["Endocrine effects usually last longer", "Nervous effects usually last longer", "Both have very short effects", "Only endocrine effects last long"], answer: "Endocrine effects usually last longer" },
+            { question: "Which two body systems work closely together to maintain homeostasis?", options: ["Nervous and Endocrine", "Digestive and Respiratory", "Skeletal and Muscular", "Immune and Circulatory"], answer: "Nervous and Endocrine" },
+            { question: "Regulating body temperature involves signals from the nervous system (like shivering) and can also involve hormones. This is an example of maintaining:", options: ["Homeostasis", "A reflex arc", "Immunity", "Growth"], answer: "Homeostasis" },
+
+            // --- Immune System Questions (Targeting IS SCs 1-10) ---
+
+            // IS SC 1: Pathogens & Disease
+            { question: "What is a pathogen?", options: ["A disease-causing microorganism or agent", "A type of white blood cell", "An antibody", "A vaccine"], answer: "A disease-causing microorganism or agent" },
+            { question: "How do most disease-causing bacteria primarily cause harm?", options: ["By producing toxins or damaging tissues", "By replicating inside host cells and destroying them", "By causing allergic reactions", "By blocking blood vessels"], answer: "By producing toxins or damaging tissues" },
+            { question: "How do viruses cause disease?", options: ["By hijacking host cells to replicate, often destroying the cell", "By producing toxins outside cells", "By competing for nutrients", "By causing inflammation only"], answer: "By hijacking host cells to replicate, often destroying the cell" },
+            { question: "Which type of pathogen are yeasts and molds examples of?", options: ["Fungi", "Bacteria", "Viruses", "Protists"], answer: "Fungi" },
+            { question: "Which pathogen is non-living and requires a host cell to reproduce?", options: ["Virus", "Bacterium", "Fungus", "Protist"], answer: "Virus" },
+
+            // IS SC 2: Role & 3 Lines
+            { question: "What is the main role of the immune system?", options: ["Defend the body against pathogens", "Transport oxygen", "Regulate temperature", "Digest food"], answer: "Defend the body against pathogens" },
+            { question: "How many main lines of defense does the immune system have?", options: ["Three", "One", "Two", "Four"], answer: "Three" },
+
+            // IS SC 3: 1st Line Barriers
+            { question: "What is the role of the first line of defense?", options: ["Prevent pathogens from entering the body", "Attack specific pathogens", "Create immune memory", "Cause inflammation"], answer: "Prevent pathogens from entering the body" },
+            { question: "Which of the following is a physical barrier in the first line of defense?", options: ["Skin", "Fever", "Antibodies", "Phagocytes"], answer: "Skin" },
+            { question: "Besides skin, what is another example of a physical barrier that traps pathogens?", options: ["Mucous membranes", "Stomach acid", "Inflammation", "Memory cells"], answer: "Mucous membranes" },
+            { question: "Which of the following is a chemical barrier in the first line of defense?", options: ["Stomach acid", "Skin", "Cilia", "Fever"], answer: "Stomach acid" },
+            { question: "How do chemical barriers like stomach acid help prevent infection?", options: ["By killing pathogens with harsh conditions", "By physically blocking entry", "By trapping pathogens", "By creating memory"], answer: "By killing pathogens with harsh conditions" },
+
+            // IS SC 4: 2nd Line Response
+            { question: "What happens in the second line of defense?", options: ["Non-specific response to pathogens that have entered", "Physical blocking of pathogens", "Specific attack using antibodies", "Memory cell formation"], answer: "Non-specific response to pathogens that have entered" },
+            { question: "Redness, heat, swelling, and pain are signs of:", options: ["Inflammation", "Antibody production", "Vaccination", "Herd immunity"], answer: "Inflammation" },
+            { question: "What is a primary role of inflammation?", options: ["Attract immune cells to the site and limit spread", "Lower body temperature", "Create memory cells", "Produce antibodies"], answer: "Attract immune cells to the site and limit spread" },
+            { question: "How can a fever help fight infection?", options: ["Inhibit pathogen growth and speed up immune cell activity", "Physically block pathogens", "Cool the body down", "Produce specific antibodies"], answer: "Inhibit pathogen growth and speed up immune cell activity" },
+            { question: "Which type of cell engulfs and destroys pathogens in the second line of defense?", options: ["Phagocytes", "B cells", "T cells", "Memory cells"], answer: "Phagocytes" },
+
+            // IS SC 5: 3rd Line & Memory
+            { question: "What is the key characteristic of the third line of defense?", options: ["Specificity (targets particular pathogens)", "Non-specific response", "Physical barrier", "Chemical barrier"], answer: "Specificity (targets particular pathogens)" },
+            { question: "What does the third line of defense create that provides long-term immunity?", options: ["Memory cells", "Phagocytes", "Inflammation", "Fever"], answer: "Memory cells" },
+            { question: "How do memory cells help upon re-exposure to the same pathogen?", options: ["Enable a faster and stronger response", "Create physical barriers", "Cause inflammation immediately", "Release stomach acid"], answer: "Enable a faster and stronger response" },
+            { question: "Why might the third line of defense fail against a new strain of a virus (like the flu)?", options: ["Memory cells may not recognise the new strain's antigens", "The first line defense is too strong", "Fever prevents the response", "Inflammation blocks antibodies"], answer: "Memory cells may not recognise the new strain's antigens" },
+
+            // IS SC 6: Herd Immunity
+            { question: "What is herd immunity?", options: ["Indirect protection of unvaccinated people due to high vaccination rates", "Immunity only found in animal herds", "A type of autoimmune disease", "The first line of defense"], answer: "Indirect protection of unvaccinated people due to high vaccination rates" },
+            { question: "How does herd immunity help reduce the spread of diseases like COVID-19?", options: ["Reduces the number of susceptible people, making transmission harder", "Makes the virus weaker", "Strengthens everyone's first line defense", "Provides direct antibodies to everyone"], answer: "Reduces the number of susceptible people, making transmission harder" },
+
+            // IS SC 7: Hygiene
+            { question: "How does regular handwashing help reduce the transmission of infectious diseases?", options: ["By physically removing pathogens from hands", "By creating memory cells", "By strengthening the skin", "By causing a fever"], answer: "By physically removing pathogens from hands" },
+            { question: "Why is proper sanitation (e.g., clean water, sewage disposal) important for preventing disease spread?", options: ["Reduces exposure to pathogens in the environment", "Boosts individual immunity", "Makes vaccines more effective", "Increases inflammation"], answer: "Reduces exposure to pathogens in the environment" },
+
+            // IS SC 8: Quarantine
+            { question: "What is the main purpose of quarantine protocols for infectious diseases?", options: ["To isolate infected individuals and prevent further spread", "To treat the infected individuals", "To develop herd immunity faster", "To test new vaccines"], answer: "To isolate infected individuals and prevent further spread" },
+
+            // IS SC 9: Medical Treatments
+            { question: "How do vaccines primarily work to prevent disease?", options: ["By stimulating the immune system to create memory cells", "By directly killing pathogens in the body", "By providing a temporary physical barrier", "By reducing fever"], answer: "By stimulating the immune system to create memory cells" },
+            { question: "What type of medication is specifically designed to inhibit the replication of viruses?", options: ["Antiviral medications", "Antibiotics", "Antifungal medications", "Vaccines"], answer: "Antiviral medications" },
+            { question: "Which type of medication is used to treat bacterial infections?", options: ["Antibiotics", "Antivirals", "Vaccines", "Antifungals"], answer: "Antibiotics" },
+
+            // IS SC 10: Public Education
+            { question: "What is a key role of public education programs regarding infectious diseases?", options: ["Improving health literacy and promoting preventative measures", "Distributing medication directly", "Enforcing quarantine by law", "Discovering new pathogens"], answer: "Improving health literacy and promoting preventative measures" },
+            { question: "How can public education encourage vaccination uptake?", options: ["By explaining vaccine safety and benefits", "By making vaccines mandatory for all", "By lowering vaccine cost only", "By criticizing other prevention methods"], answer: "By explaining vaccine safety and benefits" },
+            { question: "Promoting compliance with hygiene and quarantine measures is a function of:", options: ["Public health education", "Antibiotic development", "Vaccine research", "The third line of defense"], answer: "Public health education" }
+
+        ];
+
+        // --- Functions ---
+
+        // Theme Functions
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                bodyElement.classList.add('dark-mode');
+                themeToggleButton.textContent = "Light Mode";
+            } else {
+                bodyElement.classList.remove('dark-mode');
+                themeToggleButton.textContent = "Dark Mode";
+            }
+            if (scoreChart && !statsArea.classList.contains('hidden')) {
+                updateChartColors(theme);
+                scoreChart.update();
+            }
+        }
+        function toggleTheme() {
+            const currentTheme = bodyElement.classList.contains('dark-mode') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        }
+        function updateChartColors(theme) {
+            if (!scoreChart) return;
+            const gridColor = theme === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.1)';
+            const labelColor = theme === 'dark' ? '#bdc3c7' : '#555';
+            const titleColor = theme === 'dark' ? '#ecf0f1' : '#34495e';
+            scoreChart.options.scales.y.grid.color = gridColor;
+            scoreChart.options.scales.x.grid.color = gridColor;
+            scoreChart.options.scales.y.ticks.color = labelColor;
+            scoreChart.options.scales.x.ticks.color = labelColor;
+            scoreChart.options.scales.y.title.color = labelColor;
+            scoreChart.options.scales.x.title.color = labelColor;
+            scoreChart.options.plugins.title.color = titleColor;
+            scoreChart.options.plugins.legend.labels.color = labelColor;
+        }
+
+        // Quiz Functions
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        function selectRandomQuestions() {
+            if (!allQuestions || allQuestions.length === 0) { // Check if array is empty or not defined
+                console.error("Question bank is empty or not defined! Cannot start quiz.");
+                alert("Error: No questions loaded. Please add questions to the 'allQuestions' array.");
+                return []; // Return empty array to prevent errors
+            }
+            if (allQuestions.length < questionsPerQuiz) {
+                console.warn(`Not enough questions (${allQuestions.length}). Using all available.`);
+                return shuffleArray([...allQuestions]);
+            }
+            const shuffled = shuffleArray([...allQuestions]);
+            return shuffled.slice(0, questionsPerQuiz);
+        }
+        function displayQuestion() {
+            answerChecked = false;
+            selectedAnswer = null;
+            const currentQ = currentQuestions[currentQuestionIndex];
+            questionContainer.textContent = currentQ.question;
+            optionsContainer.innerHTML = '';
+            animationContainer.innerHTML = ''; // Clear previous animations
+
+            const shuffledOptions = shuffleArray([...currentQ.options]);
+
+            shuffledOptions.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.addEventListener('click', () => handleOptionSelect(button, option));
+                optionsContainer.appendChild(button);
+            });
+
+            feedbackContainer.textContent = '';
+            feedbackContainer.className = 'feedback-container';
+            nextBtn.textContent = 'Check Answer';
+            nextBtn.disabled = true;
+            updateProgress();
+        }
+        function handleOptionSelect(button, option) {
+            if (answerChecked) return;
+            const currentlySelected = optionsContainer.querySelector('.selected');
+            if (currentlySelected) {
+                currentlySelected.classList.remove('selected');
+            }
+            button.classList.add('selected');
+            selectedAnswer = option;
+            nextBtn.disabled = false;
+        }
+
+        // Animation Functions
+        function playStreamers() {
+            const colors = getComputedStyle(document.documentElement)
+                .getPropertyValue('--streamer-colors').split(', ');
+            const numStreamers = 12;
+
+            for (let i = 0; i < numStreamers; i++) {
+                const streamer = document.createElement('div');
+                streamer.classList.add('streamer');
+                const startX = Math.random() * window.innerWidth;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const delay = Math.random() * 0.5;
+                const duration = 2 + Math.random() * 1;
+                const rotation = (Math.random() - 0.5) * 30;
+
+                streamer.style.left = `${startX}px`;
+                streamer.style.setProperty('--streamer-color', color.trim());
+                streamer.style.setProperty('--rotate-end', `${rotation}deg`);
+                streamer.style.animationDuration = `${duration}s`;
+                streamer.style.animationDelay = `${delay}s`;
+
+                animationContainer.appendChild(streamer);
+                streamer.addEventListener('animationend', () => streamer.remove());
+            }
+        }
+        function playFireworks() {
+            const colors = getComputedStyle(document.documentElement)
+                .getPropertyValue('--firework-colors').split(', ');
+            const numBursts = 3 + Math.floor(Math.random() * 3);
+
+            for (let i = 0; i < numBursts; i++) {
+                const burstX = window.innerWidth * (0.2 + Math.random() * 0.6);
+                const burstY = window.innerHeight * (0.2 + Math.random() * 0.4);
+                const numParticles = 30 + Math.floor(Math.random() * 20);
+                const burstDelay = Math.random() * 0.5;
+
+                for (let j = 0; j < numParticles; j++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('firework-particle');
+
+                    const angle = Math.random() * Math.PI * 2;
+                    const radius = 50 + Math.random() * 100;
+                    const translateX = Math.cos(angle) * radius;
+                    const translateY = Math.sin(angle) * radius;
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    const particleDelay = burstDelay + Math.random() * 0.2;
+
+                    particle.style.left = `${burstX}px`;
+                    particle.style.top = `${burstY}px`;
+                    particle.style.setProperty('--particle-color', color.trim());
+                    particle.style.setProperty('--tx', `${translateX}px`);
+                    particle.style.setProperty('--ty', `${translateY}px`);
+                    particle.style.animationDelay = `${particleDelay}s`;
+
+                    animationContainer.appendChild(particle);
+                    particle.addEventListener('animationend', () => particle.remove());
+                }
+            }
+        }
+        function triggerCorrectAnimation() {
+            const choice = Math.random();
+            if (choice < 0.5) { playFireworks(); }
+            else { playStreamers(); }
+        }
+
+        // Check Answer Logic
+        function checkAnswer() {
+            answerChecked = true;
+            nextBtn.disabled = true;
+            const currentQ = currentQuestions[currentQuestionIndex];
+            const correct = selectedAnswer === currentQ.answer;
+            const buttons = optionsContainer.querySelectorAll('button');
+
+            buttons.forEach(button => {
+                button.disabled = true;
+                if (button.textContent === currentQ.answer) { button.classList.add('correct'); }
+                else if (button.classList.contains('selected') && !correct) { button.classList.add('incorrect'); }
+                if (!button.classList.contains('correct') && !button.classList.contains('incorrect')) { button.classList.remove('selected'); }
+            });
+
+            let timeoutDelay = 800;
+            if (correct) {
+                score++;
+                feedbackContainer.textContent = 'Correct! ✨';
+                feedbackContainer.className = 'feedback-container feedback-correct';
+                triggerCorrectAnimation();
+                timeoutDelay = 1200;
+            } else {
+                feedbackContainer.textContent = `Not quite! The answer was: ${currentQ.answer}`;
+                feedbackContainer.className = 'feedback-container feedback-incorrect';
+            }
+
+            nextBtn.textContent = 'Next Question';
+            setTimeout(() => {
+                nextBtn.disabled = false;
+                if (currentQuestionIndex === currentQuestions.length - 1) { nextBtn.textContent = 'Show Results'; }
+            }, timeoutDelay);
+        }
+
+        // Navigation and State Updates
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) { displayQuestion(); }
+            else { showResults(); }
+        }
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / currentQuestions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `Question ${currentQuestionIndex + 1} / ${currentQuestions.length}`;
+        }
+        function showResults() {
+            quizArea.classList.add('hidden');
+            resultsArea.classList.remove('hidden');
+            statsArea.classList.add('hidden');
+            const percentage = Math.round((score / currentQuestions.length) * 100);
+            finalScoreDisplay.textContent = score;
+            scorePercentageDisplay.textContent = `${percentage}%`;
+            resultsArea.classList.remove('low-score');
+            if (percentage >= 85) { resultsFeedback.textContent = "Outstanding! You smashed it! 🚀"; }
+            else if (percentage >= 60) { resultsFeedback.textContent = "Great effort! Keep practicing! 👍"; }
+            else { resultsFeedback.textContent = "Keep trying! Every attempt helps you learn. 💪"; resultsArea.classList.add('low-score'); }
+            saveScore(percentage);
+        }
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            currentQuestions = selectRandomQuestions();
+            if (!currentQuestions || currentQuestions.length === 0) {
+                // Error already alerted in selectRandomQuestions if bank is empty
+                return; // Don't proceed if no questions
+            }
+            startArea.classList.add('hidden');
+            resultsArea.classList.add('hidden');
+            statsArea.classList.add('hidden');
+            quizArea.classList.remove('hidden');
+            displayQuestion();
+        }
+
+        // Stats & Local Storage Functions
+        function loadScores() {
+            const scoresJson = localStorage.getItem('biologyQuizScores');
+            return scoresJson ? JSON.parse(scoresJson) : [];
+        }
+        function saveScore(percentageScore) {
+            const scores = loadScores();
+            const newScoreEntry = { score: percentageScore, timestamp: new Date().getTime() };
+            scores.push(newScoreEntry);
+            localStorage.setItem('biologyQuizScores', JSON.stringify(scores));
+        }
+        function calculateProjection(scoresData) {
+            if (scoresData.length < 2) return null;
+            const firstScore = scoresData[0]; const lastScore = scoresData[scoresData.length - 1];
+            const numAttempts = scoresData.length; if (numAttempts <= 1) return null;
+            const slope = (lastScore - firstScore) / (numAttempts - 1);
+            const projection = []; const projectionLength = 5;
+            for (let i = 1; i <= projectionLength; i++) {
+                let projectedScore = lastScore + slope * i;
+                projectedScore = Math.min(100, Math.max(0, projectedScore));
+                projection.push(projectedScore);
+            } return { slope, projection };
+        }
+        function displayStats() {
+            startArea.classList.add('hidden'); quizArea.classList.add('hidden'); resultsArea.classList.add('hidden'); statsArea.classList.remove('hidden');
+            const scores = loadScores();
+            if (scores.length === 0) { statsMessage.textContent = "No quiz attempts recorded yet."; if (scoreChart) { scoreChart.destroy(); scoreChart = null; } return; }
+            statsMessage.textContent = `You've completed ${scores.length} quiz attempt(s).`;
+            const labels = scores.map((_, index) => `Attempt ${index + 1}`); const dataPoints = scores.map(entry => entry.score);
+            const projectionResult = calculateProjection(dataPoints);
+            let projectedLabels = labels; let actualDataWithPadding = dataPoints; let projectionDatasets = [];
+            if (projectionResult) {
+                projectedLabels = labels.concat(Array.from({ length: projectionResult.projection.length }, (_, i) => `Proj. ${scores.length + 1 + i}`));
+                actualDataWithPadding = dataPoints.concat(Array(projectionResult.projection.length).fill(null));
+                const projectionLineData = Array(dataPoints.length - 1).fill(null).concat([dataPoints[dataPoints.length - 1]], projectionResult.projection);
+                projectionDatasets.push({
+                    label: 'Projected Trend', data: projectionLineData,
+                    borderColor: bodyElement.classList.contains('dark-mode') ? 'rgba(93, 173, 226, 0.7)' : 'rgba(54, 162, 235, 0.6)',
+                    borderDash: [5, 5], fill: false, tension: 0.1, pointRadius: 0, pointHitRadius: 10
+                });
+            }
+            projectionDatasets.push({
+                label: `${passRate}% Target`, data: Array(projectedLabels.length).fill(passRate),
+                borderColor: bodyElement.classList.contains('dark-mode') ? 'rgba(241, 148, 138, 0.9)' : 'rgba(255, 99, 132, 0.8)',
+                borderWidth: 2, fill: false, pointRadius: 0, pointHitRadius: 0
+            });
+            if (scoreChart) { scoreChart.destroy(); }
+            const currentTheme = bodyElement.classList.contains('dark-mode') ? 'dark' : 'light';
+            const gridColor = currentTheme === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.1)';
+            const labelColor = currentTheme === 'dark' ? '#bdc3c7' : '#555';
+            const titleColor = currentTheme === 'dark' ? '#ecf0f1' : '#34495e';
+            scoreChart = new Chart(scoreChartCtx, {
+                type: 'line', data: {
+                    labels: projectedLabels, datasets: [
+                        {
+                            label: 'Your Score (%)', data: actualDataWithPadding,
+                            borderColor: bodyElement.classList.contains('dark-mode') ? 'rgba(88, 214, 141, 0.9)' : 'rgb(75, 192, 192)',
+                            backgroundColor: bodyElement.classList.contains('dark-mode') ? 'rgba(88, 214, 141, 0.3)' : 'rgba(75, 192, 192, 0.2)',
+                            fill: true, tension: 0.1
+                        },
+                        ...projectionDatasets]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, scales: {
+                        y: { beginAtZero: true, max: 100, title: { display: true, text: 'Score (%)', color: labelColor }, grid: { color: gridColor }, ticks: { color: labelColor } },
+                        x: { title: { display: true, text: 'Quiz Attempt', color: labelColor }, grid: { color: gridColor }, ticks: { color: labelColor } }
+                    },
+                    plugins: { tooltip: { mode: 'index', intersect: false }, title: { display: true, text: 'Quiz Score History & Projection', color: titleColor, font: { size: 16 } }, legend: { labels: { color: labelColor } } },
+                    hover: { mode: 'nearest', intersect: true }
+                }
+            });
+        }
+
+        // --- Event Listeners ---
+        startBtn.addEventListener('click', startQuiz);
+        tryAgainBtn.addEventListener('click', startQuiz);
+        nextBtn.addEventListener('click', () => { if (!answerChecked) { if (selectedAnswer !== null) { checkAnswer(); } } else { nextQuestion(); } });
+        showStatsBtn.addEventListener('click', displayStats);
+        viewStatsResultsBtn.addEventListener('click', displayStats);
+        backToStartBtn.addEventListener('click', () => { statsArea.classList.add('hidden'); startArea.classList.remove('hidden'); });
+        themeToggleButton.addEventListener('click', toggleTheme);
+
+        // --- Initial Load ---
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        applyTheme(savedTheme);
+
+        // Initial check if questions exist
+        if (!allQuestions || allQuestions.length === 0) {
+            console.error("CRITICAL: 'allQuestions' array is empty. Quiz cannot function without questions.");
+            // Optional: Display an error message to the user on the page itself
+            // document.getElementById('start-area').innerHTML = '<p style="color: red; font-weight: bold;">Error: Question data is missing. Cannot start quiz.</p>';
+        }
+
+    </script>
+</body>
+
+</html>
