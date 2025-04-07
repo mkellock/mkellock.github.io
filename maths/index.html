@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hudson's Timed Math Sessions</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Link to Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="app-container">
+    <header>
+      <h1>Hudson's Math Gym</h1>
+      <!-- Controls remain in header -->
+      <div class="controls">
+        <!-- Reset Button Removed -->
+        <div class="theme-switch-wrapper">
+          <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" />
+            <div class="slider round"></div>
+          </label>
+          <span>Dark Mode</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- View Container -->
+    <div class="view-container">
+
+      <!-- Home View -->
+      <div id="home-view" class="view active-view">
+        <main>
+          <section id="welcome-section">
+            <h2>Welcome Back, Hudson!</h2>
+            <p>Ready for your next 30-minute math challenge?</p>
+            <button id="start-session-btn">Start Session!</button>
+          </section>
+
+          <section id="progress-report">
+            <h2>Your Overall Progress</h2>
+            <div class="chart-container">
+              <canvas id="progressChartCanvas"></canvas>
+            </div>
+            <div id="report-details">
+              <!-- Detailed text stats will be dynamically added here -->
+              <p>Loading progress...</p>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <!-- Quiz View -->
+      <div id="quiz-view" class="view">
+        <main>
+          <section id="session-status">
+            <div class="status-item">
+              <span>Time Left:</span>
+              <strong id="timer-display">30:00</strong>
+            </div>
+            <div class="status-item">
+              <span>Session Questions:</span>
+              <strong id="current-session-count">0</strong>
+            </div>
+            <div class="status-item">
+              <span>Last Session:</span>
+              <strong id="previous-session-count">0</strong>
+              <span> questions</span>
+            </div>
+          </section>
+
+          <section id="quiz-area">
+            <h2 id="quiz-category-title">Loading Challenge...</h2>
+            <div id="question-container">
+              <div id="question-display">
+                <p id="question-text"></p>
+                <div id="question-diagram"> <!-- Container for SVG diagrams --></div>
+              </div>
+              <div class="answer-area">
+                <input type="text" id="user-answer" placeholder="Your answer">
+                <button id="submit-answer">Check</button>
+              </div>
+              <button id="next-question" class="hidden">Next Question</button>
+            </div>
+            <div id="feedback-container">
+              <p id="feedback-text"></p>
+              <div id="correct-animation" class="hidden">✨</div>
+            </div>
+          </section>
+
+          <section id="motivation-area">
+            <p id="motivational-message">Let's do this!</p>
+          </section>
+        </main>
+        <button id="end-session-early-btn" title="Finish session now and save progress">End Session Early</button>
+      </div>
+
+      <!-- Session End View -->
+      <div id="session-end-view" class="view">
+        <main>
+          <h2>Session Complete!</h2>
+          <p>Great work, Hudson!</p>
+          <p>You completed <strong id="session-summary-count">0</strong> questions this session.</p>
+          <p>Your overall progress has been updated.</p>
+          <button id="back-to-home-btn">Back to Home</button>
+        </main>
+      </div>
+
+    </div> <!-- End View Container -->
+
+    <footer>
+      <p>Focus and Conquer!</p>
+    </footer>
+  </div> <!-- End App Container -->
+
+  <script src="script.js"></script>
+</body>
+
+</html>
