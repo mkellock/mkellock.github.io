@@ -1,0 +1,655 @@
+/* --- CSS Variables (Themes) --- */
+:root {
+  --primary-color: #007bff;
+  /* Bright Blue */
+  --secondary-color: #6c757d;
+  /* Gray */
+  --bg-color: #f8f9fa;
+  --card-bg: #ffffff;
+  --text-color: #212529;
+  --text-muted: #6c757d;
+  --border-color: #dee2e6;
+  --correct-color: #28a745;
+  /* Green */
+  --incorrect-color: #dc3545;
+  /* Red */
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --input-bg: #fff;
+  --button-text: #fff;
+  --orange-color: #fd7e14;
+
+  --font-main: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+body.dark-mode {
+  --primary-color: #0d6efd;
+  /* Slightly adjusted blue for dark */
+  --secondary-color: #adb5bd;
+  --bg-color: #1a1a1a;
+  /* Very dark gray */
+  --card-bg: #2c2c2c;
+  /* Darker card background */
+  --text-color: #e9ecef;
+  /* Light gray text */
+  --text-muted: #adb5bd;
+  --border-color: #495057;
+  --correct-color: #32cd32;
+  /* Brighter Green */
+  --incorrect-color: #ff6b6b;
+  /* Brighter Red */
+  --shadow-color: rgba(255, 255, 255, 0.05);
+  --input-bg: #343a40;
+  --button-text: #fff;
+  --orange-color: #ff8c42;
+  /* Brighter orange for dark */
+}
+
+/* --- Basic Reset & Body --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-main);
+  line-height: 1.6;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+/* --- Layout Container --- */
+.app-container {
+  width: 100%;
+  height: 100%;
+  max-width: 1200px;
+  max-height: 95vh;
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 5px 20px var(--shadow-color);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+/* --- Header --- */
+header {
+  padding: 15px 25px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  transition: border-color 0.3s ease;
+}
+
+header h1 {
+  font-size: 1.5em;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+header .controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* --- Footer --- */
+footer {
+  text-align: center;
+  padding: 10px 25px;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.9em;
+  flex-shrink: 0;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+/* --- View Management --- */
+.view-container {
+  flex-grow: 1;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+}
+
+.view {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease-in-out, visibility 0.4s;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-color);
+  transition: opacity 0.4s ease-in-out, visibility 0.4s, background-color 0.3s ease;
+}
+
+.view.active-view {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1;
+  position: relative;
+}
+
+/* --- Specific View Layouts --- */
+#home-view main,
+#session-end-view main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  gap: 30px;
+  overflow-y: auto;
+  text-align: center;
+  flex-grow: 1;
+}
+
+#home-view #progress-report {
+  width: 100%;
+  max-width: 700px;
+  padding: 20px;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: 0 2px 5px var(--shadow-color);
+  transition: background-color 0.3s ease;
+}
+
+#quiz-view main {
+  display: flex;
+  flex-direction: column;
+  padding: 15px 20px;
+  gap: 15px;
+  overflow-y: auto;
+  flex-grow: 1;
+  position: relative;
+}
+
+#quiz-view #quiz-area {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--card-bg);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px var(--shadow-color);
+  transition: background-color 0.3s ease;
+}
+
+#quiz-view #question-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  min-height: 200px;
+}
+
+/* --- Session Status Bar --- */
+#session-status {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  background-color: var(--card-bg);
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px var(--shadow-color);
+  transition: background-color 0.3s ease;
+  flex-shrink: 0;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95em;
+  color: var(--text-muted);
+  transition: color 0.3s ease;
+}
+
+.status-item span {
+  white-space: nowrap;
+}
+
+.status-item strong {
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
+/* --- Quiz Specific --- */
+#question-display {
+  margin-bottom: 20px;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+}
+
+#question-text {
+  font-size: 1.2em;
+  text-align: center;
+  margin-bottom: 15px;
+  color: var(--text-color);
+  transition: color 0.3s ease;
+}
+
+#question-diagram {
+  width: 100%;
+  max-width: 250px;
+  margin-top: 10px;
+}
+
+#question-diagram svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.answer-area {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+#user-answer {
+  padding: 12px 15px;
+  font-size: 1em;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  flex-grow: 1;
+  max-width: 300px;
+}
+
+#user-answer:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+body.dark-mode #user-answer:focus {
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.35);
+}
+
+/* --- Buttons --- */
+button {
+  padding: 12px 20px;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--primary-color);
+  color: var(--button-text);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+body.dark-mode button:hover {
+  opacity: 0.9;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+#next-question {
+  display: block;
+  margin: 10px auto 0;
+  background-color: var(--secondary-color);
+  flex-shrink: 0;
+}
+
+#next-question:hover {
+  opacity: 0.9;
+}
+
+body.dark-mode #next-question {
+  background-color: #5a6268;
+}
+
+/* --- Feedback Area --- */
+#feedback-container {
+  min-height: 40px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 5px;
+  flex-shrink: 0;
+}
+
+#feedback-text {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+#feedback-text.correct {
+  color: var(--correct-color);
+}
+
+#feedback-text.incorrect {
+  color: var(--incorrect-color);
+}
+
+#correct-animation {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3em;
+  animation: pop-fade 0.8s ease-out forwards;
+  opacity: 0;
+  color: var(--correct-color);
+  pointer-events: none;
+}
+
+@keyframes pop-fade {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+/* --- Progress Report --- */
+.chart-container {
+  position: relative;
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  min-height: 250px;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+#progressChartCanvas {
+  max-height: 400px;
+}
+
+#report-details ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+#report-details li {
+  background-color: var(--bg-color);
+  padding: 10px 15px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  border-left: 5px solid var(--secondary-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  transition: background-color 0.3s ease, border-left-color 0.3s ease;
+}
+
+#report-details li span {
+  white-space: nowrap;
+}
+
+#report-details .mastery {
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-left: auto;
+}
+
+#report-details li.mastery-low {
+  border-left-color: var(--incorrect-color);
+}
+
+#report-details li.mastery-mid {
+  border-left-color: var(--orange-color);
+}
+
+#report-details li.mastery-high {
+  border-left-color: var(--correct-color);
+}
+
+/* --- Motivation Area --- */
+#motivation-area {
+  text-align: center;
+  padding: 10px;
+  font-style: italic;
+  color: var(--secondary-color);
+  background-color: rgba(108, 117, 125, 0.1);
+  border-radius: 5px;
+  margin-top: auto;
+  flex-shrink: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode #motivation-area {
+  background-color: rgba(173, 181, 189, 0.1);
+  color: var(--text-muted);
+}
+
+/* --- Buttons Specific to Views --- */
+#start-session-btn,
+#back-to-home-btn {
+  padding: 15px 30px;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+#end-session-early-btn {
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  width: fit-content;
+  background-color: var(--incorrect-color);
+  padding: 8px 15px;
+  font-size: 0.9em;
+}
+
+#end-session-early-btn:hover {
+  opacity: 0.9;
+}
+
+body.dark-mode #end-session-early-btn {
+  background-color: var(--incorrect-color);
+}
+
+/* --- Dark Mode Toggle Switch --- */
+.theme-switch-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9em;
+  color: var(--text-muted);
+  transition: color 0.3s ease;
+}
+
+.theme-switch {
+  display: inline-block;
+  height: 24px;
+  position: relative;
+  width: 44px;
+}
+
+.theme-switch input {
+  display: none;
+}
+
+.slider {
+  background-color: #ccc;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: .4s;
+}
+
+.slider:before {
+  background-color: #fff;
+  bottom: 3px;
+  content: "";
+  height: 18px;
+  left: 3px;
+  position: absolute;
+  transition: .4s;
+  width: 18px;
+}
+
+input:checked+.slider {
+  background-color: var(--primary-color);
+}
+
+input:checked+.slider:before {
+  transform: translateX(20px);
+}
+
+.slider.round {
+  border-radius: 24px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* --- Utility --- */
+.hidden {
+  display: none !important;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+  .app-container {
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  header {
+    padding: 10px 15px;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  header h1 {
+    font-size: 1.3em;
+  }
+
+  #home-view main,
+  #session-end-view main,
+  #quiz-view main {
+    padding: 15px;
+    gap: 15px;
+  }
+
+  #session-status {
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .status-item {
+    font-size: 0.9em;
+  }
+
+  .status-item strong {
+    font-size: 1em;
+  }
+
+  #home-view #welcome-section h2 {
+    font-size: 1.5em;
+  }
+
+  #start-session-btn {
+    padding: 12px 25px;
+    font-size: 1.1em;
+  }
+
+  #end-session-early-btn {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .answer-area {
+    flex-direction: column;
+  }
+
+  #user-answer {
+    max-width: none;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.1em;
+  }
+
+  button {
+    padding: 10px 15px;
+    font-size: 0.9em;
+  }
+
+  #start-session-btn,
+  #back-to-home-btn {
+    padding: 10px 20px;
+    font-size: 1em;
+  }
+
+  #end-session-early-btn {
+    padding: 6px 10px;
+    font-size: 0.8em;
+  }
+
+  .status-item {
+    font-size: 0.85em;
+  }
+
+  #report-details li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  #report-details .mastery {
+    margin-left: 0;
+    font-size: 1em;
+  }
+}
