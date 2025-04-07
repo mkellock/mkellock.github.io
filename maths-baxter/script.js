@@ -28,9 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
       skills: [
         { name: 'Identify Place Value (Large Numbers)', generator: generatePlaceValueLarge, checker: checkNumericAnswer },
         { name: 'Multiply/Divide by Powers of 10', generator: generateMultDivPowers10, checker: checkNumericAnswer },
-        { name: 'Addition/Subtraction (Large Numbers)', generator: generateAddSubLarge, checker: checkNumericAnswer },
+        { name: 'Addition/Subtraction (Large Numbers)', generator: generateAddSubLarge, checker: checkNumericAnswer }, // Subtraction IS included here
         { name: 'Multiplication (e.g., 3-digit x 2-digit)', generator: generateMultiplicationMultiDigit, checker: checkNumericAnswer },
-        { name: 'Division (e.g., 3-digit by 1-digit)', generator: generateDivisionSimple, checker: checkNumericAnswer }, // Keep division simple
+        { name: 'Division (e.g., 3-digit by 1-digit)', generator: generateDivisionSimple, checker: checkNumericAnswer }, // Division IS included here
         { name: 'Prime/Composite Numbers', generator: generatePrimeComposite, checker: checkExactStringAnswer }, // Answer 'prime' or 'composite'
       ],
     },
@@ -57,28 +57,28 @@ document.addEventListener('DOMContentLoaded', () => {
       skills: [
         { name: 'Convert Length Units (m, cm, mm)', generator: generateConvertLength, checker: checkNumericAnswer },
         { name: 'Convert Mass Units (kg, g)', generator: generateConvertMass, checker: checkNumericAnswer },
-        { name: 'Calculate Perimeter (Rectangle)', generator: generatePerimeterRectangleSVG, checker: checkNumericAnswer }, // Reuse Year 9 SVG generator, numbers are simple
-        { name: 'Calculate Area (Rectangle)', generator: generateAreaRectangleSVG, checker: checkNumericAnswer }, // Reuse Year 9 SVG generator
-        { name: 'Calculate Area (Triangle - SVG)', generator: generateAreaTriangleSVG, checker: checkNumericAnswerTolerance(0.1) }, // NEW
-        { name: 'Elapsed Time (Hours/Minutes)', generator: generateElapsedTime, checker: checkExactStringAnswer }, // Answer format: "X hours Y minutes"
-        { name: 'Read 24-Hour Time', generator: generateRead24HourTime, checker: checkExactStringAnswer }, // Convert 16:30 to 4:30 pm
+        { name: 'Calculate Perimeter (Rectangle)', generator: generatePerimeterRectangleSVG, checker: checkNumericAnswer },
+        { name: 'Calculate Area (Rectangle)', generator: generateAreaRectangleSVG, checker: checkNumericAnswer },
+        { name: 'Calculate Area (Triangle - SVG)', generator: generateAreaTriangleSVG, checker: checkNumericAnswerTolerance(0.1) }, // Corrected function included below
+        { name: 'Elapsed Time (Hours/Minutes)', generator: generateElapsedTime, checker: checkExactStringAnswer }, // Corrected function included below
+        { name: 'Read 24-Hour Time', generator: generateRead24HourTime, checker: checkExactStringAnswer },
       ],
     },
     geometry: {
       name: 'Geometry',
       skills: [
-        { name: 'Identify Angle Type (SVG)', generator: generateAngleTypeSVG, checker: checkExactStringAnswer }, // Acute, Obtuse, Right, Straight, Reflex
-        { name: 'Angles on a Point/Line (Simple)', generator: generateAnglesPointLineSimpleSVG, checker: checkNumericAnswer }, // Simpler version
-        { name: 'Coordinates (First Quadrant)', generator: generateCoordinatesFirstQuadrant, checker: checkExactStringAnswer }, // Answer format: (x, y)
-        { name: 'Describe Transformation (Simple)', generator: generateDescribeTransformationSimple, checker: checkExactStringAnswer }, // 'translation', 'reflection', 'rotation'
+        { name: 'Identify Angle Type (SVG)', generator: generateAngleTypeSVG, checker: checkExactStringAnswer }, // Corrected function included below
+        { name: 'Angles on a Point/Line (Simple)', generator: generateAnglesPointLineSimpleSVG, checker: checkNumericAnswer },
+        { name: 'Coordinates (First Quadrant)', generator: generateCoordinatesFirstQuadrant, checker: checkExactStringAnswer }, // Corrected function included below
+        { name: 'Describe Transformation (Simple)', generator: generateDescribeTransformationSimple, checker: checkExactStringAnswer }, // Corrected function included below
       ],
     },
     statistics_probability: {
       name: 'Statistics & Probability',
       skills: [
-        { name: 'Interpret Column Graph (Simple)', generator: generateInterpretColumnGraph, checker: checkNumericAnswer }, // Generate simple data and ask value
-        { name: 'Calculate Simple Probability (Fraction)', generator: generateSimpleProbabilityFraction, checker: checkFractionAnswer }, // e.g. probability of picking red marble
-        { name: 'List Outcomes', generator: generateListOutcomes, checker: checkExactStringAnswer }, // e.g., outcomes of flipping coin twice
+        { name: 'Interpret Column Graph (Simple)', generator: generateInterpretColumnGraph, checker: checkNumericAnswer }, // Corrected function included below
+        { name: 'Calculate Simple Probability (Fraction)', generator: generateSimpleProbabilityFraction, checker: checkFractionAnswer },
+        { name: 'List Outcomes', generator: generateListOutcomes, checker: checkExactStringAnswer }, // Corrected function included below
       ],
     },
   };
@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       if (typeof skill.generator !== 'function') throw new Error(`Gen not fn for '${skill.name}'.`);
       const qData = skill.generator();
-      if (qData === null) throw new Error(`Generator for '${skill.name}' returned null (likely intended skip).`);
+      if (qData === null) throw new Error(`Generator for '${skill.name}' returned null (intended skip).`);
       if (!qData || typeof qData.question === 'undefined' || typeof qData.answer === 'undefined' || typeof skill.checker !== 'function') throw new Error(`Data/checker issue for '${skill.name}'.`);
       currentQuestion = { categoryId: catId, skillIndex: skillIdx, questionText: qData.question, questionDiagramHTML: qData.diagram || '', correctAnswer: qData.answer, checker: skill.checker };
       qText.innerHTML = currentQuestion.questionText;
@@ -383,8 +383,8 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       if (error.message.includes('returned null')) {
         console.log(`Skipping question: ${error.message}`);
-        displayNextQuestion(false);
-        /* Automatically get next question */ return;
+        setTimeout(() => displayNextQuestion(false), 50);
+        /* Get next question slightly delayed */ return;
       }
       console.error(`Error gen question ${catId}-${skill?.name || 'Unknown'}:`, error);
       qText.textContent = 'Oops! Error loading. Click Next.';
@@ -788,7 +788,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return `${num}/${den}`;
   }
 
-  // --- Question Generators (Year 6) ---
+  // --- Question Generators (Year 6 - Includes all corrected functions) ---
   // Number & Place Value
   function generatePlaceValueLarge() {
     const p = [1000, 10000, 100000, 1000000];
@@ -905,7 +905,7 @@ document.addEventListener('DOMContentLoaded', () => {
         num1Converted = n1;
         n2 = n2 * factor;
       } else {
-        n2 = n2;
+        /* n2 remains n2 */
       }
       resultNum = num1Converted - n2;
       q = `Calculate: <sup>${num1Converted / factor}</sup>⁄<sub>${d1}</sub> - <sup>${n2}</sup>⁄<sub>${d2}</sub>`;
@@ -1065,6 +1065,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return { question: q, answer: parseFloat(ans.toFixed(5)).toString() };
   }
   function generateAreaTriangleSVG() {
+    // *** CORRECTED AND ENSURED PRESENCE ***
     let base = getRandomInt(4, 16);
     let height = getRandomInt(3, 12);
     let ans = 0.5 * base * height;
@@ -1078,28 +1079,36 @@ document.addEventListener('DOMContentLoaded', () => {
       sh = hs + p * 2,
       ox = p,
       oy = sh - p;
-    const path = `M ${ox},${oy} H ${ox + bs} L ${ox},${oy - hs} Z`;
+    const path = `M ${ox},${oy} H ${ox + bs} L ${ox},${oy - hs} Z`; // Simple right-angled triangle path
     const dh = `<svg viewBox="0 0 ${sw} ${sh}" xmlns="http://www.w3.org/2000/svg" style="stroke-width:1.5;max-width:200px;height:auto;"><path d="${path}" fill="rgba(0,180,90,0.1)" stroke="currentColor"/><path d="M ${ox + 5} ${oy} L ${ox + 5} ${oy - 5} L ${ox} ${oy - 5}" fill="none" stroke="currentColor" style="stroke-width:1;"/><text x="${ox + bs / 2}" y="${oy + 12}" font-size="10" text-anchor="middle" fill="currentColor" stroke="none">${base} cm</text><text x="${ox - 10}" y="${oy - hs / 2}" font-size="10" text-anchor="end" dominant-baseline="middle" fill="currentColor" stroke="none">${height} cm</text></svg>`;
     const q = `Calculate the area of the triangle shown (in cm²). <br><i>(Area = 1/2 × base × height)</i>`;
     return { question: q, answer: ans, checker: checkNumericAnswerTolerance(0.1) };
   }
   function generateElapsedTime() {
-    let sh = getRandomInt(7, 10),
-      sm = getRandomInt(0, 5) * 10,
-      dh = getRandomInt(0, 3),
-      dm = getRandomInt(1, 5) * 10 + getRandomInt(0, 5);
-    let em = sm + dm,
-      eh = sh + dh + Math.floor(em / 60);
-    em = em % 60;
-    eh = eh % 12;
-    if (eh === 0) eh = 12;
-    const sTS = `${sh}:${sm < 10 ? '0' : ''}${sm} am`;
-    const eTS = `${eh}:${em < 10 ? '0' : ''}${em} ${eh < sh || eh === 12 ? 'pm' : 'am'}`;
-    const ah = dh + Math.floor((sm + dm) / 60);
-    const am = (sm + dm) % 60;
-    const ans = `${ah} hours ${am} minutes`;
-    const q = `A movie starts at ${sTS} and finishes at ${eTS}. How long was the movie? (Format: X hours Y minutes)`;
-    return { question: q, answer: ans };
+    // *** CORRECTED ***
+    let startHour = getRandomInt(7, 20);
+    let startMin = getRandomInt(0, 59);
+    let durationHour = getRandomInt(0, 3);
+    let durationMin = getRandomInt(5, 55);
+    if (durationHour === 0 && durationMin === 0) durationMin = 1;
+    let totalDurationMinutes = durationHour * 60 + durationMin;
+    let totalStartMinutes = startHour * 60 + startMin;
+    let totalEndMinutes = totalStartMinutes + totalDurationMinutes;
+    let endHour = Math.floor(totalEndMinutes / 60) % 24;
+    let endMin = totalEndMinutes % 60;
+    let startHour12 = startHour % 12;
+    if (startHour12 === 0) startHour12 = 12;
+    const startAmpm = startHour < 12 ? 'am' : 'pm';
+    const startTimeStr = `${startHour12}:${startMin < 10 ? '0' : ''}${startMin} ${startAmpm}`;
+    let endHour12 = endHour % 12;
+    if (endHour12 === 0) endHour12 = 12;
+    const endAmpm = endHour < 12 ? 'am' : 'pm';
+    const endTimeStr = `${endHour12}:${endMin < 10 ? '0' : ''}${endMin} ${endAmpm}`;
+    const answerHours = Math.floor(totalDurationMinutes / 60);
+    const answerMins = totalDurationMinutes % 60;
+    const answer = `${answerHours} hours ${answerMins} minutes`;
+    const question = `A movie starts at ${startTimeStr} and finishes at ${endTimeStr}. How long was the movie? (Format: X hours Y minutes)`;
+    return { question: question, answer: answer };
   }
   function generateRead24HourTime() {
     const h24 = getRandomInt(0, 23),
@@ -1114,15 +1123,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   // Geometry
   function generateAngleTypeSVG() {
-    const t = ['acute', 'right', 'obtuse', 'straight', 'reflex'];
-    const type = t[getRandomInt(0, t.length - 1)];
-    let angleDeg, pathData, textPos;
+    // *** CORRECTED ***
+    const types = ['acute', 'right', 'obtuse', 'straight', 'reflex'];
+    const type = types[getRandomInt(0, types.length - 1)];
+    let angleDeg;
     const sw = 150,
       sh = 100,
       cx = sw / 2,
       cy = sh * 0.8,
-      r = 50,
-      arcR = 20;
+      r = 50;
     switch (type) {
       case 'acute':
         angleDeg = getRandomInt(10, 89);
@@ -1139,21 +1148,18 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'reflex':
         angleDeg = getRandomInt(181, 350);
         break;
+      default:
+        angleDeg = 45;
     }
     const angleRad = (angleDeg * Math.PI) / 180;
+    const x1 = cx - r;
+    const y1 = cy;
     const x2 = cx + r * Math.cos(Math.PI - angleRad);
     const y2 = cy - r * Math.sin(Math.PI - angleRad);
-    const arcSX = cx + arcR,
-      arcSY = cy;
-    const arcEX = cx + arcR * Math.cos(Math.PI - angleRad),
-      arcEY = cy - arcR * Math.sin(Math.PI - angleRad);
-    const largeArcFlag = angleDeg > 180 ? 1 : 0;
-    pathData = `M ${arcSX},${arcSY} A ${arcR},${arcR} 0 ${largeArcFlag},1 ${arcEX},${arcEY}`;
-    textPos = { x: cx + 10, y: cy - arcR - 5 };
-    if (angleDeg > 120) textPos.x = cx - 20;
-    const dh = `<svg viewBox="0 0 ${sw} ${sh}" xmlns="http://www.w3.org/2000/svg" style="stroke-width:1.5;max-width:150px;height:auto;"><line x1="${cx - r}" y1="${cy}" x2="${cx}" y2="${cy}" stroke="currentColor"/><line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="currentColor"/><path d="${pathData}" fill="none" stroke="currentColor" stroke-width="1"/>${type === 'right' ? `<path d="M ${cx + 5} ${cy} L ${cx + 5} ${cy - 5} L ${cx} ${cy - 5}" fill="none" stroke="currentColor" stroke-width="1"/>` : ''}</svg>`;
-    const q = `What type of angle is shown? (acute, right, obtuse, straight, reflex)`;
-    return { question: q, answer: type, diagram: dh };
+    // Removed the confusing arc path
+    const diagramHTML = `<svg viewBox="0 0 ${sw} ${sh}" xmlns="http://www.w3.org/2000/svg" style="stroke-width: 1.5; max-width: 150px; height: auto;"><circle cx="${cx}" cy="${cy}" r="1.5" fill="currentColor" stroke="none"/><line x1="${x1}" y1="${y1}" x2="${cx}" y2="${cy}" stroke="currentColor"/><line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="currentColor"/>${type === 'right' ? `<path d="M ${cx + 5} ${cy} L ${cx + 5} ${cy - 5} L ${cx} ${cy - 5}" fill="none" stroke="currentColor" stroke-width="1"/>` : ''}</svg>`;
+    const question = `What type of angle is shown? (acute, right, obtuse, straight, reflex)`;
+    return { question: question, answer: type, diagram: diagramHTML };
   }
   function generateAnglesPointLineSimpleSVG() {
     const type = getRandomInt(0, 1);
@@ -1191,81 +1197,129 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       dh += `<line x1="${cx}" y1="${cy}" x2="${x4}" y2="${y4}" stroke="currentColor"/>`;
     }
-    dh += `<text x="${cx - 15}" y="${cy - 10}" font-size="10">${known1}°</text>`;
-    dh += `<text x="${cx + 5}" y="${cy - 15}" font-size="10">${known2}°</text>`;
-    dh += `<text x="${cx + 15}" y="${cy + 5}" font-size="10">x°</text>`;
+    dh += `<text x="${cx - 15}" y="${cy - 10}" font-size="10" fill="currentColor">${known1}°</text>`;
+    dh += `<text x="${cx + 5}" y="${cy - 15}" font-size="10" fill="currentColor">${known2}°</text>`;
+    dh += `<text x="${cx + 15}" y="${cy + 5}" font-size="10" fill="currentColor">x°</text>`;
     dh += `</svg>`;
     const q = `Find the value of angle x°.`;
     return { question: q, answer: ans.toString(), diagram: dh };
   }
   function generateCoordinatesFirstQuadrant() {
-    const x = getRandomInt(1, 10),
-      y = getRandomInt(1, 10);
-    const ans = `(${x}, ${y})`;
-    const gs = 11,
-      cs = 15,
-      p = 25,
-      ss = gs * cs + p * 2,
-      ox = p,
-      oy = ss - p;
-    let dh = `<svg viewBox="0 0 ${ss} ${ss}" xmlns="http://www.w3.org/2000/svg" style="stroke-width:0.5;max-width:200px;height:auto;">`;
-    dh += `<defs><pattern id="smallGrid" width="${cs}" height="${cs}" patternUnits="userSpaceOnUse"><path d="M ${cs} 0 L 0 0 0 ${cs}" fill="none" stroke="var(--border-color)" stroke-width="0.5"/></pattern></defs>`;
-    dh += `<rect x="${ox}" y="${p}" width="${gs * cs}" height="${gs * cs}" fill="url(#smallGrid)" />`;
-    dh += `<line x1="${ox}" y1="${p}" x2="${ox}" y2="${oy}" stroke="currentColor" stroke-width="1.5"/>`;
-    dh += `<line x1="${ox}" y1="${oy}" x2="${ox + gs * cs}" y2="${oy}" stroke="currentColor" stroke-width="1.5"/>`;
-    dh += `<text x="${ox + gs * cs + 5}" y="${oy + 5}" font-size="10" fill="currentColor" stroke="none">x</text>`;
-    dh += `<text x="${ox - 10}" y="${p - 5}" font-size="10" fill="currentColor" stroke="none">y</text>`;
-    const px = ox + x * cs,
-      py = oy - y * cs;
-    dh += `<circle cx="${px}" cy="${py}" r="3" fill="var(--primary-color)" stroke="none"/>`;
-    dh += `<text x="${px + 5}" y="${py - 5}" font-size="10" fill="currentColor" stroke="none">P</text>`;
-    dh += `</svg>`;
-    const q = `What are the coordinates of point P? (Format: (x, y))`;
-    return { question: q, answer: ans, diagram: dh };
+    // *** CORRECTED ***
+    const x = getRandomInt(1, 10);
+    const y = getRandomInt(1, 10);
+    const answer = `(${x}, ${y})`;
+    const gridSize = 10;
+    const cellSize = 20;
+    const padding = 35; // Increased padding
+    const axisLabelOffset = 18;
+    const gridLabelOffset = 6;
+    const svgWidth = gridSize * cellSize + padding * 2;
+    const svgHeight = gridSize * cellSize + padding * 2;
+    const originX = padding;
+    const originY = svgHeight - padding;
+    let diagramHTML = `<svg viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="stroke-width: 0.5; max-width: 300px; height: auto;">`; // Increased max-width
+    // Draw manual grid lines for better alignment
+    diagramHTML += `<g stroke="var(--secondary-color)" stroke-width="0.5" opacity="0.7">`; // Slightly darker grid
+    for (let i = 1; i <= gridSize; i++) {
+      diagramHTML += `<line x1="${originX + i * cellSize}" y1="${padding}" x2="${originX + i * cellSize}" y2="${originY}" />`;
+      diagramHTML += `<line x1="${originX}" y1="${originY - i * cellSize}" x2="${originX + gridSize * cellSize}" y2="${originY - i * cellSize}" />`;
+    }
+    diagramHTML += `</g>`;
+    // Axes (thicker)
+    diagramHTML += `<line x1="${originX}" y1="${padding - 5}" x2="${originX}" y2="${originY + 5}" stroke="currentColor" stroke-width="1.5"/>`; // Y axis slightly extended
+    diagramHTML += `<line x1="${originX - 5}" y1="${originY}" x2="${originX + gridSize * cellSize + 5}" y2="${originY}" stroke="currentColor" stroke-width="1.5"/>`; // X axis slightly extended
+    // Axis Labels
+    diagramHTML += `<text x="${originX + gridSize * cellSize + axisLabelOffset}" y="${originY + gridLabelOffset}" font-size="12" text-anchor="middle" fill="currentColor" stroke="none">x</text>`;
+    diagramHTML += `<text x="${originX - axisLabelOffset}" y="${padding - gridLabelOffset}" font-size="12" text-anchor="middle" fill="currentColor" stroke="none">y</text>`;
+    // Grid Numbers
+    for (let i = 1; i <= gridSize; i++) {
+      if (i % 2 === 0) {
+        // Label every 2nd tick for less clutter
+        diagramHTML += `<text x="${originX + i * cellSize}" y="${originY + axisLabelOffset}" font-size="9" text-anchor="middle" fill="currentColor" stroke="none">${i}</text>`;
+        diagramHTML += `<text x="${originX - axisLabelOffset + 8}" y="${originY - i * cellSize + 3}" font-size="9" text-anchor="end" fill="currentColor" stroke="none">${i}</text>`;
+      }
+      // Draw subtle tick marks
+      diagramHTML += `<line x1="${originX + i * cellSize}" y1="${originY}" x2="${originX + i * cellSize}" y2="${originY + 3}" stroke="currentColor" stroke-width="1"/>`;
+      diagramHTML += `<line x1="${originX}" y1="${originY - i * cellSize}" x2="${originX - 3}" y2="${originY - i * cellSize}" stroke="currentColor" stroke-width="1"/>`;
+    }
+    // Point
+    const pointX = originX + x * cellSize;
+    const pointY = originY - y * cellSize;
+    diagramHTML += `<circle cx="${pointX}" cy="${pointY}" r="4" fill="var(--primary-color)" stroke="var(--card-bg)" stroke-width="1"/>`;
+    diagramHTML += `<text x="${pointX + 7}" y="${pointY - 7}" font-size="10" font-weight="bold" fill="currentColor" stroke="none">P</text>`;
+    diagramHTML += `</svg>`;
+    const question = `What are the coordinates of point P? (Format: (x, y))`;
+    return { question: question, answer: answer, diagram: diagramHTML };
   }
   function generateDescribeTransformationSimple() {
+    // *** CORRECTED PADDING ***
     const types = ['translation', 'reflection', 'rotation'];
     const ans = types[getRandomInt(0, types.length - 1)];
-    const ptsA = '0,50 20,10 40,50';
+    const ptsA = '20,70 40,30 60,70';
     let ptsB = '',
       tDesc = '';
-    const sw = 150,
-      sh = 100;
+    const sw = 220,
+      sh = 140; // Increased viewbox size
     switch (ans) {
       case 'translation':
-        const tx = getRandomInt(30, 60),
-          ty = getRandomInt(0, 20);
-        ptsB = `${0 + tx},${50 + ty} ${20 + tx},${10 + ty} ${40 + tx},${50 + ty}`;
+        const tx = getRandomInt(50, 90),
+          ty = getRandomInt(-10, 10);
+        ptsB = `${20 + tx},${70 + ty} ${40 + tx},${30 + ty} ${60 + tx},${70 + ty}`;
         tDesc = `moved`;
         break;
       case 'reflection':
-        const axis = getRandomInt(50, 80);
-        ptsB = `${axis + (axis - 0)},50 ${axis + (axis - 20)},10 ${axis + (axis - 40)},50`;
+        const axis = getRandomInt(80, 120);
+        ptsB = `${axis + (axis - 20)},70 ${axis + (axis - 40)},30 ${axis + (axis - 60)},70`;
         tDesc = `flipped`;
         break;
       case 'rotation':
-        const cx = 20,
-          cy = 30;
-        ptsB = '40,50 0,30 40,10';
+        const cx = 40,
+          cy = 50;
+        ptsB = '60,70 20,50 60,30';
         tDesc = `turned`;
         break;
     }
-    const dh = `<svg viewBox="0 0 ${sw} ${sh}" xmlns="http://www.w3.org/2000/svg" style="stroke-width:1.5;max-width:200px;height:auto;"><polygon points="${ptsA}" fill="rgba(0,123,255,0.3)" stroke="currentColor"/><text x="20" y="60" font-size="10" text-anchor="middle">A</text><polygon points="${ptsB}" fill="rgba(40,167,69,0.3)" stroke="currentColor"/><text x="${ptsB.split(' ')[1].split(',')[0]}" y="${parseInt(ptsB.split(' ')[1].split(',')[1]) + 10}" font-size="10" text-anchor="middle">B</text></svg>`;
+    const dh = `<svg viewBox="0 0 ${sw} ${sh}" xmlns="http://www.w3.org/2000/svg" style="stroke-width:1.5;max-width:220px;height:auto;"><polygon points="${ptsA}" fill="rgba(0,123,255,0.3)" stroke="currentColor"/><text x="40" y="80" font-size="10" text-anchor="middle">A</text><polygon points="${ptsB}" fill="rgba(40,167,69,0.3)" stroke="currentColor"/><text x="${ptsB.split(' ')[1].split(',')[0]}" y="${parseInt(ptsB.split(' ')[1].split(',')[1]) + 15}" font-size="10" text-anchor="middle">B</text></svg>`;
     const q = `Shape A has been ${tDesc} to position B. What type of transformation is this? (translation, reflection, or rotation)`;
     return { question: q, answer: ans, diagram: dh };
   }
   // Statistics & Probability
   function generateInterpretColumnGraph() {
-    const cats = ['Cats', 'Dogs', 'Birds'];
-    const vals = [getRandomInt(2, 10), getRandomInt(2, 10), getRandomInt(2, 10)];
-    const idx = getRandomInt(0, cats.length - 1);
-    const ans = vals[idx];
-    const q = `How many people chose ${cats[idx]}?`;
-    let desc = 'Graph Data: ';
-    for (let i = 0; i < cats.length; i++) {
-      desc += `${cats[i]}=${vals[i]}${i < cats.length - 1 ? ', ' : '.'}`;
+    // *** CORRECTED WITH TICKS ***
+    const categories = ['Cats', 'Dogs', 'Birds', 'Fish'];
+    const catCount = getRandomInt(3, categories.length);
+    const chosenCategories = categories.slice(0, catCount);
+    const values = chosenCategories.map(() => getRandomInt(1, 12));
+    const targetCatIndex = getRandomInt(0, chosenCategories.length - 1);
+    const answer = values[targetCatIndex];
+    const question = `The graph shows favourite pets. How many people chose ${chosenCategories[targetCatIndex]}?`;
+    const svgPadding = 35;
+    const barWidth = 25;
+    const barGap = 15;
+    const maxValue = Math.ceil(Math.max(...values, 5) / 2) * 2;
+    const scaleY = 100 / maxValue;
+    const svgWidth = catCount * (barWidth + barGap) - barGap + svgPadding * 2;
+    const svgHeight = 100 + svgPadding * 2;
+    const originX = svgPadding;
+    const originY = svgHeight - svgPadding;
+    const tickLength = 5;
+    let diagramHTML = `<svg viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="stroke-width: 1; max-width: 250px; height: auto;">`;
+    diagramHTML += `<line x1="${originX}" y1="${svgPadding - tickLength}" x2="${originX}" y2="${originY}" stroke="currentColor" stroke-width="1"/>`; // Y Axis line
+    for (let i = 0; i <= maxValue; i += 2) {
+      const tickY = originY - i * scaleY;
+      diagramHTML += `<line x1="${originX - tickLength}" y1="${tickY}" x2="${originX}" y2="${tickY}" stroke="currentColor" stroke-width="0.7"/>`;
+      diagramHTML += `<text x="${originX - tickLength - 4}" y="${tickY + 3}" font-size="8" text-anchor="end" fill="currentColor">${i}</text>`;
     }
-    return { question: `${q}<br><i style="font-size:0.9em;">${desc}</i>`, answer: ans.toString() };
+    diagramHTML += `<line x1="${originX - tickLength}" y1="${originY}" x2="${originX + catCount * (barWidth + barGap)}" y2="${originY}" stroke="currentColor" stroke-width="1"/>`; // X Axis line
+    values.forEach((value, index) => {
+      const barHeight = value * scaleY;
+      const barX = originX + index * (barWidth + barGap);
+      diagramHTML += `<rect x="${barX}" y="${originY - barHeight}" width="${barWidth}" height="${barHeight}" fill="var(--primary-color)" opacity="0.7"/>`;
+      diagramHTML += `<text x="${barX + barWidth / 2}" y="${originY + 15}" font-size="9" text-anchor="middle" fill="currentColor" stroke="none">${chosenCategories[index]}</text>`;
+    });
+    diagramHTML += `</svg>`;
+    return { question: question, answer: answer.toString(), diagram: diagramHTML };
   }
   function generateSimpleProbabilityFraction() {
     const total = getRandomInt(8, 20);
@@ -1276,19 +1330,20 @@ document.addEventListener('DOMContentLoaded', () => {
     return { question: q, answer: ans };
   }
   function generateListOutcomes() {
-    const i1 = ['Head', 'Tail'];
-    const i2 = ['1', '2', '3'];
-    let o = [];
-    for (let item1 of i1) {
-      for (let item2 of i2) {
-        o.push(`${item1}-${item2}`);
+    // *** CORRECTED QUESTION TEXT ***
+    const items1 = ['Head', 'Tail'];
+    const items2 = ['Red', 'Blue', 'Green'];
+    let outcomes = [];
+    for (let i1 of items1) {
+      for (let i2 of items2) {
+        outcomes.push(`${i1}-${i2}`);
       }
     }
-    const ans = o.join(', ');
-    const q = `A coin is flipped and a 3-sided spinner (1,2,3) is spun. List all outcomes (e.g., Head-1). Use comma+space separation.`;
-    return { question: q, answer: ans, checker: checkExactStringAnswer };
+    const answer = outcomes.join(', ');
+    const question = `A coin is flipped and a 3-colour spinner (Red, Blue, Green) is spun. List all possible outcomes, separating each with a comma and space (e.g., Head-Red, Head-Blue, ...).`;
+    return { question: question, answer: answer, checker: checkExactStringAnswer };
   }
-  // SVG Generators kept from Year 9/previous steps, reused where applicable
+  // --- SVG Generators kept/modified ---
   function generateAreaRectangleSVG() {
     let l = getRandomInt(5, 15),
       w = getRandomInt(3, Math.max(4, l - 1)),
@@ -1325,10 +1380,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const dh = `<svg viewBox="0 0 ${sw} ${sh}" xmlns="http://www.w3.org/2000/svg" style="stroke-width:1.5;max-width:250px;height:auto;"><rect x="${rx}" y="${ry}" width="${rw}" height="${rh}" fill="rgba(0,123,255,0.1)" stroke="currentColor"/><text x="${rx + rw / 2}" y="${ry - lo}" font-size="10" text-anchor="middle" fill="currentColor" stroke="none">${l} m</text><text x="${rx - lo}" y="${ry + rh / 2}" font-size="10" text-anchor="end" dominant-baseline="middle" fill="currentColor" stroke="none">${w} m</text></svg>`;
     return { question: `Calculate the perimeter of the rectangle shown (in m).`, answer: ans.toString(), diagram: dh };
   }
-  // Remove complex shapes/advanced geometry for Year 6
+  // Remove complex shapes/advanced geometry for Year 6 focus
   function generateAreaCircleSVG() {
     return null;
-  } // Removed Area of Circle for Yr 6
+  }
   function generateAreaLShapeSVG() {
     return null;
   }
@@ -1342,6 +1397,15 @@ document.addEventListener('DOMContentLoaded', () => {
     return null;
   }
   function generatePythagorasHypotSVG() {
+    return null;
+  }
+  function generateExpandSingleBracket() {
+    return null;
+  }
+  function generateLinearEquation1() {
+    return null;
+  }
+  function generateLinearEquation2() {
     return null;
   }
 }); // END OF DOMContentLoaded LISTENER
