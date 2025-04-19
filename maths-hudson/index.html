@@ -35,7 +35,7 @@
         <main>
           <section id="welcome-section">
             <h2>Welcome Back, Hudson!</h2>
-            <p>Ready for your next 30-minute math challenge?</p>
+            <p>Ready for your next 15-minute math challenge?</p>
             <button id="start-session-btn">Start Session!</button>
           </section>
 
@@ -104,6 +104,17 @@
           <p>Great work, Hudson!</p>
           <p>You completed <strong id="session-summary-count">0</strong> questions this session.</p>
           <p>Your overall progress has been updated.</p>
+
+          <!-- START: Added Section for Incorrect Questions -->
+          <section id="incorrect-questions-summary">
+            <h3>Review Incorrect Answers:</h3>
+            <div id="incorrect-list">
+              <!-- Incorrect questions will be listed here by script.js -->
+              <p>Loading review...</p>
+            </div>
+          </section>
+          <!-- END: Added Section for Incorrect Questions -->
+
           <button id="back-to-home-btn">Back to Home</button>
         </main>
       </div>

@@ -55,6 +55,7 @@ html,
 body {
   height: 100%;
   overflow: hidden;
+  /* Prevent body scroll initially */
 }
 
 body {
@@ -64,9 +65,13 @@ body {
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
   display: flex;
+  /* Enable flexbox */
   justify-content: center;
+  /* Center app-container */
   align-items: center;
+  /* Center app-container */
   padding: 10px;
+  /* Small padding around the edge */
 }
 
 /* --- Layout Container --- */
@@ -74,15 +79,19 @@ body {
   width: 100%;
   height: 100%;
   max-width: 1200px;
+  /* Max width for content */
   max-height: 95vh;
+  /* Max height, leave some space */
   background-color: var(--card-bg);
   border-radius: 12px;
   box-shadow: 0 5px 20px var(--shadow-color);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  /* Important to contain children */
   transition: background-color 0.3s ease;
 }
+
 
 /* --- Header --- */
 header {
@@ -92,6 +101,7 @@ header {
   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
+  /* Prevent header shrinking */
   transition: border-color 0.3s ease;
 }
 
@@ -105,6 +115,7 @@ header .controls {
   display: flex;
   align-items: center;
   gap: 15px;
+  /* Space between controls */
 }
 
 /* --- Footer --- */
@@ -115,29 +126,39 @@ footer {
   color: var(--text-muted);
   font-size: 0.9em;
   flex-shrink: 0;
+  /* Prevent footer shrinking */
   transition: border-color 0.3s ease, color 0.3s ease;
 }
 
 /* --- View Management --- */
 .view-container {
   flex-grow: 1;
+  /* Takes up space between header and footer */
   overflow: hidden;
+  /* Contains the views */
   position: relative;
+  /* For positioning views */
   display: flex;
+  /* Use flex for view transition prep (optional) */
 }
 
 .view {
   width: 100%;
   height: 100%;
   position: absolute;
+  /* Stack views */
   top: 0;
   left: 0;
   opacity: 0;
+  /* Hidden by default */
   visibility: hidden;
   transition: opacity 0.4s ease-in-out, visibility 0.4s;
   display: flex;
+  /* Use flex for internal layout */
   flex-direction: column;
+  /* Stack main/footer within view */
   background-color: var(--bg-color);
+  /* Views have base background */
   transition: opacity 0.4s ease-in-out, visibility 0.4s, background-color 0.3s ease;
 }
 
@@ -145,7 +166,9 @@ footer {
   opacity: 1;
   visibility: visible;
   z-index: 1;
+  /* Bring active view to front */
   position: relative;
+  /* Change from absolute to take space */
 }
 
 /* --- Specific View Layouts --- */
@@ -153,19 +176,26 @@ footer {
 #session-end-view main {
   display: flex;
   flex-direction: column;
+  /* Stack sections */
   align-items: center;
+  /* Center content horizontally */
+  /* justify-content: center; Center vertically - might push content off if tall */
   padding: 30px;
   gap: 30px;
   overflow-y: auto;
+  /* Allow scrolling if content overflows */
   text-align: center;
   flex-grow: 1;
+  /* Allow main to take space */
 }
 
 #home-view #progress-report {
   width: 100%;
   max-width: 700px;
+  /* Limit width of progress section */
   padding: 20px;
   background-color: var(--card-bg);
+  /* Card background for report area */
   border-radius: 8px;
   box-shadow: 0 2px 5px var(--shadow-color);
   transition: background-color 0.3s ease;
@@ -175,17 +205,24 @@ footer {
   display: flex;
   flex-direction: column;
   padding: 15px 20px;
+  /* Slightly less padding */
   gap: 15px;
   overflow-y: auto;
+  /* Allow quiz content to scroll if needed */
   flex-grow: 1;
+  /* Take available space */
   position: relative;
+  /* For absolute positioning of end button */
 }
 
+/* Ensure main sections within quiz view are correctly sized */
 #quiz-view #quiz-area {
   flex-grow: 1;
+  /* Allow quiz area to expand */
   display: flex;
   flex-direction: column;
   background-color: var(--card-bg);
+  /* Match card background */
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 5px var(--shadow-color);
@@ -194,26 +231,33 @@ footer {
 
 #quiz-view #question-container {
   flex-grow: 1;
+  /* Allow question container to expand */
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  /* Distribute space within */
   padding: 15px;
   border-radius: 8px;
   margin-bottom: 15px;
   min-height: 200px;
+  /* Ensure minimum space */
 }
+
 
 /* --- Session Status Bar --- */
 #session-status {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
+  /* Allow wrapping on smaller screens */
   background-color: var(--card-bg);
   padding: 10px 15px;
   border-radius: 8px;
   box-shadow: 0 2px 5px var(--shadow-color);
+  /* Removed margin-bottom, handled by main gap */
   transition: background-color 0.3s ease;
   flex-shrink: 0;
+  /* Prevent shrinking */
 }
 
 .status-item {
@@ -227,6 +271,7 @@ footer {
 
 .status-item span {
   white-space: nowrap;
+  /* Prevent wrapping within item */
 }
 
 .status-item strong {
@@ -235,34 +280,43 @@ footer {
   font-size: 1.1em;
 }
 
+
 /* --- Quiz Specific --- */
+
 #question-display {
   margin-bottom: 20px;
   min-height: 100px;
+  /* Ensure space for text/diagram */
   display: flex;
   flex-direction: column;
   align-items: center;
+  /* Center diagram/text */
   flex-grow: 1;
+  /* Allow this area to take space */
 }
 
 #question-text {
   font-size: 1.2em;
   text-align: center;
   margin-bottom: 15px;
+  /* Space between text and diagram */
   color: var(--text-color);
   transition: color 0.3s ease;
 }
 
 #question-diagram {
   width: 100%;
-  max-width: 250px;
+  max-width: 350px;
+  /* Adjusted for potentially larger diagrams like graphs/coordinates */
   margin-top: 10px;
+  /* SVG styles added directly via JS for theme adaptation */
 }
 
 #question-diagram svg {
   display: block;
   width: 100%;
   height: auto;
+  /* Stroke/fill are set dynamically or inherit via currentColor */
 }
 
 .answer-area {
@@ -271,6 +325,7 @@ footer {
   justify-content: center;
   margin-bottom: 10px;
   flex-shrink: 0;
+  /* Prevent shrinking */
 }
 
 #user-answer {
@@ -282,6 +337,7 @@ footer {
   color: var(--text-color);
   transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
   flex-grow: 1;
+  /* Allow input to take space */
   max-width: 300px;
 }
 
@@ -295,6 +351,7 @@ body.dark-mode #user-answer:focus {
   box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.35);
 }
 
+
 /* --- Buttons --- */
 button {
   padding: 12px 20px;
@@ -307,6 +364,7 @@ button {
   color: var(--button-text);
   transition: background-color 0.2s ease, transform 0.1s ease;
   white-space: nowrap;
+  /* Prevent button text wrapping */
 }
 
 button:hover {
@@ -323,9 +381,12 @@ button:active {
 
 #next-question {
   display: block;
+  /* Make it block to center easily */
   margin: 10px auto 0;
+  /* Center the next button */
   background-color: var(--secondary-color);
   flex-shrink: 0;
+  /* Prevent shrinking */
 }
 
 #next-question:hover {
@@ -336,16 +397,20 @@ body.dark-mode #next-question {
   background-color: #5a6268;
 }
 
+
 /* --- Feedback Area --- */
 #feedback-container {
   min-height: 40px;
+  /* Reserve space */
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   padding: 5px;
+  /* Reduced padding */
   flex-shrink: 0;
+  /* Prevent shrinking */
 }
 
 #feedback-text {
@@ -363,6 +428,7 @@ body.dark-mode #next-question {
 
 #correct-animation {
   position: absolute;
+  /* Center animation roughly */
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -370,7 +436,9 @@ body.dark-mode #next-question {
   animation: pop-fade 0.8s ease-out forwards;
   opacity: 0;
   color: var(--correct-color);
+  /* Make sparkle match correct color */
   pointer-events: none;
+  /* Prevent interaction */
 }
 
 @keyframes pop-fade {
@@ -390,51 +458,76 @@ body.dark-mode #next-question {
   }
 }
 
+
 /* --- Progress Report --- */
+.progress-summary {
+  /* This class isn't used in current HTML, but keep if needed */
+  text-align: center;
+  margin-bottom: 15px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
 .chart-container {
   position: relative;
+  /* Needed for Chart.js responsiveness */
   margin-bottom: 20px;
   padding: 15px;
+  /* background: var(--card-bg); Moved background to #progress-report */
   border-radius: 8px;
+  /* box-shadow: 0 2px 5px var(--shadow-color); Moved shadow to #progress-report */
   min-height: 250px;
+  /* Ensure space for the chart */
   width: 100%;
+  /* Take full width of parent */
   transition: background-color 0.3s ease;
 }
 
+/* Ensure canvas takes up space */
 #progressChartCanvas {
   max-height: 400px;
+  /* Limit chart height */
 }
+
 
 #report-details ul {
   list-style: none;
   padding: 0;
   width: 100%;
+  /* Ensure list takes width */
 }
 
 #report-details li {
   background-color: var(--bg-color);
+  /* Use main background for contrast */
   padding: 10px 15px;
   margin-bottom: 8px;
   border-radius: 4px;
   border-left: 5px solid var(--secondary-color);
+  /* Default border */
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
+  /* Add gap for wrapping */
   transition: background-color 0.3s ease, border-left-color 0.3s ease;
 }
 
 #report-details li span {
+  /* margin-right: 10px; Replaced by gap */
   white-space: nowrap;
+  /* Prevent wrapping within spans */
 }
 
 #report-details .mastery {
   font-weight: bold;
   font-size: 1.1em;
   margin-left: auto;
+  /* Push mastery to the right */
 }
 
+/* Conditional border colors for list items - Based on mastery */
 #report-details li.mastery-low {
   border-left-color: var(--incorrect-color);
 }
@@ -443,9 +536,11 @@ body.dark-mode #next-question {
   border-left-color: var(--orange-color);
 }
 
+/* Use variable */
 #report-details li.mastery-high {
   border-left-color: var(--correct-color);
 }
+
 
 /* --- Motivation Area --- */
 #motivation-area {
@@ -454,9 +549,12 @@ body.dark-mode #next-question {
   font-style: italic;
   color: var(--secondary-color);
   background-color: rgba(108, 117, 125, 0.1);
+  /* Faint background */
   border-radius: 5px;
   margin-top: auto;
+  /* Push to bottom if space allows */
   flex-shrink: 0;
+  /* Prevent shrinking */
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -474,14 +572,22 @@ body.dark-mode #motivation-area {
 }
 
 #end-session-early-btn {
+  /* Position relative to quiz-view main area */
   margin-top: 15px;
+  /* Space above it */
   margin-left: auto;
+  /* Push to right */
   margin-right: auto;
+  /* Center if needed, or remove for right align */
   display: block;
+  /* Make it block level */
   width: fit-content;
+  /* Size to content */
+
   background-color: var(--incorrect-color);
   padding: 8px 15px;
   font-size: 0.9em;
+  /* z-index: 5; Not needed if not absolutely positioned */
 }
 
 #end-session-early-btn:hover {
@@ -490,7 +596,9 @@ body.dark-mode #motivation-area {
 
 body.dark-mode #end-session-early-btn {
   background-color: var(--incorrect-color);
+  /* Use bright red */
 }
+
 
 /* --- Dark Mode Toggle Switch --- */
 .theme-switch-wrapper {
@@ -505,8 +613,10 @@ body.dark-mode #end-session-early-btn {
 .theme-switch {
   display: inline-block;
   height: 24px;
+  /* Adjusted height */
   position: relative;
   width: 44px;
+  /* Adjusted width */
 }
 
 .theme-switch input {
@@ -527,12 +637,16 @@ body.dark-mode #end-session-early-btn {
 .slider:before {
   background-color: #fff;
   bottom: 3px;
+  /* Adjusted position */
   content: "";
   height: 18px;
+  /* Adjusted size */
   left: 3px;
+  /* Adjusted position */
   position: absolute;
   transition: .4s;
   width: 18px;
+  /* Adjusted size */
 }
 
 input:checked+.slider {
@@ -541,15 +655,18 @@ input:checked+.slider {
 
 input:checked+.slider:before {
   transform: translateX(20px);
+  /* Adjusted translation */
 }
 
 .slider.round {
   border-radius: 24px;
+  /* Adjusted radius */
 }
 
 .slider.round:before {
   border-radius: 50%;
 }
+
 
 /* --- Utility --- */
 .hidden {
@@ -560,6 +677,7 @@ input:checked+.slider:before {
 @media (max-width: 768px) {
   .app-container {
     max-height: 100vh;
+    /* Use full height on mobile */
     border-radius: 0;
   }
 
@@ -604,16 +722,19 @@ input:checked+.slider:before {
   }
 
   #end-session-early-btn {
+    /* Keep centered or align as needed */
     margin-left: auto;
     margin-right: auto;
   }
 
   .answer-area {
     flex-direction: column;
+    /* Stack input and button */
   }
 
   #user-answer {
     max-width: none;
+    /* Allow input to take full width */
   }
 }
 
@@ -652,4 +773,117 @@ input:checked+.slider:before {
     margin-left: 0;
     font-size: 1em;
   }
+
+  /* Adjust diagram size slightly on very small screens */
+  #question-diagram {
+    max-width: 280px;
+  }
 }
+
+
+/* --- START: Styles for Incorrect Questions Review --- */
+#incorrect-questions-summary {
+  width: 100%;
+  max-width: 700px;
+  /* Match progress report width */
+  margin-top: 20px;
+  /* Space above this section */
+  padding: 15px 20px;
+  background-color: var(--bg-color);
+  /* Use main background for contrast with card */
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  text-align: left;
+  /* Align list items left */
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+#incorrect-questions-summary h3 {
+  margin-bottom: 15px;
+  color: var(--primary-color);
+  text-align: center;
+  /* Center heading */
+  font-size: 1.2em;
+}
+
+/* Style the container div for the list */
+#incorrect-list {
+  max-height: 35vh;
+  /* Limit height to prevent excessive scrolling */
+  overflow-y: auto;
+  /* Add vertical scrollbar if needed */
+  padding-right: 10px;
+  /* Space for scrollbar */
+  margin-top: 5px;
+}
+
+.incorrect-questions-list {
+  list-style: none;
+  padding: 0;
+}
+
+.incorrect-questions-list li {
+  border-bottom: 1px dashed var(--border-color);
+  padding: 15px 5px 15px 0;
+  /* Padding top/bottom, less on sides */
+  margin-bottom: 15px;
+  transition: border-color 0.3s ease;
+}
+
+.incorrect-questions-list li:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 5px;
+  /* Less padding for last item */
+}
+
+.incorrect-questions-list li p {
+  margin-bottom: 8px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  /* Wrap long text */
+}
+
+.incorrect-questions-list li p:last-child {
+  margin-bottom: 0;
+}
+
+.incorrect-questions-list li strong {
+  color: var(--text-color);
+  /* Use main text color for emphasis */
+  font-weight: 600;
+}
+
+/* Style for user's incorrect answer */
+.incorrect-questions-list li em {
+  color: var(--incorrect-color);
+  font-style: normal;
+  /* Use normal style but keep color */
+}
+
+body.dark-mode .incorrect-questions-list li em {
+  /* Optional: Different style for dark mode if needed */
+}
+
+/* Container for diagrams within the review list */
+.incorrect-questions-list .review-diagram {
+  max-width: 150px;
+  /* Smaller diagrams in review */
+  margin: 10px auto 15px;
+  /* Center diagram, add bottom margin */
+  padding: 5px;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+  /* Match card bg for contrast */
+  border-radius: 4px;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.incorrect-questions-list .review-diagram svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Stroke/fill are set dynamically by JS */
+}
+
+/* --- END: Styles for Incorrect Questions Review --- */

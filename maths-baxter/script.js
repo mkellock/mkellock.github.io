@@ -3,24 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log("DOM Content Loaded. Initializing Baxter's Year 6 script...");
 
   // --- Configuration & Constants ---
-  const SESSION_DURATION_SECONDS = 30 * 60; // 30 minutes
-  // const SESSION_DURATION_SECONDS = 30; // Use a short duration for testing
-  const MOTIVATIONAL_MESSAGES = [
-    // Same messages can be used
-    "Keep pushing, you're doing great!",
-    'Every problem solved makes you stronger!',
-    'Focus and determination lead to success!',
-    'Believe in your ability to figure it out!',
-    'Mistakes are learning opportunities. Keep trying!',
-    "You've got this, Baxter!",
-    'One question at a time.',
-    'Embrace the challenge!',
-    'Math power activated!',
-    'Stay sharp, stay focused!',
-    'Precision and practice make perfect.',
-    'Excellent effort!',
-    'Keep that brain working!',
-  ];
+  const SESSION_DURATION_SECONDS = 15 * 60; // 15 minutes
+  // const SESSION_DURATION_SECONDS = 60; // Use a short duration for testing
+  const MOTIVATIONAL_MESSAGES = ["Keep pushing, you're doing great!", 'Every problem solved makes you stronger!', 'Focus and determination lead to success!', 'Believe in your ability to figure it out!', 'Mistakes are learning opportunities. Keep trying!', "You've got this, Baxter!", 'One question at a time.', 'Embrace the challenge!', 'Math power activated!', 'Stay sharp, stay focused!', 'Precision and practice make perfect.', 'Excellent effort!', 'Keep that brain working!'];
   // --- YEAR 6 CURRICULUM CATEGORIES ---
   const categories = {
     number: {
@@ -28,27 +13,27 @@ document.addEventListener('DOMContentLoaded', () => {
       skills: [
         { name: 'Identify Place Value (Large Numbers)', generator: generatePlaceValueLarge, checker: checkNumericAnswer },
         { name: 'Multiply/Divide by Powers of 10', generator: generateMultDivPowers10, checker: checkNumericAnswer },
-        { name: 'Addition/Subtraction (Large Numbers)', generator: generateAddSubLarge, checker: checkNumericAnswer }, // Subtraction IS included here
+        { name: 'Addition/Subtraction (Large Numbers)', generator: generateAddSubLarge, checker: checkNumericAnswer },
         { name: 'Multiplication (e.g., 3-digit x 2-digit)', generator: generateMultiplicationMultiDigit, checker: checkNumericAnswer },
-        { name: 'Division (e.g., 3-digit by 1-digit)', generator: generateDivisionSimple, checker: checkNumericAnswer }, // Division IS included here
-        { name: 'Prime/Composite Numbers', generator: generatePrimeComposite, checker: checkExactStringAnswer }, // Answer 'prime' or 'composite'
+        { name: 'Division (e.g., 3-digit by 1-digit)', generator: generateDivisionSimple, checker: checkNumericAnswer },
+        { name: 'Prime/Composite Numbers', generator: generatePrimeComposite, checker: checkExactStringAnswer },
       ],
     },
     fractions_decimals: {
       name: 'Fractions & Decimals',
       skills: [
-        { name: 'Compare Fractions (Related Denominators)', generator: generateCompareFractionsRelated, checker: checkExactStringAnswer }, // Answer '>', '<', or '='
+        { name: 'Compare Fractions (Related Denominators)', generator: generateCompareFractionsRelated, checker: checkExactStringAnswer },
         { name: 'Add/Sub Fractions (Related Denominators)', generator: generateAddSubFractionsRelated, checker: checkFractionAnswer },
         { name: 'Multiply Decimals by Whole Number', generator: generateDecimalMultWhole, checker: checkNumericAnswerTolerance(0.001) },
-        { name: 'Fraction/Decimal Conversion (Simple)', generator: generateFracDecConversionSimple, checker: checkNumericAnswerTolerance(0.001) }, // e.g., 1/2=0.5, 1/4=0.25
-        { name: 'Percentage of Quantity (Simple %)', generator: generatePercentageOfQuantitySimple, checker: checkNumericAnswer }, // e.g., 10%, 25%, 50%
+        { name: 'Fraction/Decimal Conversion (Simple)', generator: generateFracDecConversionSimple, checker: checkNumericAnswerTolerance(0.001) },
+        { name: 'Percentage of Quantity (Simple %)', generator: generatePercentageOfQuantitySimple, checker: checkNumericAnswer },
       ],
     },
     patterns_algebra: {
       name: 'Patterns & Algebra',
       skills: [
         { name: 'Continue Number Pattern (Addition/Subtraction)', generator: generatePatternAddSub, checker: checkNumericAnswer },
-        { name: 'Find Rule for Pattern (Simple)', generator: generateFindRuleSimple, checker: checkExactStringAnswer }, // e.g. 'add 3', 'multiply by 2'
+        { name: 'Find Rule for Pattern (Simple)', generator: generateFindRuleSimple, checker: checkExactStringAnswer },
         { name: 'Order of Operations (BODMAS/PEMDAS)', generator: generateOrderOfOpsSimple, checker: checkNumericAnswer },
       ],
     },
@@ -59,26 +44,26 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'Convert Mass Units (kg, g)', generator: generateConvertMass, checker: checkNumericAnswer },
         { name: 'Calculate Perimeter (Rectangle)', generator: generatePerimeterRectangleSVG, checker: checkNumericAnswer },
         { name: 'Calculate Area (Rectangle)', generator: generateAreaRectangleSVG, checker: checkNumericAnswer },
-        { name: 'Calculate Area (Triangle - SVG)', generator: generateAreaTriangleSVG, checker: checkNumericAnswerTolerance(0.1) }, // Corrected function included below
-        { name: 'Elapsed Time (Hours/Minutes)', generator: generateElapsedTime, checker: checkExactStringAnswer }, // Corrected function included below
+        { name: 'Calculate Area (Triangle - SVG)', generator: generateAreaTriangleSVG, checker: checkNumericAnswerTolerance(0.1) },
+        { name: 'Elapsed Time (Hours/Minutes)', generator: generateElapsedTime, checker: checkExactStringAnswer },
         { name: 'Read 24-Hour Time', generator: generateRead24HourTime, checker: checkExactStringAnswer },
       ],
     },
     geometry: {
       name: 'Geometry',
       skills: [
-        { name: 'Identify Angle Type (SVG)', generator: generateAngleTypeSVG, checker: checkExactStringAnswer }, // Corrected function included below
+        { name: 'Identify Angle Type (SVG)', generator: generateAngleTypeSVG, checker: checkExactStringAnswer },
         { name: 'Angles on a Point/Line (Simple)', generator: generateAnglesPointLineSimpleSVG, checker: checkNumericAnswer },
-        { name: 'Coordinates (First Quadrant)', generator: generateCoordinatesFirstQuadrant, checker: checkExactStringAnswer }, // Corrected function included below
-        { name: 'Describe Transformation (Simple)', generator: generateDescribeTransformationSimple, checker: checkExactStringAnswer }, // Corrected function included below
+        { name: 'Coordinates (First Quadrant)', generator: generateCoordinatesFirstQuadrant, checker: checkExactStringAnswer },
+        { name: 'Describe Transformation (Simple)', generator: generateDescribeTransformationSimple, checker: checkExactStringAnswer },
       ],
     },
     statistics_probability: {
       name: 'Statistics & Probability',
       skills: [
-        { name: 'Interpret Column Graph (Simple)', generator: generateInterpretColumnGraph, checker: checkNumericAnswer }, // Corrected function included below
+        { name: 'Interpret Column Graph (Simple)', generator: generateInterpretColumnGraph, checker: checkNumericAnswer },
         { name: 'Calculate Simple Probability (Fraction)', generator: generateSimpleProbabilityFraction, checker: checkFractionAnswer },
-        { name: 'List Outcomes', generator: generateListOutcomes, checker: checkExactStringAnswer }, // Corrected function included below
+        { name: 'List Outcomes', generator: generateListOutcomes, checker: checkExactStringAnswer },
       ],
     },
   };
@@ -90,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!element && isEssential) {
       console.error(`CRITICAL ERROR: Essential DOM element with ID "${id}" not found!`);
       essentialElementsAvailable = false;
-    } else if (!element) {
+    } else if (!element && !isEssential) {
       console.warn(`Warning: Non-essential DOM element with ID "${id}" not found.`);
     }
     return element;
@@ -113,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentSessionQuestionsCompleted = 0;
   let previousSessionQuestionsCompleted = 0;
   let isSessionActive = false;
+  let incorrectlyAnsweredQuestions = []; // <<< ADDED: Array to store incorrect questions
 
   // --- Halt initialization if essential elements are missing ---
   if (!essentialElementsAvailable) {
@@ -123,8 +109,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Initialization ---
   try {
-    progress = loadProgress();
-    previousSessionQuestionsCompleted = loadPreviousSessionCount();
+    progress = loadProgress(); // Uses _Baxter key
+    previousSessionQuestionsCompleted = loadPreviousSessionCount(); // Uses _Baxter key
     console.log('Loaded Progress:', JSON.parse(JSON.stringify(progress)));
     console.log('Loaded Previous Session Count:', previousSessionQuestionsCompleted);
     initializeTheme();
@@ -142,16 +128,16 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     console.error('Start Session Button not found.');
   }
-  const submitBtn = document.getElementById('submit-answer');
+  const submitBtn = getElement('submit-answer');
   if (submitBtn) submitBtn.addEventListener('click', handleSubmitAnswer);
-  const answerInput = document.getElementById('user-answer');
+  const answerInput = getElement('user-answer');
   if (answerInput) answerInput.addEventListener('keypress', handleEnterKey);
-  const nextBtn = document.getElementById('next-question');
+  const nextBtn = getElement('next-question');
   if (nextBtn) nextBtn.addEventListener('click', () => displayNextQuestion(true));
   if (themeToggle) themeToggle.addEventListener('change', handleThemeToggle);
-  const backBtn = document.getElementById('back-to-home-btn');
+  const backBtn = getElement('back-to-home-btn');
   if (backBtn) backBtn.addEventListener('click', () => setActiveView('home-view'));
-  const endEarlyBtn = document.getElementById('end-session-early-btn');
+  const endEarlyBtn = getElement('end-session-early-btn');
   if (endEarlyBtn) {
     endEarlyBtn.addEventListener('click', () => {
       if (isSessionActive && confirm('Finish session now?')) {
@@ -205,10 +191,67 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = 'hidden';
       } else if (viewId === 'session-end-view') {
         console.log('Session end view activated.');
-        const summaryCountEl = document.getElementById('session-summary-count');
+        const summaryCountEl = getElement('session-summary-count');
         if (summaryCountEl) summaryCountEl.textContent = currentSessionQuestionsCompleted;
         else console.warn('sessionSummaryCount not found.');
-        document.body.style.overflow = 'hidden';
+
+        // --- START: Display Incorrect Questions ---
+        const incorrectListDiv = getElement('incorrect-list', false); // Non-essential
+        if (incorrectListDiv) {
+          incorrectListDiv.innerHTML = ''; // Clear previous content
+          if (incorrectlyAnsweredQuestions.length === 0) {
+            incorrectListDiv.innerHTML = '<p>No incorrect answers this session. Well done!</p>';
+            console.log('No incorrect questions to display.');
+          } else {
+            console.log(`Displaying ${incorrectlyAnsweredQuestions.length} incorrect questions.`);
+            const ul = document.createElement('ul');
+            ul.className = 'incorrect-questions-list'; // Add class for styling
+            incorrectlyAnsweredQuestions.forEach((item, index) => {
+              const li = document.createElement('li');
+              let displayAnswer = item.correctAnswer;
+              // Format answer for display
+              if (typeof displayAnswer === 'number') {
+                if (Math.abs(displayAnswer - Math.round(displayAnswer)) < 0.0001) {
+                  displayAnswer = Math.round(displayAnswer);
+                } else if (Math.abs(displayAnswer - displayAnswer.toFixed(1)) < 0.0001) {
+                  displayAnswer = displayAnswer.toFixed(1);
+                } else if (Math.abs(displayAnswer - displayAnswer.toFixed(2)) < 0.0001) {
+                  displayAnswer = displayAnswer.toFixed(2);
+                } else {
+                  displayAnswer = displayAnswer.toFixed(4); // Fallback precision
+                }
+              } else if (typeof displayAnswer === 'string' && displayAnswer.includes('/')) {
+                // Keep fraction string as is
+              } else {
+                displayAnswer = String(displayAnswer); // Convert others to string
+              }
+
+              li.innerHTML = `
+                <p><strong>Question ${index + 1}:</strong> ${item.questionText}</p>
+                ${item.questionDiagramHTML ? `<div class="review-diagram">${item.questionDiagramHTML}</div>` : ''}
+                <p><em>Your answer: ${item.userAnswer || '(No answer entered)'}</em></p>
+                <p><strong>Correct answer: ${displayAnswer}</strong></p>
+              `;
+              ul.appendChild(li);
+            });
+            incorrectListDiv.appendChild(ul);
+
+            // Re-apply theme styles to SVGs in the review list
+            setTimeout(() => {
+              const reviewSvgs = incorrectListDiv.querySelectorAll('.review-diagram svg');
+              console.log(`Found ${reviewSvgs.length} SVGs in review list to style.`);
+              if (reviewSvgs.length > 0) {
+                reviewSvgs.forEach((svgEl) => applyThemeToSVG(svgEl)); // Use helper
+                console.log('Applied theme styles to review SVGs.');
+              }
+            }, 150); // Delay slightly
+          }
+        } else {
+          console.warn('Element with ID "incorrect-list" not found.');
+        }
+        // --- END: Display Incorrect Questions ---
+
+        document.body.style.overflow = 'hidden'; // Keep overflow hidden
       }
     } else {
       console.error(`View element NOT found for ID: "${viewId}". Fallback.`);
@@ -229,12 +272,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Session Management ---
   function startSession() {
-    const prevCountDisplay = document.getElementById('previous-session-count');
-    const currentCountDisplay = document.getElementById('current-session-count');
+    const prevCountDisplay = getElement('previous-session-count');
+    const currentCountDisplay = getElement('current-session-count');
     try {
       console.log('Start Session clicked!');
       isSessionActive = true;
       currentSessionQuestionsCompleted = 0;
+      incorrectlyAnsweredQuestions = []; // <<< ADDED: Clear list for new session
+      console.log('Cleared incorrectly answered questions list.');
       sessionTimeRemaining = SESSION_DURATION_SECONDS;
       if (prevCountDisplay) prevCountDisplay.textContent = previousSessionQuestionsCompleted;
       else console.warn('prevCountDisplay not found.');
@@ -263,9 +308,9 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Ending session...');
     isSessionActive = false;
     clearInterval(sessionTimerInterval);
-    savePreviousSessionCount(currentSessionQuestionsCompleted);
-    saveProgress();
-    setActiveView('session-end-view');
+    savePreviousSessionCount(currentSessionQuestionsCompleted); // Uses _Baxter key
+    saveProgress(); // Uses _Baxter key, save before view switch
+    setActiveView('session-end-view'); // Switch view *after* saving
   }
   function updateTimer() {
     if (!isSessionActive) {
@@ -283,14 +328,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   function updateTimerDisplay() {
-    const timerDisp = document.getElementById('timer-display');
+    const timerDisp = getElement('timer-display');
     if (!timerDisp) return;
     const minutes = Math.floor(sessionTimeRemaining / 60);
     const seconds = sessionTimeRemaining % 60;
     timerDisp.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   }
   function displayMotivationalMessage() {
-    const motivationEl = document.getElementById('motivational-message');
+    const motivationEl = getElement('motivational-message');
     if (!motivationEl) return;
     const randomIndex = Math.floor(Math.random() * MOTIVATIONAL_MESSAGES.length);
     motivationEl.textContent = MOTIVATIONAL_MESSAGES[randomIndex];
@@ -314,12 +359,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   function displayNextQuestion(isUserInitiatedNext) {
-    const qTitle = document.getElementById('quiz-category-title'),
-      qText = document.getElementById('question-text'),
-      qDiag = document.getElementById('question-diagram'),
-      qAns = document.getElementById('user-answer'),
-      qSub = document.getElementById('submit-answer'),
-      qNext = document.getElementById('next-question');
+    const qTitle = getElement('quiz-category-title'),
+      qText = getElement('question-text'),
+      qDiag = getElement('question-diagram'),
+      qAns = getElement('user-answer'),
+      qSub = getElement('submit-answer'),
+      qNext = getElement('next-question');
     if (!isSessionActive || !qTitle || !qText || !qDiag || !qAns || !qSub || !qNext) {
       console.error('DNQ: Missing DOM/inactive.');
       if (isSessionActive) endSession();
@@ -363,28 +408,21 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       if (typeof skill.generator !== 'function') throw new Error(`Gen not fn for '${skill.name}'.`);
       const qData = skill.generator();
-      if (qData === null) throw new Error(`Generator for '${skill.name}' returned null (intended skip).`);
+      if (qData === null) throw new Error(`Generator for '${skill.name}' returned null (intended skip).`); // Handle null return for skipping
       if (!qData || typeof qData.question === 'undefined' || typeof qData.answer === 'undefined' || typeof skill.checker !== 'function') throw new Error(`Data/checker issue for '${skill.name}'.`);
       currentQuestion = { categoryId: catId, skillIndex: skillIdx, questionText: qData.question, questionDiagramHTML: qData.diagram || '', correctAnswer: qData.answer, checker: skill.checker };
-      qText.innerHTML = currentQuestion.questionText;
+      qText.innerHTML = currentQuestion.questionText; // Use innerHTML for potential HTML tags
       qDiag.innerHTML = currentQuestion.questionDiagramHTML;
       const svgEl = qDiag.querySelector('svg');
       if (svgEl) {
-        const bs = getComputedStyle(document.body);
-        const ct = bs.getPropertyValue('--text-color');
-        svgEl.style.stroke = ct;
-        svgEl.querySelectorAll('text,tspan').forEach((t) => (t.style.fill = ct));
-        svgEl.querySelectorAll('line,path,rect,circle').forEach((s) => {
-          if (s.style.stroke !== 'none' && !s.getAttribute('stroke')) {
-            s.style.stroke = 'currentColor';
-          }
-        });
+        applyThemeToSVG(svgEl); // Apply theme colors to new SVG
       }
     } catch (error) {
       if (error.message.includes('returned null')) {
-        console.log(`Skipping question: ${error.message}`);
-        setTimeout(() => displayNextQuestion(false), 50);
-        /* Get next question slightly delayed */ return;
+        // Check if it was an intended skip
+        console.log(`Skipping question type: ${skill?.name || 'Unknown'}`);
+        setTimeout(() => displayNextQuestion(false), 50); // Try next question immediately
+        return;
       }
       console.error(`Error gen question ${catId}-${skill?.name || 'Unknown'}:`, error);
       qText.textContent = 'Oops! Error loading. Click Next.';
@@ -400,23 +438,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   function handleSubmitAnswer() {
-    // *** CORRECTED VERSION ***
-    const qAns = document.getElementById('user-answer');
-    const qSub = document.getElementById('submit-answer');
-    const qNext = document.getElementById('next-question');
-    const qCount = document.getElementById('current-session-count');
+    const qAns = getElement('user-answer');
+    const qSub = getElement('submit-answer');
+    const qNext = getElement('next-question');
+    const qCount = getElement('current-session-count');
     if (!currentQuestion || !isSessionActive || !qSub || !qNext || !qAns || !qCount) {
       console.error('Submit aborted: Missing elements/inactive.');
       return;
     }
     const uAns = qAns.value.trim();
-    // Corrected Check for empty answers (allow 0)
-    if (uAns === '' && currentQuestion.correctAnswer !== '0' && currentQuestion.correctAnswer !== 0) {
-      console.log('Empty answer rejected.');
+    if (uAns === '' && String(currentQuestion.correctAnswer) !== '' && String(currentQuestion.correctAnswer) !== '0') {
+      console.log('Empty answer submitted when correct answer is not empty or 0. Aborting.');
+      showFeedback(false, 'Please enter an answer.'); // Give feedback
       return;
     }
     try {
       const isCorrect = currentQuestion.checker(uAns, currentQuestion.correctAnswer);
+
+      // --- START: ADDED --- Store incorrect question details
+      if (!isCorrect) {
+        incorrectlyAnsweredQuestions.push({
+          questionText: currentQuestion.questionText, // Store raw question text/HTML
+          questionDiagramHTML: currentQuestion.questionDiagramHTML, // Store diagram HTML
+          correctAnswer: currentQuestion.correctAnswer, // Store the raw correct answer
+          userAnswer: uAns, // Store user's answer
+        });
+        console.log('Added incorrect question to list. Count:', incorrectlyAnsweredQuestions.length);
+      }
+      // --- END: ADDED ---
+
       updateOverallProgress(currentQuestion.categoryId, isCorrect);
       currentSessionQuestionsCompleted++;
       qCount.textContent = currentSessionQuestionsCompleted;
@@ -437,8 +487,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   function handleEnterKey(e) {
-    const qSub = document.getElementById('submit-answer'),
-      qNext = document.getElementById('next-question');
+    const qSub = getElement('submit-answer'),
+      qNext = getElement('next-question');
     if (currentView !== 'quiz-view' || !isSessionActive) return;
     if (e.key === 'Enter') {
       if (qSub && !qSub.classList.contains('hidden')) {
@@ -451,24 +501,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   function showFeedback(isCorrect, correctAnswer) {
-    const fText = document.getElementById('feedback-text'),
-      fAnim = document.getElementById('correct-animation');
+    const fText = getElement('feedback-text'),
+      fAnim = getElement('correct-animation');
     if (!fText || !fAnim) return;
     let fMsg = '';
     if (isCorrect) {
       fMsg = 'Correct!';
     } else {
       let dA = correctAnswer;
+      // Format answer for display (similar to review list formatting)
       if (typeof dA === 'number') {
-        dA = parseFloat(dA.toFixed(4));
+        dA = parseFloat(dA.toFixed(4)); // Keep reasonable precision
       } else if (typeof dA === 'string' && dA.includes('/')) {
-        dA = dA;
+        // dA is already a simplified fraction string
       } else if (dA === null || typeof dA === 'undefined') {
-        dA = '[No Answer]';
+        dA = '[Internal Error]';
       } else {
-        dA = dA.toString();
+        dA = dA.toString(); // Convert others to string
       }
-      fMsg = `Not quite! The answer was: ${dA}`;
+      const displayUserAnswer = document.getElementById('user-answer')?.value.trim();
+      if (fMsg === 'Please enter an answer.') {
+        // Don't override specific message
+      } else if (displayUserAnswer === '' && fMsg !== 'Please enter an answer.') {
+        fMsg = `Not quite! The answer was: ${dA}`;
+      } else {
+        fMsg = `Not quite! The answer was: ${dA}`;
+      }
     }
     fText.textContent = fMsg;
     fText.className = isCorrect ? 'correct' : 'incorrect';
@@ -483,8 +541,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   function clearFeedback() {
-    const fText = document.getElementById('feedback-text'),
-      fAnim = document.getElementById('correct-animation');
+    const fText = getElement('feedback-text'),
+      fAnim = getElement('correct-animation');
     if (fText) {
       fText.textContent = '';
       fText.className = '';
@@ -511,7 +569,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   function renderProgressReport() {
     console.log('Rendering progress report...');
-    const detailsDiv = document.getElementById('report-details');
+    const detailsDiv = getElement('report-details');
     const canvasCtx = progressChartCanvas;
     if (!detailsDiv) {
       console.warn("Cannot render text: Missing 'report-details'.");
@@ -569,13 +627,35 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     if (categoryIdsForChart.length === 0) {
-      chartContainer.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding-top:50px;">Complete a session for chart.</p>';
+      // Check if canvas exists before replacing innerHTML
+      if (chartContainer.querySelector('canvas')) {
+        chartContainer.querySelector('canvas').style.display = 'none'; // Hide canvas
+      }
+      if (!chartContainer.querySelector('p.no-chart-data')) {
+        // Add check for existing message
+        const noDataMsg = document.createElement('p');
+        noDataMsg.textContent = 'Complete a session for chart.';
+        noDataMsg.style.textAlign = 'center';
+        noDataMsg.style.color = 'var(--text-muted)';
+        noDataMsg.style.paddingTop = '50px';
+        noDataMsg.className = 'no-chart-data'; // Add class to identify
+        chartContainer.appendChild(noDataMsg);
+      }
       console.log('No data for chart.');
       return;
-    } else if (!chartContainer.querySelector('canvas')) {
-      chartContainer.innerHTML = '';
-      chartContainer.appendChild(canvasElementCheck);
-      console.log('Re-added canvas.');
+    } else {
+      // Remove 'no data' message if it exists
+      const noDataMsg = chartContainer.querySelector('p.no-chart-data');
+      if (noDataMsg) noDataMsg.remove();
+
+      // Ensure canvas exists and is visible
+      if (!chartContainer.querySelector('canvas')) {
+        chartContainer.innerHTML = ''; // Clear potentially wrong content
+        chartContainer.appendChild(canvasElementCheck); // Re-add canvas
+        console.log('Re-added canvas.');
+      } else {
+        chartContainer.querySelector('canvas').style.display = 'block'; // Make sure it's visible
+      }
     }
     const bodyStyles = getComputedStyle(document.body);
     const textColor = bodyStyles.getPropertyValue('--text-color');
@@ -650,8 +730,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const s = localStorage.getItem('mathPracticeProgress_Baxter');
       const p = s ? JSON.parse(s) : {};
       if (typeof p === 'object' && p !== null) {
+        // Ensure progress structure is valid
         Object.keys(p).forEach((k) => {
           if (!p[k].name && categories[k]) p[k].name = categories[k].name;
+          if (typeof p[k].attempted !== 'number') p[k].attempted = 0;
+          if (typeof p[k].correct !== 'number') p[k].correct = 0;
+          p[k].mastery = p[k].attempted > 0 ? p[k].correct / p[k].attempted : 0;
         });
         return p;
       }
@@ -686,7 +770,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function initializeTheme() {
     try {
       const pD = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
-      const sT = localStorage.getItem('theme');
+      const sT = localStorage.getItem('theme'); // Use generic theme key
       if (sT === 'dark' || (!sT && pD)) {
         document.body.classList.add('dark-mode');
         if (themeToggle) themeToggle.checked = true;
@@ -707,11 +791,42 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.remove('dark-mode');
         localStorage.setItem('theme', 'light');
       }
-      if (currentView === 'home-view') {
-        renderProgressReport();
+      // Update chart colors if visible
+      if (currentView === 'home-view' && progressChart) {
+        renderProgressReport(); // Re-render chart with new theme colors
+      }
+      // Update current SVG colors if in quiz view
+      if (currentView === 'quiz-view') {
+        const currentSVG = getElement('question-diagram', false)?.querySelector('svg');
+        if (currentSVG) applyThemeToSVG(currentSVG);
+      }
+      // Update SVG colors in review list if visible
+      if (currentView === 'session-end-view') {
+        const reviewSvgs = getElement('incorrect-list', false)?.querySelectorAll('.review-diagram svg');
+        if (reviewSvgs && reviewSvgs.length > 0) {
+          reviewSvgs.forEach((svgEl) => applyThemeToSVG(svgEl)); // Use helper
+        }
       }
     } catch (e) {
       console.error('Theme toggle error:', e);
+    }
+  }
+  // Helper function to apply theme colors to an SVG element
+  function applyThemeToSVG(svgEl) {
+    if (!svgEl) return;
+    try {
+      const bs = getComputedStyle(document.body);
+      const ct = bs.getPropertyValue('--text-color');
+      svgEl.style.stroke = ct; // Set default stroke for the SVG container
+      svgEl.querySelectorAll('text, tspan').forEach((t) => (t.style.fill = ct));
+      svgEl.querySelectorAll('line, path, rect, circle').forEach((s) => {
+        if (s.style.stroke !== 'none' && !s.getAttribute('stroke')) {
+          s.style.stroke = 'currentColor';
+        }
+      });
+      console.log('Applied theme styles to SVG.');
+    } catch (e) {
+      console.error('Error applying theme to SVG:', e);
     }
   }
 
@@ -719,7 +834,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function checkNumericAnswer(ua, ca) {
     const nu = parseFloat(ua),
       nc = parseFloat(ca);
-    return !isNaN(nu) && !isNaN(nc) && nu === nc;
+    return !isNaN(nu) && !isNaN(nc) && Math.abs(nu - nc) < 1e-9; // Use tolerance
   }
   function checkNumericAnswerTolerance(tol) {
     return function (ua, ca) {
@@ -730,36 +845,52 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
   function checkExactStringAnswer(ua, ca) {
+    // Trim extra spaces and ignore case for robustness
     const cu = ua.replace(/\s+/g, '').toLowerCase();
     const cc = (ca || '').toString().replace(/\s+/g, '').toLowerCase();
     return cu === cc;
   }
   function checkFractionAnswer(ua, ca) {
     try {
-      const cs = (ca || '').toString();
-      const cp = cs.split('/').map(Number);
-      let cv;
+      // Correct Answer Processing
+      const cs = (ca || '').toString().trim();
+      const cp = cs
+        .split('/')
+        .map((s) => s.trim())
+        .map(Number);
+      let cv; // Correct value (decimal)
       if (cp.length === 2) {
-        if (cp[1] === 0 || isNaN(cp[0]) || isNaN(cp[1])) return !1;
+        if (cp[1] === 0 || isNaN(cp[0]) || isNaN(cp[1])) return false; // Invalid fraction
         cv = cp[0] / cp[1];
       } else if (cp.length === 1) {
-        if (isNaN(cp[0])) return !1;
+        if (isNaN(cp[0])) return false; // Invalid number
         cv = cp[0];
       } else {
-        return !1;
+        return false; // Not a valid number or fraction string
       }
-      if (!ua.includes('/')) {
-        const un = parseFloat(ua);
-        if (isNaN(un)) return !1;
-        return Math.abs(un - cv) < 1e-4;
+
+      // User Answer Processing
+      const us = ua.trim();
+      if (us === '') return false; // Empty answer is incorrect
+
+      if (!us.includes('/')) {
+        // User entered a decimal or whole number
+        const un = parseFloat(us);
+        if (isNaN(un)) return false; // Not a number
+        return Math.abs(un - cv) < 1e-6; // Compare decimal values with tolerance
+      } else {
+        // User entered a fraction
+        const up = us
+          .split('/')
+          .map((s) => s.trim())
+          .map(Number);
+        if (up.length !== 2 || isNaN(up[0]) || isNaN(up[1]) || up[1] === 0) return false; // Invalid fraction format
+        const uv = up[0] / up[1]; // User value (decimal)
+        return Math.abs(uv - cv) < 1e-6; // Compare decimal values with tolerance
       }
-      const up = ua.split('/').map(Number);
-      if (up.length !== 2 || isNaN(up[0]) || isNaN(up[1]) || up[1] === 0) return !1;
-      const uv = up[0] / up[1];
-      return Math.abs(uv - cv) < 1e-4;
     } catch (e) {
       console.error('Fraction check error:', e);
-      return !1;
+      return false;
     }
   }
 
@@ -777,9 +908,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function simplifyFraction(n, d) {
     if (d === 0) return 'Undefined';
     if (n === 0) return '0';
-    const cd = gcd(n, d);
-    let num = n / cd;
-    let den = d / cd;
+    const commonDivisor = gcd(n, d);
+    let num = n / commonDivisor;
+    let den = d / commonDivisor;
     if (den < 0) {
       num = -num;
       den = -den;
@@ -791,141 +922,218 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Question Generators (Year 6 - Includes all corrected functions) ---
   // Number & Place Value
   function generatePlaceValueLarge() {
-    const p = [1000, 10000, 100000, 1000000];
-    const pv = p[getRandomInt(0, p.length - 1)];
+    const places = [
+      { power: 1000, name: 'thousands' },
+      { power: 10000, name: 'ten thousands' },
+      { power: 100000, name: 'hundred thousands' },
+      { power: 1000000, name: 'millions' },
+    ];
+    const chosenPlace = places[getRandomInt(0, places.length - 1)];
+    const pv = chosenPlace.power;
     const num = getRandomInt(1, 9) * pv + getRandomInt(0, pv - 1);
     const digit = Math.floor(num / pv) % 10;
-    const pn = pv.toLocaleString();
-    let q = `In ${num.toLocaleString()}, what is the value of the digit ${digit}?`;
-    if (pv === 1000) q = `In ${num.toLocaleString()}, what digit is in the thousands place?`;
-    else if (pv === 10000) q = `In ${num.toLocaleString()}, what digit is in the ten thousands place?`;
-    let ans = pv === 1000 || pv === 10000 ? digit.toString() : (digit * pv).toString();
-    if (q.includes('value of the digit')) {
-      ans = (digit * pv).toString();
+
+    const questionType = getRandomInt(0, 1); // 0: ask for digit, 1: ask for value
+    let questionText = '';
+    let answer = '';
+
+    if (questionType === 0) {
+      questionText = `In the number ${num.toLocaleString()}, what digit is in the ${chosenPlace.name} place?`;
+      answer = digit.toString();
     } else {
-      ans = digit.toString();
+      // Ensure the digit isn't 0 when asking for value
+      let valueDigit = digit;
+      let valueNum = num;
+      if (valueDigit === 0) {
+        // Find a non-zero digit's place value to ask about instead
+        let tempNumStr = String(num);
+        let nonZeroIndex = -1;
+        for (let i = 0; i < tempNumStr.length; i++) {
+          if (tempNumStr[i] !== '0') {
+            nonZeroIndex = i;
+            break;
+          }
+        }
+        if (nonZeroIndex !== -1) {
+          let newPower = 10 ** (tempNumStr.length - 1 - nonZeroIndex);
+          valueDigit = parseInt(tempNumStr[nonZeroIndex]);
+          questionText = `In the number ${num.toLocaleString()}, what is the value of the digit ${valueDigit}?`;
+          answer = (valueDigit * newPower).toLocaleString();
+        } else {
+          // Should not happen if num > 0
+          questionText = `In the number ${num.toLocaleString()}, what is the value of the digit 0?`;
+          answer = '0';
+        }
+      } else {
+        questionText = `In the number ${num.toLocaleString()}, what is the value of the digit ${digit}?`;
+        answer = (digit * pv).toLocaleString();
+      }
     }
-    return { question: q, answer: ans };
+
+    return { question: questionText, answer: answer.replace(/,/g, '') }; // Return value without commas for checking
   }
   function generateMultDivPowers10() {
-    const num = getRandomInt(1, 500) / (getRandomInt(0, 1) === 0 ? 1 : 10);
-    const power = 10 ** getRandomInt(1, 3);
-    const op = getRandomInt(0, 1);
-    let q = '',
-      ans = 0;
-    if (op === 0) {
-      q = `Calculate: ${num} × ${power}`;
-      ans = num * power;
+    const num = getRandomInt(1, 5000) / (getRandomInt(0, 1) === 0 ? 1 : 10); // Allow decimals
+    const power = 10 ** getRandomInt(1, 3); // 10, 100, 1000
+    const operation = getRandomInt(0, 1); // 0 for multiply, 1 for divide
+
+    let questionText = '';
+    let answer = 0;
+
+    if (operation === 0) {
+      // Multiply
+      questionText = `Calculate: ${num} × ${power}`;
+      answer = num * power;
     } else {
-      q = `Calculate: ${num} ÷ ${power}`;
-      ans = num / power;
+      // Divide
+      questionText = `Calculate: ${num} ÷ ${power}`;
+      answer = num / power;
     }
-    return { question: q, answer: parseFloat(ans.toFixed(5)).toString() };
+
+    // Format answer to avoid floating point issues for simple cases
+    let formattedAnswer;
+    if (answer === Math.floor(answer)) {
+      formattedAnswer = answer.toString();
+    } else {
+      formattedAnswer = parseFloat(answer.toFixed(5)).toString(); // Keep some precision for division results
+    }
+
+    return { question: questionText, answer: formattedAnswer, checker: checkNumericAnswerTolerance(1e-6) };
   }
   function generateAddSubLarge() {
     const num1 = getRandomInt(1000, 99999);
-    const num2 = getRandomInt(1000, num1);
-    const op = getRandomInt(0, 1);
-    let q = '',
-      ans = 0;
-    if (op === 0) {
-      q = `Calculate: ${num1.toLocaleString()} + ${num2.toLocaleString()}`;
-      ans = num1 + num2;
+    const num2 = getRandomInt(1000, num1 - 1); // Ensure num2 is smaller for subtraction
+    const operation = getRandomInt(0, 1); // 0 for addition, 1 for subtraction
+
+    let questionText = '';
+    let answer = 0;
+
+    if (operation === 0) {
+      // Addition
+      questionText = `Calculate: ${num1.toLocaleString()} + ${num2.toLocaleString()}`;
+      answer = num1 + num2;
     } else {
-      q = `Calculate: ${num1.toLocaleString()} - ${num2.toLocaleString()}`;
-      ans = num1 - num2;
+      // Subtraction
+      questionText = `Calculate: ${num1.toLocaleString()} - ${num2.toLocaleString()}`;
+      answer = num1 - num2;
     }
-    return { question: q, answer: ans.toString() };
+
+    return { question: questionText, answer: answer.toString() };
   }
   function generateMultiplicationMultiDigit() {
-    const num1 = getRandomInt(100, 999);
-    const num2 = getRandomInt(10, 99);
-    const q = `Calculate: ${num1} × ${num2}`;
-    const ans = num1 * num2;
-    return { question: q, answer: ans.toString() };
+    const num1 = getRandomInt(100, 999); // 3-digit
+    const num2 = getRandomInt(10, 99); // 2-digit
+    const questionText = `Calculate: ${num1} × ${num2}`;
+    const answer = num1 * num2;
+    return { question: questionText, answer: answer.toString() };
   }
   function generateDivisionSimple() {
-    const divisor = getRandomInt(2, 9);
-    const quotient = getRandomInt(20, 200);
-    const dividend = divisor * quotient;
-    const q = `Calculate: ${dividend} ÷ ${divisor}`;
-    const ans = quotient;
-    return { question: q, answer: ans.toString() };
+    // Ensure dividend is perfectly divisible by divisor for Year 6 level
+    const divisor = getRandomInt(2, 9); // 1-digit divisor
+    const quotient = getRandomInt(20, 200); // Result (quotient)
+    const dividend = divisor * quotient; // Calculate dividend based on desired result
+    const questionText = `Calculate: ${dividend} ÷ ${divisor}`;
+    const answer = quotient;
+    return { question: questionText, answer: answer.toString() };
   }
   function generatePrimeComposite() {
     const num = getRandomInt(2, 100);
     let isPrime = true;
-    if (num <= 1) isPrime = false;
-    else {
+
+    if (num <= 1) {
+      isPrime = false; // 1 and numbers less than 1 are not prime
+    } else {
       for (let i = 2; i * i <= num; i++) {
         if (num % i === 0) {
-          isPrime = false;
+          isPrime = false; // Found a factor, so it's composite
           break;
         }
       }
     }
-    const ans = isPrime ? 'prime' : 'composite';
-    const q = `Is the number ${num} prime or composite?`;
-    return { question: q, answer: ans };
+
+    const answer = isPrime ? 'prime' : 'composite';
+    const questionText = `Is the number ${num} prime or composite?`;
+    return { question: questionText, answer: answer };
   }
   // Fractions & Decimals
   function generateCompareFractionsRelated() {
-    const factor = getRandomInt(2, 4);
-    const d1 = getRandomInt(2, 6);
-    const d2 = d1 * factor;
-    let n1 = getRandomInt(1, d1 - 1);
-    let n2 = getRandomInt(1, d2 - 1);
-    let val1 = n1 / d1;
-    let val2 = n2 / d2;
+    const factor = getRandomInt(2, 4); // Multiplier for denominator
+    const d1 = getRandomInt(2, 6); // First denominator
+    const d2 = d1 * factor; // Second denominator (related)
+    let n1 = getRandomInt(1, d1 - 1); // Numerator 1 (less than d1)
+    let n2 = getRandomInt(1, d2 - 1); // Numerator 2 (less than d2)
+
+    const val1 = n1 / d1;
+    const val2 = n2 / d2;
+
+    // Avoid making them equal too often unless intended
     if (Math.random() < 0.7 && Math.abs(val1 - val2) < 0.001) {
-      n2 = getRandomInt(1, d2 - 1);
-      val2 = n2 / d2;
+      // If they accidentally became equal, try changing n2
+      let originalN2 = n2;
+      do {
+        n2 = getRandomInt(1, d2 - 1);
+      } while (n2 === originalN2 && d2 > 1); // Prevent infinite loop if d2 is 1 (shouldn't happen here)
     }
-    const ans = Math.abs(val1 - val2) < 0.001 ? '=' : val1 > val2 ? '>' : '<';
-    const q = `Compare the fractions: <sup>${n1}</sup>⁄<sub>${d1}</sub> and <sup>${n2}</sup>⁄<sub>${d2}</sub>. Enter >, <, or =.`;
-    return { question: q, answer: ans };
+
+    const finalVal1 = n1 / d1;
+    const finalVal2 = n2 / d2;
+
+    const answer = Math.abs(finalVal1 - finalVal2) < 0.001 ? '=' : finalVal1 > finalVal2 ? '>' : '<';
+    const questionText = `Compare the fractions: <sup>${n1}</sup>⁄<sub>${d1}</sub> and <sup>${n2}</sup>⁄<sub>${d2}</sub>. <br>Enter >, <, or =.`;
+    return { question: questionText, answer: answer };
   }
   function generateAddSubFractionsRelated() {
-    const factor = getRandomInt(2, 3);
-    const d1 = getRandomInt(2, 5);
-    const d2 = d1 * factor;
-    let n1 = getRandomInt(1, d1 - 1);
-    let n2 = getRandomInt(1, d2 - 1);
-    const op = getRandomInt(0, 1);
+    const factor = getRandomInt(2, 3); // Factor between denominators
+    const d1 = getRandomInt(2, 5); // Smaller denominator
+    const d2 = d1 * factor; // Larger denominator
+    let n1 = getRandomInt(1, d1 - 1); // Numerator for smaller denominator
+    let n2 = getRandomInt(1, d2 - 1); // Numerator for larger denominator
+
+    const operation = getRandomInt(0, 1); // 0 for addition, 1 for subtraction
+
     let commonDenom = d2;
-    let num1Converted = n1 * factor;
-    let resultNum, q;
-    if (op === 0) {
+    let num1Converted = n1 * factor; // Convert n1 to have the common denominator d2
+    let resultNum;
+    let questionText;
+
+    if (operation === 0) {
+      // Addition
       resultNum = num1Converted + n2;
-      q = `Calculate: <sup>${n1}</sup>⁄<sub>${d1}</sub> + <sup>${n2}</sup>⁄<sub>${d2}</sub>`;
+      questionText = `Calculate: <sup>${n1}</sup>⁄<sub>${d1}</sub> + <sup>${n2}</sup>⁄<sub>${d2}</sub>`;
     } else {
+      // Subtraction
+      // Ensure the result is not negative for this level
       if (num1Converted < n2) {
-        [n1, n2] = [n2, n1];
-        [d1, d2] = [d2, d1];
-        num1Converted = n1;
-        n2 = n2 * factor;
+        // Swap fractions if n1/d1 is smaller than n2/d2
+        [n1, n2] = [n2, n1]; // Swap numerators
+        [d1, d2] = [d2, d1]; // Swap denominators (d1 is now larger)
+        let tempFactor = d1 / d2; // Calculate the new factor
+        num1Converted = n1; // n1 already has the common denominator d1
+        let num2Converted = n2 * tempFactor; // Convert n2 to common denominator d1
+        resultNum = num1Converted - num2Converted;
+        commonDenom = d1; // Common denominator is now the original d2
+        questionText = `Calculate: <sup>${n1}</sup>⁄<sub>${d1}</sub> - <sup>${n2}</sup>⁄<sub>${d2}</sub>`;
       } else {
-        /* n2 remains n2 */
-      }
-      resultNum = num1Converted - n2;
-      q = `Calculate: <sup>${num1Converted / factor}</sup>⁄<sub>${d1}</sub> - <sup>${n2}</sup>⁄<sub>${d2}</sub>`;
-      if (d1 > d2) {
-        q = `Calculate: <sup>${n1}</sup>⁄<sub>${d1}</sub> - <sup>${n2 / factor}</sup>⁄<sub>${d2 / factor}</sub>`;
+        // n1/d1 is >= n2/d2, proceed normally
+        resultNum = num1Converted - n2;
+        questionText = `Calculate: <sup>${n1}</sup>⁄<sub>${d1}</sub> - <sup>${n2}</sup>⁄<sub>${d2}</sub>`;
       }
     }
-    const ans = simplifyFraction(resultNum, commonDenom);
-    q += ` <br>(Give answer as a fraction e.g. a/b or a whole number)`;
-    return { question: q, answer: ans };
+
+    const answer = simplifyFraction(resultNum, commonDenom);
+    questionText += ` <br>(Give answer as a simplified fraction e.g. a/b or a whole number)`;
+    return { question: questionText, answer: answer };
   }
   function generateDecimalMultWhole() {
-    const decimal = getRandomInt(1, 99) / 10;
+    const decimal = getRandomInt(1, 99) / 10; // e.g., 0.1 to 9.9
     const whole = getRandomInt(2, 12);
-    const ans = decimal * whole;
-    const q = `Calculate: ${decimal} × ${whole}`;
-    return { question: q, answer: ans };
+    const answer = decimal * whole;
+    const questionText = `Calculate: ${decimal} × ${whole}`;
+    // Use tolerance checker for potential floating point results
+    return { question: questionText, answer: parseFloat(answer.toFixed(5)), checker: checkNumericAnswerTolerance(1e-6) };
   }
   function generateFracDecConversionSimple() {
-    const f = [
+    const fractions = [
       { f: '1/2', d: 0.5 },
       { f: '1/4', d: 0.25 },
       { f: '3/4', d: 0.75 },
@@ -935,413 +1143,663 @@ document.addEventListener('DOMContentLoaded', () => {
       { f: '4/5', d: 0.8 },
       { f: '1/10', d: 0.1 },
       { f: '3/10', d: 0.3 },
+      { f: '7/10', d: 0.7 },
+      { f: '9/10', d: 0.9 },
+      // Maybe add 1/8 = 0.125? Let's stick to simpler ones for now.
+      // { f: '1/8', d: 0.125 }, { f: '3/8', d: 0.375 }, { f: '5/8', d: 0.625 }, { f: '7/8', d: 0.875 }
     ];
-    const c = f[getRandomInt(0, f.length - 1)];
-    const to = getRandomInt(0, 1);
-    let q,
-      ans,
-      chk = checkNumericAnswerTolerance(0.001);
-    if (to === 0) {
-      q = `Convert <sup>${c.f.split('/')[0]}</sup>⁄<sub>${c.f.split('/')[1]}</sub> to a decimal.`;
-      ans = c.d;
+    const chosen = fractions[getRandomInt(0, fractions.length - 1)];
+    const convertTo = getRandomInt(0, 1); // 0: fraction to decimal, 1: decimal to fraction
+
+    let questionText, answer, checker;
+
+    if (convertTo === 0) {
+      // Fraction to Decimal
+      const parts = chosen.f.split('/');
+      questionText = `Convert <sup>${parts[0]}</sup>⁄<sub>${parts[1]}</sub> to a decimal.`;
+      answer = chosen.d;
+      checker = checkNumericAnswerTolerance(0.001);
     } else {
-      q = `Convert ${c.d} to a simple fraction (e.g., a/b).`;
-      ans = c.f;
-      chk = checkFractionAnswer;
+      // Decimal to Fraction
+      questionText = `Convert ${chosen.d} to a simple fraction (e.g., a/b).`;
+      answer = chosen.f;
+      checker = checkFractionAnswer; // Use fraction checker
     }
-    return { question: q, answer: ans, checker: chk };
+
+    return { question: questionText, answer: answer, checker: checker };
   }
   function generatePercentageOfQuantitySimple() {
-    const p = [10, 20, 25, 50, 75];
-    const pc = p[getRandomInt(0, p.length - 1)];
-    let q;
-    if (pc === 10 || pc === 20) q = getRandomInt(2, 15) * 10;
-    else if (pc === 25 || pc === 75) q = getRandomInt(2, 10) * 4;
-    else q = getRandomInt(2, 20) * 2;
-    const ans = (pc / 100) * q;
-    return { question: `Calculate ${pc}% of ${q}`, answer: ans.toString() };
+    const percentages = [10, 20, 25, 50, 75]; // Common simple percentages
+    const chosenPercent = percentages[getRandomInt(0, percentages.length - 1)];
+    let quantity;
+
+    // Choose quantity such that the answer is likely an integer
+    if (chosenPercent === 10 || chosenPercent === 20) {
+      // Divisible by 10 or 5
+      quantity = getRandomInt(2, 15) * 10;
+    } else if (chosenPercent === 25 || chosenPercent === 75) {
+      // Divisible by 4
+      quantity = getRandomInt(2, 12) * 4;
+    } else {
+      // 50%, divisible by 2
+      quantity = getRandomInt(2, 20) * 2;
+    }
+
+    const answer = (chosenPercent / 100) * quantity;
+    const questionText = `Calculate ${chosenPercent}% of ${quantity}`;
+    return { question: questionText, answer: answer.toString() };
   }
   // Patterns & Algebra
   function generatePatternAddSub() {
     const start = getRandomInt(1, 50);
-    const diff = getRandomInt(2, 15) * (getRandomInt(0, 1) === 0 ? 1 : -1);
+    const diff = getRandomInt(2, 15) * (getRandomInt(0, 1) === 0 ? 1 : -1); // Can be add or subtract
     const terms = [start];
     for (let i = 1; i < 4; i++) {
+      // Generate first 4 terms
       terms.push(terms[i - 1] + diff);
     }
-    const ans = terms[3] + diff;
-    const q = `What is the next number in the pattern: ${terms.join(', ')}, ...?`;
-    return { question: q, answer: ans.toString() };
+    const answer = terms[3] + diff; // Calculate the 5th term
+    const questionText = `What is the next number in the pattern: ${terms.join(', ')}, ...?`;
+    return { question: questionText, answer: answer.toString() };
   }
   function generateFindRuleSimple() {
-    const type = getRandomInt(0, 2);
-    let ruleDesc = '',
-      seq = [],
-      start,
-      diff,
-      mult;
+    const type = getRandomInt(0, 2); // 0: Add, 1: Subtract, 2: Multiply
+    let ruleDescription = '';
+    let sequence = [];
+    let start, difference, multiplier;
+
     if (type === 0) {
+      // Addition
       start = getRandomInt(1, 20);
-      diff = getRandomInt(2, 9);
-      for (let i = 0; i < 4; i++) seq.push(start + i * diff);
-      ruleDesc = `add ${diff}`;
+      difference = getRandomInt(2, 9);
+      for (let i = 0; i < 4; i++) sequence.push(start + i * difference);
+      ruleDescription = `add ${difference}`;
     } else if (type === 1) {
+      // Subtraction
       start = getRandomInt(30, 60);
-      diff = getRandomInt(2, 9);
-      for (let i = 0; i < 4; i++) seq.push(start - i * diff);
-      ruleDesc = `subtract ${diff}`;
+      difference = getRandomInt(2, 9);
+      for (let i = 0; i < 4; i++) sequence.push(start - i * difference);
+      ruleDescription = `subtract ${difference}`;
     } else {
+      // Multiplication (simple)
       start = getRandomInt(2, 5);
-      mult = getRandomInt(2, 3);
-      seq.push(start);
-      for (let i = 1; i < 4; i++) seq.push(seq[i - 1] * mult);
-      ruleDesc = `multiply by ${mult}`;
+      multiplier = getRandomInt(2, 3); // Keep multiplier small
+      sequence.push(start);
+      for (let i = 1; i < 4; i++) sequence.push(sequence[i - 1] * multiplier);
+      ruleDescription = `multiply by ${multiplier}`;
     }
-    const q = `What is the rule for this pattern: ${seq.join(', ')}, ...? (e.g., 'add 5')`;
-    return { question: q, answer: ruleDesc };
+
+    const questionText = `What is the rule for this pattern: ${sequence.join(', ')}, ...? <br>(e.g., 'add 5', 'subtract 3', 'multiply by 2')`;
+    return { question: questionText, answer: ruleDescription };
   }
   function generateOrderOfOpsSimple() {
     let a = getRandomInt(2, 10),
       b = getRandomInt(2, 10),
-      c = getRandomInt(2, 10),
-      d = getRandomInt(1, 5);
-    let q = '',
-      ans = 0;
-    const type = getRandomInt(0, 3);
-    if (type === 0) {
-      q = `${a} + ${b} × ${c}`;
-      ans = a + b * c;
-    } else if (type === 1) {
-      q = `(${a} + ${b}) × ${c}`;
-      ans = (a + b) * c;
-    } else if (type === 2) {
-      a = getRandomInt(5, 12);
-      b = getRandomInt(5, 12);
-      c = getRandomInt(2, a * b - 1);
-      q = `${a} × ${b} - ${c}`;
-      ans = a * b - c;
-    } else {
-      a = getRandomInt(1, 10);
-      b = getRandomInt(2, 8);
-      c = getRandomInt(2, 8);
-      d = getRandomInt(1, a + b * c);
-      q = `${a} + ${b} × ${c} - ${d}`;
-      ans = a + b * c - d;
+      c = getRandomInt(2, 10);
+    let questionText = '',
+      answer = 0;
+    const type = getRandomInt(0, 3); // Different structures
+
+    switch (type) {
+      case 0: // a + b * c
+        questionText = `${a} + ${b} × ${c}`;
+        answer = a + b * c;
+        break;
+      case 1: // (a + b) * c
+        // Ensure a+b is reasonable
+        a = getRandomInt(1, 5);
+        b = getRandomInt(1, 5);
+        c = getRandomInt(2, 5);
+        questionText = `(${a} + ${b}) × ${c}`;
+        answer = (a + b) * c;
+        break;
+      case 2: // a * b - c
+        a = getRandomInt(5, 12);
+        b = getRandomInt(2, 10);
+        c = getRandomInt(1, a * b - 1); // Ensure positive result
+        questionText = `${a} × ${b} - ${c}`;
+        answer = a * b - c;
+        break;
+      case 3: // a + b ÷ c (ensure division is whole)
+        c = getRandomInt(2, 5);
+        b = getRandomInt(1, 10) * c; // b is a multiple of c
+        a = getRandomInt(1, 20);
+        questionText = `${a} + ${b} ÷ ${c}`;
+        answer = a + b / c;
+        break;
+      // Could add cases like a - b * c, (a - b) * c, a * (b + c) etc.
     }
-    return { question: `Calculate: ${q}`, answer: ans.toString() };
+
+    return { question: `Calculate: ${questionText}`, answer: answer.toString() };
   }
   // Measurement
   function generateConvertLength() {
-    const val = getRandomInt(1, 5000);
-    const u = [
-      { f: 'm', t: 'cm', fact: 100 },
-      { f: 'cm', t: 'm', fact: 0.01 },
-      { f: 'cm', t: 'mm', fact: 10 },
-      { f: 'mm', t: 'cm', fact: 0.1 },
-      { f: 'm', t: 'mm', fact: 1000 },
-      { f: 'mm', t: 'm', fact: 0.001 },
+    const units = [
+      { from: 'm', to: 'cm', factor: 100 },
+      { from: 'cm', to: 'm', factor: 0.01 },
+      { from: 'cm', to: 'mm', factor: 10 },
+      { from: 'mm', to: 'cm', factor: 0.1 },
+      { from: 'm', to: 'mm', factor: 1000 },
+      { from: 'mm', to: 'm', factor: 0.001 },
+      // Adding km
+      { from: 'km', to: 'm', factor: 1000 },
+      { from: 'm', to: 'km', factor: 0.001 },
     ];
-    const conv = u[getRandomInt(0, u.length - 1)];
-    let sv = val;
-    if (conv.f === 'm' && conv.t === 'mm') sv = getRandomInt(1, 5);
-    if (conv.f === 'mm' && conv.t === 'm') sv = getRandomInt(1000, 9000);
-    if (conv.f === 'mm' && conv.t === 'cm') sv = getRandomInt(10, 500);
-    if (conv.f === 'cm' && conv.t === 'm') sv = getRandomInt(100, 9000);
-    const ans = sv * conv.fact;
-    const q = `Convert ${sv}${conv.f} to ${conv.t}.`;
-    return { question: q, answer: parseFloat(ans.toFixed(5)).toString() };
+    const conversion = units[getRandomInt(0, units.length - 1)];
+    let startValue;
+
+    // Adjust start value ranges for sensibility
+    if (conversion.from === 'km') startValue = getRandomInt(1, 15);
+    else if (conversion.from === 'm' && conversion.to === 'mm') startValue = getRandomInt(1, 5);
+    else if (conversion.from === 'm' && conversion.to === 'km') startValue = getRandomInt(500, 9500);
+    else if (conversion.from === 'mm' && conversion.to === 'm') startValue = getRandomInt(1000, 9000);
+    else if (conversion.from === 'cm' && conversion.to === 'm') startValue = getRandomInt(100, 9000);
+    else startValue = getRandomInt(1, 500); // Default range
+
+    // Add occasional decimal start values
+    if (Math.random() < 0.3 && conversion.factor > 1) {
+      // More likely for m->cm, cm->mm etc.
+      startValue = getRandomInt(10, 500) / 10;
+    }
+
+    const answer = startValue * conversion.factor;
+    const questionText = `Convert ${startValue}${conversion.from} to ${conversion.to}.`;
+
+    // Use tolerance checker due to potential floating point results from division/decimals
+    return { question: questionText, answer: parseFloat(answer.toFixed(5)), checker: checkNumericAnswerTolerance(1e-6) };
   }
   function generateConvertMass() {
-    const u = [
-      { f: 'kg', t: 'g', fact: 1000 },
-      { f: 'g', t: 'kg', fact: 0.001 },
+    const units = [
+      { from: 'kg', to: 'g', factor: 1000 },
+      { from: 'g', to: 'kg', factor: 0.001 },
+      // Could add tonnes if appropriate for Year 6 curriculum
+      // { from: 't', to: 'kg', factor: 1000 },
+      // { from: 'kg', to: 't', factor: 0.001 },
     ];
-    const conv = u[getRandomInt(0, u.length - 1)];
-    let sv = 0;
-    if (conv.f === 'kg') sv = getRandomInt(1, 25) + (getRandomInt(0, 1) === 0 ? 0 : 0.5);
-    else sv = getRandomInt(500, 9500);
-    const ans = sv * conv.fact;
-    const q = `Convert ${sv}${conv.f} to ${conv.t}.`;
-    return { question: q, answer: parseFloat(ans.toFixed(5)).toString() };
+    const conversion = units[getRandomInt(0, units.length - 1)];
+    let startValue;
+
+    if (conversion.from === 'kg') {
+      // Include some decimal kgs like 1.5kg, 2.2kg
+      startValue = getRandomInt(0, 1) === 0 ? getRandomInt(1, 25) : getRandomInt(10, 250) / 10;
+    } else {
+      // g to kg
+      startValue = getRandomInt(100, 9500); // Use grams like 500g, 1250g, etc.
+    }
+
+    const answer = startValue * conversion.factor;
+    const questionText = `Convert ${startValue}${conversion.from} to ${conversion.to}.`;
+
+    return { question: questionText, answer: parseFloat(answer.toFixed(5)), checker: checkNumericAnswerTolerance(1e-6) };
   }
   function generateAreaTriangleSVG() {
-    // *** CORRECTED AND ENSURED PRESENCE ***
     let base = getRandomInt(4, 16);
     let height = getRandomInt(3, 12);
-    let ans = 0.5 * base * height;
-    const p = 35,
-      mvs = 150,
-      mD = Math.max(base, height),
-      sf = mvs / mD,
-      bs = base * sf,
-      hs = height * sf,
-      sw = bs + p * 2,
-      sh = hs + p * 2,
-      ox = p,
-      oy = sh - p;
-    const path = `M ${ox},${oy} H ${ox + bs} L ${ox},${oy - hs} Z`; // Simple right-angled triangle path
-    const dh = `<svg viewBox="0 0 ${sw} ${sh}" xmlns="http://www.w3.org/2000/svg" style="stroke-width:1.5;max-width:200px;height:auto;"><path d="${path}" fill="rgba(0,180,90,0.1)" stroke="currentColor"/><path d="M ${ox + 5} ${oy} L ${ox + 5} ${oy - 5} L ${ox} ${oy - 5}" fill="none" stroke="currentColor" style="stroke-width:1;"/><text x="${ox + bs / 2}" y="${oy + 12}" font-size="10" text-anchor="middle" fill="currentColor" stroke="none">${base} cm</text><text x="${ox - 10}" y="${oy - hs / 2}" font-size="10" text-anchor="end" dominant-baseline="middle" fill="currentColor" stroke="none">${height} cm</text></svg>`;
-    const q = `Calculate the area of the triangle shown (in cm²). <br><i>(Area = 1/2 × base × height)</i>`;
-    return { question: q, answer: ans, checker: checkNumericAnswerTolerance(0.1) };
+    let answer = 0.5 * base * height;
+
+    const padding = 35;
+    const maxViewSize = 150;
+    const maxDim = Math.max(base, height);
+    const scaleFactor = maxViewSize / maxDim;
+    const baseScaled = base * scaleFactor;
+    const heightScaled = height * scaleFactor;
+    const svgWidth = baseScaled + padding * 2;
+    const svgHeight = heightScaled + padding * 2;
+    const originX = padding;
+    const originY = svgHeight - padding; // Bottom-left corner
+
+    // Path for a standard right-angled triangle
+    const pathData = `M ${originX},${originY} L ${originX + baseScaled},${originY} L ${originX},${originY - heightScaled} Z`;
+
+    const diagramHTML = `
+          <svg viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="stroke-width:1.5;max-width:200px;height:auto;">
+              <path d="${pathData}" fill="rgba(40,167,69,0.1)" stroke="currentColor"/>
+              <!-- Right angle marker -->
+              <path d="M ${originX + 5} ${originY} L ${originX + 5} ${originY - 5} L ${originX} ${originY - 5}" fill="none" stroke="currentColor" style="stroke-width:1;"/>
+              <!-- Labels -->
+              <text x="${originX + baseScaled / 2}" y="${originY + 12}" font-size="10" text-anchor="middle" fill="currentColor" stroke="none">${base} cm</text> <!-- Base label -->
+              <text x="${originX - 10}" y="${originY - heightScaled / 2}" font-size="10" text-anchor="end" dominant-baseline="middle" fill="currentColor" stroke="none">${height} cm</text> <!-- Height label -->
+          </svg>`;
+
+    const questionText = `Calculate the area of the triangle shown (in cm²). <br><i>(Area = 1/2 × base × height)</i>`;
+    // Answer might be a decimal (e.g., 0.5 * 5 * 3 = 7.5), so use tolerance checker
+    return { question: questionText, answer: answer, diagram: diagramHTML, checker: checkNumericAnswerTolerance(0.01) };
   }
   function generateElapsedTime() {
-    // *** CORRECTED ***
-    let startHour = getRandomInt(7, 20);
-    let startMin = getRandomInt(0, 59);
+    let startHour = getRandomInt(7, 20); // Sensible start times (7am to 8pm)
+    let startMin = getRandomInt(0, 11) * 5; // Start on 5-min intervals (0, 5, ..., 55)
+
     let durationHour = getRandomInt(0, 3);
-    let durationMin = getRandomInt(5, 55);
-    if (durationHour === 0 && durationMin === 0) durationMin = 1;
+    let durationMin = getRandomInt(1, 11) * 5; // Duration also 5-min intervals (5, ..., 55)
+
+    // Ensure duration is at least 5 minutes
+    if (durationHour === 0 && durationMin === 0) durationMin = 5;
+
     let totalDurationMinutes = durationHour * 60 + durationMin;
     let totalStartMinutes = startHour * 60 + startMin;
     let totalEndMinutes = totalStartMinutes + totalDurationMinutes;
-    let endHour = Math.floor(totalEndMinutes / 60) % 24;
+
+    let endHour = Math.floor(totalEndMinutes / 60) % 24; // Handle crossing midnight if needed (though unlikely with ranges)
     let endMin = totalEndMinutes % 60;
+
+    // Format start time (12-hour am/pm)
     let startHour12 = startHour % 12;
-    if (startHour12 === 0) startHour12 = 12;
+    if (startHour12 === 0) startHour12 = 12; // Handle 12 am/pm
     const startAmpm = startHour < 12 ? 'am' : 'pm';
-    const startTimeStr = `${startHour12}:${startMin < 10 ? '0' : ''}${startMin} ${startAmpm}`;
+    const startTimeStr = `${startHour12}:${startMin < 10 ? '0' : ''}${startMin}${startAmpm}`; // Removed space
+
+    // Format end time (12-hour am/pm)
     let endHour12 = endHour % 12;
     if (endHour12 === 0) endHour12 = 12;
     const endAmpm = endHour < 12 ? 'am' : 'pm';
-    const endTimeStr = `${endHour12}:${endMin < 10 ? '0' : ''}${endMin} ${endAmpm}`;
+    const endTimeStr = `${endHour12}:${endMin < 10 ? '0' : ''}${endMin}${endAmpm}`; // Removed space
+
+    // Format answer (X hours Y minutes)
     const answerHours = Math.floor(totalDurationMinutes / 60);
     const answerMins = totalDurationMinutes % 60;
-    const answer = `${answerHours} hours ${answerMins} minutes`;
-    const question = `A movie starts at ${startTimeStr} and finishes at ${endTimeStr}. How long was the movie? (Format: X hours Y minutes)`;
-    return { question: question, answer: answer };
+    let answer = '';
+    if (answerHours > 0) {
+      answer += `${answerHours} hour${answerHours > 1 ? 's' : ''}`;
+    }
+    if (answerMins > 0) {
+      if (answerHours > 0) answer += ' '; // Add space if hours were present
+      answer += `${answerMins} minute${answerMins > 1 ? 's' : ''}`;
+    }
+    if (answer === '') answer = '0 minutes'; // Should not happen with current logic
+
+    const questionText = `A journey starts at ${startTimeStr} and finishes at ${endTimeStr}. How long did the journey take? <br>(Format: e.g., '2 hours 15 minutes', '45 minutes')`;
+
+    // Use exact string checker, requires user to format correctly
+    return { question: questionText, answer: answer, checker: checkExactStringAnswer };
   }
   function generateRead24HourTime() {
-    const h24 = getRandomInt(0, 23),
-      min = getRandomInt(0, 59);
-    const t24s = `${h24 < 10 ? '0' : ''}${h24}:${min < 10 ? '0' : ''}${min}`;
-    let h12 = h24 % 12;
-    if (h12 === 0) h12 = 12;
-    const ampm = h24 < 12 ? 'am' : 'pm';
-    const ans = `${h12}:${min < 10 ? '0' : ''}${min} ${ampm}`;
-    const q = `Convert the 24-hour time ${t24s} to 12-hour time (e.g., 3:45 pm).`;
-    return { question: q, answer: ans };
+    const hour24 = getRandomInt(0, 23);
+    const minute = getRandomInt(0, 59);
+
+    const time24Str = `${hour24 < 10 ? '0' : ''}${hour24}:${minute < 10 ? '0' : ''}${minute}`;
+
+    let hour12 = hour24 % 12;
+    if (hour12 === 0) {
+      hour12 = 12; // 00 becomes 12am, 12 stays 12pm
+    }
+    const ampm = hour24 < 12 ? 'am' : 'pm';
+
+    const answer = `${hour12}:${minute < 10 ? '0' : ''}${minute}${ampm}`; // No space before am/pm is common
+
+    const questionText = `Convert the 24-hour time ${time24Str} to 12-hour time (e.g., 3:45pm, 11:05am).`;
+    return { question: questionText, answer: answer }; // Uses default exact string checker
   }
   // Geometry
   function generateAngleTypeSVG() {
-    // *** CORRECTED ***
     const types = ['acute', 'right', 'obtuse', 'straight', 'reflex'];
-    const type = types[getRandomInt(0, types.length - 1)];
-    let angleDeg;
-    const sw = 150,
-      sh = 100,
-      cx = sw / 2,
-      cy = sh * 0.8,
-      r = 50;
-    switch (type) {
+    const chosenType = types[getRandomInt(0, types.length - 1)];
+    let angleDegrees;
+
+    const svgWidth = 150,
+      svgHeight = 120; // Adjusted height for reflex
+    const centerX = svgWidth / 2,
+      centerY = svgHeight * 0.7; // Center lower down
+    const lineRadius = 50; // Length of the angle lines
+    const arcRadius = 20; // Radius for the angle arc marker
+
+    // Define angle ranges
+    switch (chosenType) {
       case 'acute':
-        angleDeg = getRandomInt(10, 89);
+        angleDegrees = getRandomInt(10, 89);
         break;
       case 'right':
-        angleDeg = 90;
+        angleDegrees = 90;
         break;
       case 'obtuse':
-        angleDeg = getRandomInt(91, 179);
+        angleDegrees = getRandomInt(91, 179);
         break;
       case 'straight':
-        angleDeg = 180;
+        angleDegrees = 180;
         break;
       case 'reflex':
-        angleDeg = getRandomInt(181, 350);
+        angleDegrees = getRandomInt(181, 350);
         break;
       default:
-        angleDeg = 45;
+        angleDegrees = 45; // Fallback
     }
-    const angleRad = (angleDeg * Math.PI) / 180;
-    const x1 = cx - r;
-    const y1 = cy;
-    const x2 = cx + r * Math.cos(Math.PI - angleRad);
-    const y2 = cy - r * Math.sin(Math.PI - angleRad);
-    // Removed the confusing arc path
-    const diagramHTML = `<svg viewBox="0 0 ${sw} ${sh}" xmlns="http://www.w3.org/2000/svg" style="stroke-width: 1.5; max-width: 150px; height: auto;"><circle cx="${cx}" cy="${cy}" r="1.5" fill="currentColor" stroke="none"/><line x1="${x1}" y1="${y1}" x2="${cx}" y2="${cy}" stroke="currentColor"/><line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="currentColor"/>${type === 'right' ? `<path d="M ${cx + 5} ${cy} L ${cx + 5} ${cy - 5} L ${cx} ${cy - 5}" fill="none" stroke="currentColor" stroke-width="1"/>` : ''}</svg>`;
-    const question = `What type of angle is shown? (acute, right, obtuse, straight, reflex)`;
-    return { question: question, answer: type, diagram: diagramHTML };
+
+    const angleRadians = (angleDegrees * Math.PI) / 180;
+
+    // Calculate line endpoints
+    const x1 = centerX + lineRadius * Math.cos(Math.PI); // Start line pointing left
+    const y1 = centerY + lineRadius * Math.sin(Math.PI);
+    const x2 = centerX + lineRadius * Math.cos(Math.PI - angleRadians); // End line based on angle
+    const y2 = centerY + lineRadius * Math.sin(Math.PI - angleRadians);
+
+    // Arc path calculation
+    const largeArcFlag = angleDegrees <= 180 ? 0 : 1; // Use large arc for reflex angles
+    const arcEndX = centerX + arcRadius * Math.cos(Math.PI - angleRadians);
+    const arcEndY = centerY + arcRadius * Math.sin(Math.PI - angleRadians);
+    // Start arc from the horizontal line
+    const arcPath = `M ${centerX - arcRadius} ${centerY} A ${arcRadius} ${arcRadius} 0 ${largeArcFlag} 1 ${arcEndX} ${arcEndY}`;
+
+    let diagramHTML = `
+        <svg viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="stroke-width: 1.5; max-width: 150px; height: auto;">
+            <!-- Vertex point -->
+            <circle cx="${centerX}" cy="${centerY}" r="1.5" fill="currentColor" stroke="none"/>
+            <!-- Angle lines -->
+            <line x1="${centerX}" y1="${centerY}" x2="${x1}" y2="${y1}" stroke="currentColor"/>
+            <line x1="${centerX}" y1="${centerY}" x2="${x2}" y2="${y2}" stroke="currentColor"/>
+            <!-- Angle arc -->
+            <path d="${arcPath}" fill="none" stroke="var(--secondary-color)" style="stroke-width:1;"/>
+            <!-- Right angle box -->
+            ${chosenType === 'right' ? `<path d="M ${centerX + 5} ${centerY} L ${centerX + 5} ${centerY - 5} L ${centerX} ${centerY - 5}" fill="none" stroke="currentColor" style="stroke-width:1;"/>` : ''}
+        </svg>`;
+
+    const questionText = `What type of angle is shown? (Enter: acute, right, obtuse, straight, or reflex)`;
+    return { question: questionText, answer: chosenType, diagram: diagramHTML };
   }
   function generateAnglesPointLineSimpleSVG() {
-    const type = getRandomInt(0, 1);
-    let totalAngle = type === 0 ? 360 : 180;
-    let known1 = getRandomInt(40, Math.floor(totalAngle * 0.4));
-    let known2 = getRandomInt(40, Math.floor(totalAngle * 0.4));
-    let ans = totalAngle - known1 - known2;
-    if (ans < 30) {
-      known1 = Math.max(20, known1 - 20);
-      known2 = Math.max(20, known2 - 20);
-      ans = totalAngle - known1 - known2;
-    }
-    const sw = 200,
-      sh = type === 0 ? 150 : 100,
-      cx = sw / 2,
-      cy = type === 0 ? sh / 2 + 10 : sh * 0.8,
-      r = 60;
-    let dh = `<svg viewBox="0 0 ${sw} ${sh}" xmlns="http://www.w3.org/2000/svg" style="stroke-width:1.5;max-width:200px;height:auto;">`;
-    const r1 = (known1 * Math.PI) / 180,
-      r2 = (known2 * Math.PI) / 180,
-      r3 = (ans * Math.PI) / 180;
-    const x1 = cx + r * Math.cos(Math.PI),
-      y1 = cy + r * Math.sin(Math.PI);
-    const x2 = cx + r * Math.cos(Math.PI + r1),
-      y2 = cy + r * Math.sin(Math.PI + r1);
-    const x3 = cx + r * Math.cos(Math.PI + r1 + r2),
-      y3 = cy + r * Math.sin(Math.PI + r1 + r2);
-    const x4 = cx + r * Math.cos(Math.PI + r1 + r2 + r3),
-      y4 = cy + r * Math.sin(Math.PI + r1 + r2 + r3);
-    dh += `<line x1="${cx}" y1="${cy}" x2="${x1}" y2="${y1}" stroke="currentColor"/>`;
-    dh += `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="currentColor"/>`;
-    dh += `<line x1="${cx}" y1="${cy}" x2="${x3}" y2="${y3}" stroke="currentColor"/>`;
-    if (type === 1) {
-      dh += `<line x1="${cx}" y1="${cy}" x2="${cx + r}" y2="${cy}" stroke="currentColor"/>`;
+    const type = getRandomInt(0, 1); // 0 for point (360), 1 for line (180)
+    const totalAngle = type === 0 ? 360 : 180;
+    let angle1, angle2, answer;
+
+    // Generate angles ensuring they add up correctly and are reasonably sized
+    if (type === 0) {
+      // Angles around a point
+      angle1 = getRandomInt(80, 150);
+      angle2 = getRandomInt(80, 150);
+      answer = 360 - angle1 - angle2;
+      // Adjust if answer is too small or one angle dominates
+      if (answer < 30 || answer > 170) {
+        angle1 = getRandomInt(100, 130);
+        angle2 = getRandomInt(100, 130);
+        answer = 360 - angle1 - angle2;
+      }
     } else {
-      dh += `<line x1="${cx}" y1="${cy}" x2="${x4}" y2="${y4}" stroke="currentColor"/>`;
+      // Angles on a straight line
+      angle1 = getRandomInt(30, 150);
+      answer = 180 - angle1;
+      angle2 = 0; // No second known angle for simple straight line problem
     }
-    dh += `<text x="${cx - 15}" y="${cy - 10}" font-size="10" fill="currentColor">${known1}°</text>`;
-    dh += `<text x="${cx + 5}" y="${cy - 15}" font-size="10" fill="currentColor">${known2}°</text>`;
-    dh += `<text x="${cx + 15}" y="${cy + 5}" font-size="10" fill="currentColor">x°</text>`;
-    dh += `</svg>`;
-    const q = `Find the value of angle x°.`;
-    return { question: q, answer: ans.toString(), diagram: dh };
+
+    const svgWidth = 200,
+      svgHeight = 150;
+    const centerX = svgWidth / 2,
+      centerY = svgHeight / 2 + 20; // Center lower down
+    const radius = 60; // Radius for drawing lines
+    const labelRadius = radius * 0.5; // Radius for placing labels
+    const arcRadius = radius * 0.35; // Radius for drawing arcs
+
+    let diagramHTML = `<svg viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="stroke-width: 1.5; max-width: 200px; height: auto;">`;
+
+    // Draw lines radiating from the center
+    let currentRad = Math.PI; // Start from left horizontal
+    const rad1 = (angle1 * Math.PI) / 180;
+    const rad2 = (angle2 * Math.PI) / 180;
+    const radAns = (answer * Math.PI) / 180;
+
+    const p1 = { x: centerX + radius * Math.cos(currentRad), y: centerY + radius * Math.sin(currentRad) };
+    const p2 = { x: centerX + radius * Math.cos(currentRad - rad1), y: centerY + radius * Math.sin(currentRad - rad1) };
+    const p3 = type === 0 ? { x: centerX + radius * Math.cos(currentRad - rad1 - rad2), y: centerY + radius * Math.sin(currentRad - rad1 - rad2) } : null;
+    const pEnd = { x: centerX + radius * Math.cos(currentRad - rad1 - rad2 - radAns), y: centerY + radius * Math.sin(currentRad - rad1 - rad2 - radAns) }; // Should be horizontal right if correct
+
+    // Draw the lines
+    diagramHTML += `<line x1="${centerX}" y1="${centerY}" x2="${p1.x}" y2="${p1.y}" stroke="currentColor"/>`; // First line (left)
+    diagramHTML += `<line x1="${centerX}" y1="${centerY}" x2="${p2.x}" y2="${p2.y}" stroke="currentColor"/>`; // Second line
+    if (type === 0) {
+      diagramHTML += `<line x1="${centerX}" y1="${centerY}" x2="${p3.x}" y2="${p3.y}" stroke="currentColor"/>`; // Third line (only for point)
+    }
+    diagramHTML += `<line x1="${centerX}" y1="${centerY}" x2="${pEnd.x}" y2="${pEnd.y}" stroke="currentColor"/>`; // Final line (right)
+
+    // Add labels and arcs
+    const addAngleLabel = (angleDeg, startRad, angleRad, labelText) => {
+      const midRad = startRad - angleRad / 2;
+      const labelX = centerX + labelRadius * Math.cos(midRad);
+      const labelY = centerY + labelRadius * Math.sin(midRad);
+      const arcStartX = centerX + arcRadius * Math.cos(startRad);
+      const arcStartY = centerY + arcRadius * Math.sin(startRad);
+      const arcEndX = centerX + arcRadius * Math.cos(startRad - angleRad);
+      const arcEndY = centerY + arcRadius * Math.sin(startRad - angleRad);
+      const largeArcFlag = angleRad > Math.PI ? 1 : 0;
+
+      diagramHTML += `<path d="M ${arcStartX} ${arcStartY} A ${arcRadius} ${arcRadius} 0 ${largeArcFlag} 0 ${arcEndX} ${arcEndY}" fill="none" stroke="var(--secondary-color)" stroke-width="0.8"/>`;
+      diagramHTML += `<text x="${labelX}" y="${labelY}" font-size="10" text-anchor="middle" dominant-baseline="middle" fill="currentColor" stroke="none">${labelText}</text>`;
+    };
+
+    addAngleLabel(angle1, currentRad, rad1, `${angle1}°`);
+    currentRad -= rad1;
+    if (type === 0) {
+      addAngleLabel(angle2, currentRad, rad2, `${angle2}°`);
+      currentRad -= rad2;
+    }
+    addAngleLabel(answer, currentRad, radAns, 'x°');
+
+    diagramHTML += `</svg>`;
+
+    const questionText = `Find the value of angle x°.`;
+    return { question: questionText, answer: answer.toString(), diagram: diagramHTML };
   }
   function generateCoordinatesFirstQuadrant() {
-    // *** CORRECTED ***
     const x = getRandomInt(1, 10);
     const y = getRandomInt(1, 10);
-    const answer = `(${x}, ${y})`;
+    const answer = `(${x}, ${y})`; // Format expected: (x, y) including brackets and comma+space
+
     const gridSize = 10;
-    const cellSize = 20;
-    const padding = 35; // Increased padding
-    const axisLabelOffset = 18;
-    const gridLabelOffset = 6;
+    const cellSize = 22; // Slightly larger cells
+    const padding = 40; // Increased padding for labels
+    const axisLabelOffset = 20; // Distance for axis labels (x, y)
+    const gridLabelOffset = 5; // Nudge for number labels
     const svgWidth = gridSize * cellSize + padding * 2;
     const svgHeight = gridSize * cellSize + padding * 2;
     const originX = padding;
-    const originY = svgHeight - padding;
-    let diagramHTML = `<svg viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="stroke-width: 0.5; max-width: 300px; height: auto;">`; // Increased max-width
-    // Draw manual grid lines for better alignment
-    diagramHTML += `<g stroke="var(--secondary-color)" stroke-width="0.5" opacity="0.7">`; // Slightly darker grid
+    const originY = svgHeight - padding; // Bottom-left origin
+
+    let diagramHTML = `
+        <svg viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="stroke-width: 0.5; max-width: 320px; height: auto; font-family: var(--font-main);">
+        <!-- Grid lines -->
+        <g stroke="var(--border-color)" stroke-width="0.5">`; // Lighter grid lines
     for (let i = 1; i <= gridSize; i++) {
+      // Vertical lines
       diagramHTML += `<line x1="${originX + i * cellSize}" y1="${padding}" x2="${originX + i * cellSize}" y2="${originY}" />`;
+      // Horizontal lines
       diagramHTML += `<line x1="${originX}" y1="${originY - i * cellSize}" x2="${originX + gridSize * cellSize}" y2="${originY - i * cellSize}" />`;
     }
     diagramHTML += `</g>`;
-    // Axes (thicker)
-    diagramHTML += `<line x1="${originX}" y1="${padding - 5}" x2="${originX}" y2="${originY + 5}" stroke="currentColor" stroke-width="1.5"/>`; // Y axis slightly extended
-    diagramHTML += `<line x1="${originX - 5}" y1="${originY}" x2="${originX + gridSize * cellSize + 5}" y2="${originY}" stroke="currentColor" stroke-width="1.5"/>`; // X axis slightly extended
-    // Axis Labels
+
+    // Axes (slightly thicker)
+    diagramHTML += `<line x1="${originX}" y1="${padding - 10}" x2="${originX}" y2="${originY + 5}" stroke="currentColor" stroke-width="1"/>`; // Y axis
+    diagramHTML += `<line x1="${originX - 5}" y1="${originY}" x2="${originX + gridSize * cellSize + 10}" y2="${originY}" stroke="currentColor" stroke-width="1"/>`; // X axis
+
+    // Axis Labels (x and y)
     diagramHTML += `<text x="${originX + gridSize * cellSize + axisLabelOffset}" y="${originY + gridLabelOffset}" font-size="12" text-anchor="middle" fill="currentColor" stroke="none">x</text>`;
     diagramHTML += `<text x="${originX - axisLabelOffset}" y="${padding - gridLabelOffset}" font-size="12" text-anchor="middle" fill="currentColor" stroke="none">y</text>`;
-    // Grid Numbers
+
+    // Grid Numbers & Tick Marks
+    diagramHTML += `<g font-size="10" fill="currentColor" text-anchor="middle">`;
     for (let i = 1; i <= gridSize; i++) {
-      if (i % 2 === 0) {
-        // Label every 2nd tick for less clutter
-        diagramHTML += `<text x="${originX + i * cellSize}" y="${originY + axisLabelOffset}" font-size="9" text-anchor="middle" fill="currentColor" stroke="none">${i}</text>`;
-        diagramHTML += `<text x="${originX - axisLabelOffset + 8}" y="${originY - i * cellSize + 3}" font-size="9" text-anchor="end" fill="currentColor" stroke="none">${i}</text>`;
-      }
-      // Draw subtle tick marks
-      diagramHTML += `<line x1="${originX + i * cellSize}" y1="${originY}" x2="${originX + i * cellSize}" y2="${originY + 3}" stroke="currentColor" stroke-width="1"/>`;
-      diagramHTML += `<line x1="${originX}" y1="${originY - i * cellSize}" x2="${originX - 3}" y2="${originY - i * cellSize}" stroke="currentColor" stroke-width="1"/>`;
+      // X-axis numbers and ticks
+      diagramHTML += `<text x="${originX + i * cellSize}" y="${originY + axisLabelOffset - 5}" stroke="none">${i}</text>`;
+      diagramHTML += `<line x1="${originX + i * cellSize}" y1="${originY}" x2="${originX + i * cellSize}" y2="${originY + 4}" stroke="currentColor" stroke-width="0.8"/>`;
+
+      // Y-axis numbers and ticks
+      diagramHTML += `<text x="${originX - axisLabelOffset + 10}" y="${originY - i * cellSize + gridLabelOffset}" stroke="none">${i}</text>`;
+      diagramHTML += `<line x1="${originX}" y1="${originY - i * cellSize}" x2="${originX - 4}" y2="${originY - i * cellSize}" stroke="currentColor" stroke-width="0.8"/>`;
     }
-    // Point
+    diagramHTML += `<text x="${originX - axisLabelOffset + 10}" y="${originY + gridLabelOffset}" stroke="none">0</text>`; // Origin Label
+    diagramHTML += `</g>`;
+
+    // The Point 'P'
     const pointX = originX + x * cellSize;
     const pointY = originY - y * cellSize;
-    diagramHTML += `<circle cx="${pointX}" cy="${pointY}" r="4" fill="var(--primary-color)" stroke="var(--card-bg)" stroke-width="1"/>`;
-    diagramHTML += `<text x="${pointX + 7}" y="${pointY - 7}" font-size="10" font-weight="bold" fill="currentColor" stroke="none">P</text>`;
+    diagramHTML += `<circle cx="${pointX}" cy="${pointY}" r="4" fill="var(--primary-color)" stroke="var(--card-bg)" stroke-width="1"/>`; // Point circle
+    diagramHTML += `<text x="${pointX + 8}" y="${pointY - 8}" font-size="11" font-weight="bold" fill="currentColor" stroke="none">P</text>`; // Point label
+
     diagramHTML += `</svg>`;
-    const question = `What are the coordinates of point P? (Format: (x, y))`;
-    return { question: question, answer: answer, diagram: diagramHTML };
+
+    const questionText = `What are the coordinates of point P? <br>(Format: (x, y) including brackets and comma+space)`;
+    return { question: questionText, answer: answer, diagram: diagramHTML };
   }
   function generateDescribeTransformationSimple() {
-    // *** CORRECTED PADDING ***
     const types = ['translation', 'reflection', 'rotation'];
-    const ans = types[getRandomInt(0, types.length - 1)];
-    const ptsA = '20,70 40,30 60,70';
-    let ptsB = '',
-      tDesc = '';
-    const sw = 220,
-      sh = 140; // Increased viewbox size
-    switch (ans) {
+    const chosenType = types[getRandomInt(0, types.length - 1)];
+
+    // Original shape (simple triangle) points relative to origin (0,0)
+    const originalPoints = [
+      { x: 20, y: 70 },
+      { x: 40, y: 30 },
+      { x: 60, y: 70 },
+    ];
+    let transformedPoints = [];
+    let descriptionVerb = '';
+    let axisLine = ''; // For reflection
+
+    const svgWidth = 240; // Increased width
+    const svgHeight = 150; // Increased height
+
+    switch (chosenType) {
       case 'translation':
-        const tx = getRandomInt(50, 90),
-          ty = getRandomInt(-10, 10);
-        ptsB = `${20 + tx},${70 + ty} ${40 + tx},${30 + ty} ${60 + tx},${70 + ty}`;
-        tDesc = `moved`;
+        const tx = getRandomInt(70, 120); // Translate further right
+        const ty = getRandomInt(-15, 15); // Small vertical shift
+        transformedPoints = originalPoints.map((p) => ({ x: p.x + tx, y: p.y + ty }));
+        descriptionVerb = 'slid';
         break;
       case 'reflection':
-        const axis = getRandomInt(80, 120);
-        ptsB = `${axis + (axis - 20)},70 ${axis + (axis - 40)},30 ${axis + (axis - 60)},70`;
-        tDesc = `flipped`;
+        const axisX = getRandomInt(80, 100); // Reflection line X-coordinate
+        axisLine = `<line x1="${axisX}" y1="10" x2="${axisX}" y2="${svgHeight - 10}" stroke="var(--secondary-color)" stroke-dasharray="3,3" stroke-width="1"/>`;
+        transformedPoints = originalPoints.map((p) => ({ x: axisX + (axisX - p.x), y: p.y })); // Reflect horizontally
+        descriptionVerb = 'flipped';
         break;
       case 'rotation':
-        const cx = 40,
-          cy = 50;
-        ptsB = '60,70 20,50 60,30';
-        tDesc = `turned`;
+        // Simple 90 degree clockwise rotation around a point (e.g., 40, 70)
+        const pivot = { x: 40, y: 70 }; // Rotate around one vertex
+        transformedPoints = originalPoints.map((p) => {
+          let dx = p.x - pivot.x;
+          let dy = p.y - pivot.y;
+          // Clockwise 90 deg rotation: (x', y') = (y, -x) relative to pivot
+          return { x: pivot.x + dy, y: pivot.y - dx };
+        });
+        descriptionVerb = 'turned';
         break;
     }
-    const dh = `<svg viewBox="0 0 ${sw} ${sh}" xmlns="http://www.w3.org/2000/svg" style="stroke-width:1.5;max-width:220px;height:auto;"><polygon points="${ptsA}" fill="rgba(0,123,255,0.3)" stroke="currentColor"/><text x="40" y="80" font-size="10" text-anchor="middle">A</text><polygon points="${ptsB}" fill="rgba(40,167,69,0.3)" stroke="currentColor"/><text x="${ptsB.split(' ')[1].split(',')[0]}" y="${parseInt(ptsB.split(' ')[1].split(',')[1]) + 15}" font-size="10" text-anchor="middle">B</text></svg>`;
-    const q = `Shape A has been ${tDesc} to position B. What type of transformation is this? (translation, reflection, or rotation)`;
-    return { question: q, answer: ans, diagram: dh };
+
+    const formatPoints = (points) => points.map((p) => `${p.x},${p.y}`).join(' ');
+
+    const diagramHTML = `
+        <svg viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="stroke-width:1.5;max-width:${svgWidth}px;height:auto;">
+            <!-- Original Shape A -->
+            <polygon points="${formatPoints(originalPoints)}" fill="rgba(0,123,255,0.3)" stroke="currentColor"/>
+            <text x="${originalPoints[1].x}" y="${originalPoints[1].y - 8}" font-size="10" text-anchor="middle">A</text>
+
+            <!-- Transformed Shape B -->
+            <polygon points="${formatPoints(transformedPoints)}" fill="rgba(40,167,69,0.3)" stroke="currentColor"/>
+             <text x="${transformedPoints[1].x}" y="${transformedPoints[1].y - 8}" font-size="10" text-anchor="middle">B</text>
+
+             <!-- Reflection Axis (if applicable) -->
+            ${axisLine}
+        </svg>`;
+
+    const questionText = `Shape A has been ${descriptionVerb} to position B. What type of transformation is this? <br>(Enter: translation, reflection, or rotation)`;
+    return { question: questionText, answer: chosenType, diagram: diagramHTML };
   }
   // Statistics & Probability
   function generateInterpretColumnGraph() {
-    // *** CORRECTED WITH TICKS ***
-    const categories = ['Cats', 'Dogs', 'Birds', 'Fish'];
-    const catCount = getRandomInt(3, categories.length);
-    const chosenCategories = categories.slice(0, catCount);
-    const values = chosenCategories.map(() => getRandomInt(1, 12));
-    const targetCatIndex = getRandomInt(0, chosenCategories.length - 1);
+    const petCategories = ['Cats', 'Dogs', 'Birds', 'Fish', 'Rabbits', 'Hamsters'];
+    const numCategories = getRandomInt(3, 5); // Choose 3 to 5 categories
+    const chosenCategories = petCategories.slice(0, numCategories);
+    const values = chosenCategories.map(() => getRandomInt(1, 12)); // Values for each category
+
+    const targetCatIndex = getRandomInt(0, chosenCategories.length - 1); // Which category to ask about
     const answer = values[targetCatIndex];
-    const question = `The graph shows favourite pets. How many people chose ${chosenCategories[targetCatIndex]}?`;
-    const svgPadding = 35;
-    const barWidth = 25;
-    const barGap = 15;
-    const maxValue = Math.ceil(Math.max(...values, 5) / 2) * 2;
-    const scaleY = 100 / maxValue;
-    const svgWidth = catCount * (barWidth + barGap) - barGap + svgPadding * 2;
-    const svgHeight = 100 + svgPadding * 2;
+    const questionText = `The graph shows the number of pets owned by students in a class. How many ${chosenCategories[targetCatIndex].toLowerCase()} were owned?`;
+
+    const svgPadding = 40; // Increased padding
+    const barWidth = 30; // Wider bars
+    const barGap = 20; // Increased gap
+    const maxValue = Math.ceil(Math.max(...values, 5) / 2) * 2; // Determine max Y-axis value (even number)
+    const chartHeight = 150; // Fixed height for the chart area
+    const scaleY = chartHeight / maxValue; // Pixels per unit on Y-axis
+    const svgWidth = numCategories * (barWidth + barGap) - barGap + svgPadding * 2;
+    const svgHeight = chartHeight + svgPadding * 2;
     const originX = svgPadding;
-    const originY = svgHeight - svgPadding;
+    const originY = svgHeight - svgPadding; // Bottom-left origin of chart area
     const tickLength = 5;
-    let diagramHTML = `<svg viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="stroke-width: 1; max-width: 250px; height: auto;">`;
-    diagramHTML += `<line x1="${originX}" y1="${svgPadding - tickLength}" x2="${originX}" y2="${originY}" stroke="currentColor" stroke-width="1"/>`; // Y Axis line
+
+    let diagramHTML = `
+        <svg viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="stroke-width: 1; max-width: 350px; height: auto; font-family: var(--font-main);">
+        <!-- Y Axis and Ticks -->
+        <line x1="${originX}" y1="${originY - chartHeight - 10}" x2="${originX}" y2="${originY}" stroke="currentColor" stroke-width="1"/>`; // Y Axis line
     for (let i = 0; i <= maxValue; i += 2) {
+      // Y-axis ticks every 2 units
       const tickY = originY - i * scaleY;
       diagramHTML += `<line x1="${originX - tickLength}" y1="${tickY}" x2="${originX}" y2="${tickY}" stroke="currentColor" stroke-width="0.7"/>`;
-      diagramHTML += `<text x="${originX - tickLength - 4}" y="${tickY + 3}" font-size="8" text-anchor="end" fill="currentColor">${i}</text>`;
+      diagramHTML += `<text x="${originX - tickLength - 5}" y="${tickY + 3}" font-size="9" text-anchor="end" fill="currentColor" stroke="none">${i}</text>`;
     }
-    diagramHTML += `<line x1="${originX - tickLength}" y1="${originY}" x2="${originX + catCount * (barWidth + barGap)}" y2="${originY}" stroke="currentColor" stroke-width="1"/>`; // X Axis line
+    // X Axis
+    diagramHTML += `<line x1="${originX - tickLength}" y1="${originY}" x2="${originX + numCategories * (barWidth + barGap)}" y2="${originY}" stroke="currentColor" stroke-width="1"/>`; // X Axis line
+
+    // Bars and X Labels
     values.forEach((value, index) => {
       const barHeight = value * scaleY;
       const barX = originX + index * (barWidth + barGap);
       diagramHTML += `<rect x="${barX}" y="${originY - barHeight}" width="${barWidth}" height="${barHeight}" fill="var(--primary-color)" opacity="0.7"/>`;
-      diagramHTML += `<text x="${barX + barWidth / 2}" y="${originY + 15}" font-size="9" text-anchor="middle" fill="currentColor" stroke="none">${chosenCategories[index]}</text>`;
+      // Rotate labels if too many categories? For 3-5, horizontal should be fine.
+      diagramHTML += `<text x="${barX + barWidth / 2}" y="${originY + 18}" font-size="10" text-anchor="middle" fill="currentColor" stroke="none">${chosenCategories[index]}</text>`;
     });
+
     diagramHTML += `</svg>`;
-    return { question: question, answer: answer.toString(), diagram: diagramHTML };
+    return { question: questionText, answer: answer.toString(), diagram: diagramHTML };
   }
   function generateSimpleProbabilityFraction() {
-    const total = getRandomInt(8, 20);
-    const fav = getRandomInt(1, total - 1);
-    const col = ['red', 'blue', 'green', 'yellow'][getRandomInt(0, 3)];
-    const ans = simplifyFraction(fav, total);
-    const q = `A bag contains ${total} marbles. ${fav} are ${col}. What is the probability of picking a ${col} marble? <br>(Give answer as a fraction e.g. a/b)`;
-    return { question: q, answer: ans };
+    const itemTypes = ['marbles', 'counters', 'beads', 'buttons'];
+    const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange'];
+
+    const item = itemTypes[getRandomInt(0, itemTypes.length - 1)];
+    const color = colors[getRandomInt(0, colors.length - 1)];
+
+    const totalItems = getRandomInt(8, 24);
+    // Ensure favourable outcomes is less than total
+    const favourableItems = getRandomInt(1, Math.max(1, totalItems - 2));
+
+    const answer = simplifyFraction(favourableItems, totalItems);
+
+    const questionText = `A bag contains ${totalItems} ${item}. ${favourableItems} of the ${item} are ${color}. What is the probability of picking a ${color} ${item}? <br>(Give your answer as a simplified fraction, e.g., 3/4 or 1/2)`;
+    return { question: questionText, answer: answer }; // Uses fraction checker
   }
   function generateListOutcomes() {
-    // *** CORRECTED QUESTION TEXT ***
-    const items1 = ['Head', 'Tail'];
-    const items2 = ['Red', 'Blue', 'Green'];
+    const experiment1 = [
+      { name: 'coin', items: ['Head', 'Tail'] },
+      { name: 'die', items: ['1', '2', '3', '4', '5', '6'] },
+      { name: 'spinner', items: ['Red', 'Blue', 'Green'] },
+    ];
+    const experiment2 = [
+      { name: 'coin', items: ['H', 'T'] }, // Use shorter names if combining with die
+      { name: 'die', items: ['1', '2', '3', '4'] }, // 4-sided die?
+      { name: 'spinner', items: ['A', 'B', 'C', 'D'] },
+      { name: 'card suit', items: ['Heart', 'Diamond', 'Club', 'Spade'] },
+    ];
+
+    // Pick two different experiments
+    let idx1 = getRandomInt(0, experiment1.length - 1);
+    let idx2 = getRandomInt(0, experiment2.length - 1);
+    // Ensure they are somewhat different activities if possible (e.g., not coin and coin)
+    if (experiment1[idx1].name === experiment2[idx2].name && experiment1.length > 1 && experiment2.length > 1) {
+      idx2 = (idx2 + 1) % experiment2.length;
+    }
+
+    const e1 = experiment1[idx1];
+    const e2 = experiment2[idx2];
+
     let outcomes = [];
-    for (let i1 of items1) {
-      for (let i2 of items2) {
-        outcomes.push(`${i1}-${i2}`);
+    for (let item1 of e1.items) {
+      for (let item2 of e2.items) {
+        outcomes.push(`${item1}-${item2}`); // Combine with a hyphen
       }
     }
-    const answer = outcomes.join(', ');
-    const question = `A coin is flipped and a 3-colour spinner (Red, Blue, Green) is spun. List all possible outcomes, separating each with a comma and space (e.g., Head-Red, Head-Blue, ...).`;
-    return { question: question, answer: answer, checker: checkExactStringAnswer };
+
+    const answer = outcomes.join(', '); // Expected format: A-1, A-2, ..., B-1, B-2, ...
+
+    // Construct the question text dynamically
+    let questionText = `An experiment involves first using a ${e1.name} (outcomes: ${e1.items.join('/')}) and then using a ${e2.name} (outcomes: ${e2.items.join('/')}). List all possible combined outcomes.`;
+    questionText += `<br>(Separate each outcome with a comma and space. Format like: ${e1.items[0]}-${e2.items[0]}, ${e1.items[0]}-${e2.items[1]}, ...)`;
+
+    // Checker needs exact string match, case-insensitive, ignoring spaces
+    return { question: questionText, answer: answer, checker: checkExactStringAnswer };
   }
   // --- SVG Generators kept/modified ---
   function generateAreaRectangleSVG() {
@@ -1380,7 +1838,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dh = `<svg viewBox="0 0 ${sw} ${sh}" xmlns="http://www.w3.org/2000/svg" style="stroke-width:1.5;max-width:250px;height:auto;"><rect x="${rx}" y="${ry}" width="${rw}" height="${rh}" fill="rgba(0,123,255,0.1)" stroke="currentColor"/><text x="${rx + rw / 2}" y="${ry - lo}" font-size="10" text-anchor="middle" fill="currentColor" stroke="none">${l} m</text><text x="${rx - lo}" y="${ry + rh / 2}" font-size="10" text-anchor="end" dominant-baseline="middle" fill="currentColor" stroke="none">${w} m</text></svg>`;
     return { question: `Calculate the perimeter of the rectangle shown (in m).`, answer: ans.toString(), diagram: dh };
   }
-  // Remove complex shapes/advanced geometry for Year 6 focus
+  // Remove complex/advanced generators not relevant to Year 6 focus
   function generateAreaCircleSVG() {
     return null;
   }
