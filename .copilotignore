@@ -1,0 +1,4 @@
+# Ignore maths folders from Copilot suggestions
+maths-baxter/
+maths-hudson/
+biology/
