@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /maths-baxter/
+Disallow: /maths-hudson/
+Disallow: /biology/
+Disallow: /times-tables/
+
+Sitemap: https://kellock.com.au/sitemap.xml
