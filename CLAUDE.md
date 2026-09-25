@@ -21,23 +21,16 @@ There are no tests, no linting config, and no package manager.
 The repo contains two distinct areas:
 
 **Portfolio site (root):**
-- Pages: `index.html`, `about.html`, `experience.html`, `skills.html`, `contact.html`, `home.html`
-- Blog articles live in `blog/` and reference `../styles.css`
-- All portfolio pages share `styles.css` and `script.js` from the root
-- External dependencies loaded via CDN: Google Fonts (Inter), Font Awesome 6.4.0
+- Single page app: `index.html`, rendered by `support.js` (design runtime; loads React 18 and Babel standalone from unpkg) with `tech-bg.js` (animated background)
+- Views: Home, Speaking & writing (index), individual talk/article pages, About (background, experience, governance, skills, contact). Routing is hash based: `#speaking`, `#about`, `#<post-id>`; legacy `#experience`/`#contact` redirect to About
+- All content lives in the `<script type="text/x-dc">` block at the bottom of `index.html`: `POSTS`, `STATS`, `FOCUS`, `BIO`, `JOBS`, `CREDENTIALS`, `SKILLS`, `SOCIALS`. Add new talks or articles to the top of `POSTS` (body is a list of P/H/Q blocks)
+- Images: `images/portrait.jpg` (on page), `images/profile.jpg` (social preview)
+- External dependencies via CDN: Google Fonts (Inter, JetBrains Mono), Font Awesome 6.7.2, React/Babel (unpkg)
+- Content rules: the current employer is not named on the site (described as a global payroll and HR technology company); no em dashes
 
 **Self-contained mini-apps (each has its own `index.html`, `script.js`, `style.css`):**
-- `maths-baxter/` — Year 6 Australian curriculum maths practice for Baxter (timed 15-min sessions, randomised question generators per skill category)
-- `maths-hudson/` — More advanced maths practice for Hudson (algebra, geometry, statistics, composite shapes)
-- `biology/` — Multiple-choice quiz on nervous and endocrine systems
-
-These mini-apps are intentionally excluded from Copilot suggestions (`.copilotignore`) and should be treated as isolated projects with no shared code.
-
-## Key style files
-
-- `styles.css` — Active stylesheet for the portfolio site (glassmorphism / dark theme)
-- `styles-backup.css`, `styles-modern.css` — Historical backups; not in use
-- `assets/css/main.css` — Leftover from an old HTML5 UP "Dimension" template; not used by current pages
+- `maths-baxter/`, `maths-hudson/`, `biology/`, `times-tables/`
+- These mini-apps are intentionally excluded from Copilot suggestions (`.copilotignore`) and should be treated as isolated projects with no shared code.
 
 ## Deployment
 
