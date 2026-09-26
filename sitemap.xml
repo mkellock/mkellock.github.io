@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://kellock.com.au/</loc><lastmod>2026-07-15</lastmod></url>
-  <url><loc>https://kellock.com.au/writing/</loc><lastmod>2026-07-15</lastmod></url>
+  <url><loc>https://kellock.com.au/</loc><lastmod>2026-09-26</lastmod></url>
+  <url><loc>https://kellock.com.au/writing/</loc><lastmod>2026-09-26</lastmod></url>
   <url><loc>https://kellock.com.au/about/</loc></url>
+  <url><loc>https://kellock.com.au/writing/agent-that-wouldnt-take-no/</loc><lastmod>2026-09-26</lastmod></url>
+  <url><loc>https://kellock.com.au/writing/private-by-default-playbook/</loc><lastmod>2026-09-26</lastmod></url>
   <url><loc>https://kellock.com.au/writing/shift-left-vs-ai/</loc><lastmod>2026-07-15</lastmod></url>
 </urlset>

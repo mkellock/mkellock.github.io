@@ -1,10 +1,12 @@
 // Generates crawlable copies of index.html for each route, plus sitemap.xml.
 // Run after any change to index.html:  node scripts/build.mjs
-// No dependencies. Content comes from the POSTS array in index.html's x-dc script block.
+// No dependencies. Content comes from the POSTS array in index.html's x-dc script block;
+// posts with `md: true` take their body from posts/<id>.md (see scripts/markdown.mjs).
 import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
+import { markdownToHtml } from './markdown.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = 'https://kellock.com.au';
@@ -25,7 +27,7 @@ const ld = obj => '<script type="application/ld+json">\n' + JSON.stringify({ '@c
 const person = { '@type': 'Person', '@id': SITE + '/#person', name: 'Matt Kellock', url: SITE + '/' };
 const crumbs = items => ({ '@type': 'BreadcrumbList', itemListElement: items.map(([name, path], i) => ({ '@type': 'ListItem', position: i + 1, name, item: SITE + path })) });
 
-function seoHead({ title, desc, path, type = 'website', robots = 'index, follow', extra = '' }) {
+function seoHead({ title, desc, path, type = 'website', robots = 'index, follow', image = IMAGE, imageAlt = 'Portrait of Matt Kellock', extra = '' }) {
   const url = SITE + path;
   return [
     `<title>${esc(title)}</title>`,
@@ -38,16 +40,19 @@ function seoHead({ title, desc, path, type = 'website', robots = 'index, follow'
     `<meta property="og:description" content="${esc(desc)}">`,
     `<meta name="twitter:title" content="${esc(title)}">`,
     `<meta name="twitter:description" content="${esc(desc)}">`,
+    `<meta property="og:image" content="${image}">`,
+    `<meta property="og:image:alt" content="${esc(imageAlt)}">`,
+    `<meta name="twitter:image" content="${image}">`,
     extra
   ].filter(Boolean).join('\n');
 }
 
-function render({ head, jsonld = '', noscript = '' }) {
+function render({ head, jsonld = '', noscript = '', extraBody = '' }) {
   let out = src
     .replace(/<!-- seo:start -->[\s\S]*?<!-- seo:end -->/, `<!-- seo:start -->\n${head}\n<!-- seo:end -->`)
     .replace(/<!-- seo-ld:start -->[\s\S]*?<!-- seo-ld:end -->/, `<!-- seo-ld:start -->${jsonld ? '\n' + jsonld + '\n' : ''}<!-- seo-ld:end -->`)
     .replace(/^<!DOCTYPE html>\n/i, `<!DOCTYPE html>\n${MARK}\n`);
-  if (noscript) out = out.replace('<body>\n', `<body>\n<noscript>\n${noscript}\n</noscript>\n`);
+  if (noscript || extraBody) out = out.replace('<body>\n', `<body>\n${noscript ? `<noscript>\n${noscript}\n</noscript>\n` : ''}${extraBody}`);
   return out;
 }
 
@@ -82,11 +87,23 @@ write('writing/index.html', render({
 
 // One page per talk or article
 const postDirs = new Set(POSTS.map(p => p.id));
+const links = p => (p.links || []).length ? `<h2>Elsewhere</h2>\n<ul>\n${p.links.map(l => `<li><a href="${esc(l.href)}">${esc(l.label)}</a> (${esc(l.source)})</li>`).join('\n')}\n</ul>` : '';
 for (const p of POSTS) {
   const path = `/writing/${p.id}/`;
+  const image = p.image ? SITE + p.image : IMAGE;
+  let bodyHtml, words;
+  if (p.md) {
+    ({ html: bodyHtml, words } = markdownToHtml(readFileSync(join(ROOT, 'posts', p.id + '.md'), 'utf8'), p.id));
+    // Fragment the app fetches when the article is opened from another page.
+    write(`writing/${p.id}/body.html`, bodyHtml + '\n');
+  } else {
+    bodyHtml = p.body.map(block).join('\n');
+  }
+  const header = `${nav}\n${p.md ? '' : '<article>\n'}<p>${esc(p.type)} · <time datetime="${p.dt}">${esc(p.date)}</time>${p.venue ? ' · ' + esc(p.venue) : ''}</p>\n<h1>${esc(p.title)}</h1>\n<p>${esc(p.dek)}</p>`;
   write(`writing/${p.id}/index.html`, render({
     head: seoHead({
       title: p.title + ' · Matt Kellock', desc: p.dek, path, type: 'article',
+      ...(p.image ? { image, imageAlt: p.imageAlt || p.title } : {}),
       extra: [
         `<meta property="article:published_time" content="${p.dt}">`,
         `<meta property="article:author" content="${SITE}/about/">`,
@@ -97,14 +114,19 @@ for (const p of POSTS) {
       '@graph': [
         {
           '@type': 'Article', headline: p.title, description: p.dek, datePublished: p.dt, dateModified: p.updated || p.dt,
-          inLanguage: 'en-AU', image: IMAGE, url: SITE + path, mainEntityOfPage: SITE + path,
+          inLanguage: 'en-AU', image, url: SITE + path, mainEntityOfPage: SITE + path,
           articleSection: p.tag, genre: p.type, author: person, publisher: person,
+          ...(words ? { wordCount: words } : {}),
+          ...(p.links && p.links.length ? { citation: p.links.map(l => l.href) } : {}),
           ...(p.venue ? { locationCreated: { '@type': 'Place', name: p.venue } } : {})
         },
         crumbs([['Home', '/'], ['Talks & writing', '/writing/'], [p.title, path]])
       ]
     }),
-    noscript: `${nav}\n<article>\n<p>${esc(p.type)} · <time datetime="${p.dt}">${esc(p.date)}</time> · ${esc(p.venue)}</p>\n<h1>${esc(p.title)}</h1>\n<p>${esc(p.dek)}</p>\n${p.body.map(block).join('\n')}\n</article>`
+    // Markdown bodies get their own noscript: crawlers without JS read it, and the app reads
+    // its text on first load instead of fetching body.html.
+    noscript: p.md ? header : `${header}\n${bodyHtml}\n${links(p)}\n</article>`,
+    extraBody: p.md ? `<noscript id="mk-body-${p.id}">\n${bodyHtml}\n</noscript>\n${links(p) ? `<noscript>\n${links(p)}\n</noscript>\n` : ''}` : ''
   }));
 }
 
