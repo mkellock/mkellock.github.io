@@ -2,12 +2,13 @@
 // ## / ### headings, paragraphs, > callouts (nested), - and 1. lists, pipe tables,
 // standalone images (as figures), ---, **bold**, *italic*, `code`, [links](url),
 // bare URLs, and footnotes ([^n] references with [^n]: definitions).
-// idPrefix keeps footnote and heading ids unique per post.
+// idPrefix keeps footnote and heading ids unique per post. opts.lightSrc(src) may return a
+// light-theme variant of a figure image; both are emitted and CSS shows the one for the theme.
 
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const slug = s => s.toLowerCase().replace(/<[^>]+>/g, '').replace(/&[a-z]+;/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-export function markdownToHtml(md, idPrefix) {
+export function markdownToHtml(md, idPrefix, opts = {}) {
   const notes = new Map();
   const refCount = new Map();
 
@@ -81,7 +82,9 @@ export function markdownToHtml(md, idPrefix) {
         out.push('<ol class="mk-refs">' + defs.map(([n, t]) =>
           `<li id="${idPrefix}-fn-${n}" value="${esc(n)}">${inline(t)} <a href="#${idPrefix}-ref-${n}" class="mk-back" aria-label="Back to reference ${n} in the text">↩</a></li>`).join('') + '</ol>');
       } else if ((m = line.match(/^!\[(.*)\]\((\S+)\)\s*$/))) {
-        out.push(`<figure><img src="${m[2]}" alt="${esc(m[1])}" loading="lazy"></figure>`);
+        const light = opts.lightSrc && opts.lightSrc(m[2]);
+        const img = (src, cls) => `<img${cls ? ` class="${cls}"` : ''} src="${src}" alt="${esc(m[1])}" loading="lazy">`;
+        out.push(`<figure>${light ? img(m[2], 'mk-img-dark') + img(light, 'mk-img-light') : img(m[2])}</figure>`);
         i++;
       } else {
         const para = [];

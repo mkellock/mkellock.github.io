@@ -15,9 +15,9 @@
 <meta property="og:description" content="Public by design, private by default: what the Medicare portal incident teaches about AI agents.">
 <meta name="twitter:title" content="The Agent That Wouldn't Take No for an Answer · Matt Kellock">
 <meta name="twitter:description" content="Public by design, private by default: what the Medicare portal incident teaches about AI agents.">
-<meta property="og:image" content="https://kellock.com.au/images/writing/public-private-planes.png">
+<meta property="og:image" content="https://kellock.com.au/images/writing/public-private-planes-v2.png">
 <meta property="og:image:alt" content="Before and after diagram: separating a public portal from private systems and data">
-<meta name="twitter:image" content="https://kellock.com.au/images/writing/public-private-planes.png">
+<meta name="twitter:image" content="https://kellock.com.au/images/writing/public-private-planes-v2.png">
 <meta property="article:published_time" content="2026-09-26">
 <meta property="article:author" content="https://kellock.com.au/about/">
 <meta property="article:section" content="Security">
@@ -83,7 +83,7 @@
       "datePublished": "2026-09-26",
       "dateModified": "2026-09-26",
       "inLanguage": "en-AU",
-      "image": "https://kellock.com.au/images/writing/public-private-planes.png",
+      "image": "https://kellock.com.au/images/writing/public-private-planes-v2.png",
       "url": "https://kellock.com.au/writing/agent-that-wouldnt-take-no/",
       "mainEntityOfPage": "https://kellock.com.au/writing/agent-that-wouldnt-take-no/",
       "articleSection": "Security",
@@ -182,7 +182,7 @@ heap.load("2371692256");
 <p>The portal existed to publish statistics to anyone who wanted them, so hiding it behind a VPN would have defeated the point. The principle I'd apply instead:</p>
 <blockquote><p><strong>Public services should expose only public data, from a tier that can't read or write anything else. Everything else should be private by default. Every layer still needs authentication, authorisation, patching, monitoring and segmentation.</strong></p></blockquote>
 <p>Non-public data and internal servers belong where the public tier has no route and no credentials to reach them. The Medicare portal let users customise the content and format of their reports,<sup class="fn"><a href="#agent-that-wouldnt-take-no-fn-16" id="agent-that-wouldnt-take-no-ref-16" aria-label="Reference 16">16</a></sup> so this can't just mean publishing static files. A portal like that can still run live queries, as long as it runs them against a read-only store that holds only released data, kept in its own plane and fed by a one-way push from inside.</p>
-<figure><img src="/images/writing/public-private-planes.svg" alt="Before: the public portal reads non-public data and can write to an internal server. After: the portal only queries a store of released data, internal systems push releases to it one way, and there is no route from the portal into the private plane." loading="lazy"></figure>
+<figure><img class="mk-img-dark" src="/images/writing/public-private-planes-v2.png" alt="Before: the public portal reads non-public data and can write to an internal server. After: the portal only queries a store of released data, internal systems push releases to it one way, and there is no route from the portal into the private plane." loading="lazy"><img class="mk-img-light" src="/images/writing/public-private-planes-v2-light.png" alt="Before: the public portal reads non-public data and can write to an internal server. After: the portal only queries a store of released data, internal systems push releases to it one way, and there is no route from the portal into the private plane." loading="lazy"></figure>
 <p>The government's own fix follows the same logic. The portal's public data is moving to data.gov.au, and Gallagher has directed Services Australia to move data off its other legacy public-facing websites, or decommission them where appropriate.<sup class="fn"><a href="#agent-that-wouldnt-take-no-fn-2" aria-label="Reference 2">2</a></sup></p>
 <h2 id="agent-that-wouldnt-take-no-why-reachability-still-matters">Why reachability still matters</h2>
 <p>A service doesn't become private because it has a login page, an unadvertised hostname or an unpredictable URL. Certificate-transparency logs publicly record TLS certificates as they're issued, and anyone can watch them,<sup class="fn"><a href="#agent-that-wouldnt-take-no-fn-17" id="agent-that-wouldnt-take-no-ref-17" aria-label="Reference 17">17</a></sup> while DNS, cloud address ranges and search engines give away plenty more. Obscurity may delay discovery, but it doesn't control access.</p>
@@ -241,8 +241,10 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
 .mk-md li::marker{color:var(--fg-accent)}
 .mk-md blockquote{background:var(--bg-alt);border-left:3px solid #ffe600;padding:20px 24px}
 .mk-md blockquote>*+*{margin-top:14px}
-.mk-md figure{margin:40px 0;background:#fff;border:1px solid var(--border-strong)}
+.mk-md figure{margin:40px 0;border:1px solid var(--border-strong)}
 .mk-md figure img{display:block;width:100%;height:auto}
+.mk-md figure .mk-img-light,[data-theme="light"] .mk-md figure .mk-img-dark{display:none}
+[data-theme="light"] .mk-md figure .mk-img-light{display:block}
 .mk-md code{font-family:'JetBrains Mono',monospace;font-size:0.88em}
 .mk-md sup.fn{font-size:0.68em;line-height:0;margin-left:1px}
 .mk-md sup.fn a{font-family:'JetBrains Mono',monospace;font-weight:700;text-decoration:none;padding:0 2px}
@@ -574,7 +576,7 @@ const POSTS = [
     id: 'agent-that-wouldnt-take-no', type: 'Article', tag: 'Security', date: '26 Sep 2026', dt: '2026-09-26', md: true,
     title: "The Agent That Wouldn't Take No for an Answer",
     dek: 'Public by design, private by default: what the Medicare portal incident teaches about AI agents.',
-    image: '/images/writing/public-private-planes.png', imageAlt: 'Before and after diagram: separating a public portal from private systems and data'
+    image: '/images/writing/public-private-planes-v2.png', imageAlt: 'Before and after diagram: separating a public portal from private systems and data'
   },
   {
     id: 'private-by-default-playbook', type: 'Article', tag: 'Security', date: '26 Sep 2026', dt: '2026-09-26', md: true,

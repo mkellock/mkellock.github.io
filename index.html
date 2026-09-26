@@ -104,8 +104,10 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
 .mk-md li::marker{color:var(--fg-accent)}
 .mk-md blockquote{background:var(--bg-alt);border-left:3px solid #ffe600;padding:20px 24px}
 .mk-md blockquote>*+*{margin-top:14px}
-.mk-md figure{margin:40px 0;background:#fff;border:1px solid var(--border-strong)}
+.mk-md figure{margin:40px 0;border:1px solid var(--border-strong)}
 .mk-md figure img{display:block;width:100%;height:auto}
+.mk-md figure .mk-img-light,[data-theme="light"] .mk-md figure .mk-img-dark{display:none}
+[data-theme="light"] .mk-md figure .mk-img-light{display:block}
 .mk-md code{font-family:'JetBrains Mono',monospace;font-size:0.88em}
 .mk-md sup.fn{font-size:0.68em;line-height:0;margin-left:1px}
 .mk-md sup.fn a{font-family:'JetBrains Mono',monospace;font-weight:700;text-decoration:none;padding:0 2px}
@@ -437,7 +439,7 @@ const POSTS = [
     id: 'agent-that-wouldnt-take-no', type: 'Article', tag: 'Security', date: '26 Sep 2026', dt: '2026-09-26', md: true,
     title: "The Agent That Wouldn't Take No for an Answer",
     dek: 'Public by design, private by default: what the Medicare portal incident teaches about AI agents.',
-    image: '/images/writing/public-private-planes.png', imageAlt: 'Before and after diagram: separating a public portal from private systems and data'
+    image: '/images/writing/public-private-planes-v2.png', imageAlt: 'Before and after diagram: separating a public portal from private systems and data'
   },
   {
     id: 'private-by-default-playbook', type: 'Article', tag: 'Security', date: '26 Sep 2026', dt: '2026-09-26', md: true,

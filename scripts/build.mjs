@@ -85,6 +85,12 @@ write('writing/index.html', render({
   noscript: `${nav}\n<h1>Talks &amp; writing</h1>\n<ul>\n${listing}\n</ul>`
 }));
 
+// Figure images with a sibling "<name>-light.<ext>" get a light-theme variant.
+const lightSrc = src => {
+  const light = src.replace(/(\.\w+)$/, '-light$1');
+  return src.startsWith('/') && existsSync(join(ROOT, light)) ? light : null;
+};
+
 // One page per talk or article
 const postDirs = new Set(POSTS.map(p => p.id));
 const links = p => (p.links || []).length ? `<h2>Elsewhere</h2>\n<ul>\n${p.links.map(l => `<li><a href="${esc(l.href)}">${esc(l.label)}</a> (${esc(l.source)})</li>`).join('\n')}\n</ul>` : '';
@@ -93,7 +99,7 @@ for (const p of POSTS) {
   const image = p.image ? SITE + p.image : IMAGE;
   let bodyHtml, words;
   if (p.md) {
-    ({ html: bodyHtml, words } = markdownToHtml(readFileSync(join(ROOT, 'posts', p.id + '.md'), 'utf8'), p.id));
+    ({ html: bodyHtml, words } = markdownToHtml(readFileSync(join(ROOT, 'posts', p.id + '.md'), 'utf8'), p.id, { lightSrc }));
     // Fragment the app fetches when the article is opened from another page.
     write(`writing/${p.id}/body.html`, bodyHtml + '\n');
   } else {

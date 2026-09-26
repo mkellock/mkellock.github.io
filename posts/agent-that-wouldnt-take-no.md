@@ -77,7 +77,7 @@ The portal existed to publish statistics to anyone who wanted them, so hiding it
 
 Non-public data and internal servers belong where the public tier has no route and no credentials to reach them. The Medicare portal let users customise the content and format of their reports,[^16] so this can't just mean publishing static files. A portal like that can still run live queries, as long as it runs them against a read-only store that holds only released data, kept in its own plane and fed by a one-way push from inside.
 
-![Before: the public portal reads non-public data and can write to an internal server. After: the portal only queries a store of released data, internal systems push releases to it one way, and there is no route from the portal into the private plane.](/images/writing/public-private-planes.svg)
+![Before: the public portal reads non-public data and can write to an internal server. After: the portal only queries a store of released data, internal systems push releases to it one way, and there is no route from the portal into the private plane.](/images/writing/public-private-planes-v2.png)
 
 The government's own fix follows the same logic. The portal's public data is moving to data.gov.au, and Gallagher has directed Services Australia to move data off its other legacy public-facing websites, or decommission them where appropriate.[^2]
 
