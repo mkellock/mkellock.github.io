@@ -143,7 +143,7 @@ The build generates every per-post head tag from the `POSTS` fields: title, desc
 
 ### Known site limits (fix in code, not per article)
 - No figure captions, `<abbr>`, fenced code blocks, nested lists, multi-tag or keywords support in posts.
-- GitHub Pages lets browsers cache assets for about 10 minutes, so after a deploy a changed `tech-bg.js` or `support.js` may take that long to reach returning visitors.
+- Caching (Cloudflare in front of GitHub Pages): HTML, `body.html` and `feed.xml` are cached for 10 minutes, but scripts and images for 4 hours (`max-age=14400`). A changed `tech-bg.js` or `support.js` can take up to 4 hours to reach returning visitors, and a changed image needs a new filename (as the share cards already do).
 - `setTitle()` rewrites `og:title` in the live DOM with the " · Matt Kellock" suffix; check share tags in the generated files.
 
 ## Deployment
