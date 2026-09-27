@@ -15,6 +15,9 @@ export function markdownToHtml(md, idPrefix, opts = {}) {
   function inline(text) {
     const keep = [];
     const stash = html => `\u0000${keep.push(html) - 1}\u0000`;
+    // Stashed HTML can itself hold placeholders (e.g. `code` inside link text), so restore until none remain.
+    const unstash = t => { for (let prev; prev !== t;) { prev = t; t = t.replace(/\u0000(\d+)\u0000/g, (_, i) => keep[+i]); } return t; };
+    const plain = t => unstash(t).replace(/<[^>]*>/g, '');
     let s = esc(text);
     s = s.replace(/`([^`]+)`/g, (_, c) => stash(`<code>${c}</code>`));
     s = s.replace(/\[\^([^\]]+)\]/g, (_, n) => {
@@ -22,12 +25,15 @@ export function markdownToHtml(md, idPrefix, opts = {}) {
       refCount.set(n, k);
       return stash(`<sup class="fn"><a href="#${idPrefix}-fn-${n}"${k === 1 ? ` id="${idPrefix}-ref-${n}"` : ''} aria-label="Reference ${n}">${n}</a></sup>`);
     });
-    s = s.replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, (_, alt, src) => stash(`<img src="${src}" alt="${alt}" loading="lazy">`));
-    s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_, t, href) => stash(`<a href="${href}">${t}</a>`));
-    s = s.replace(/https?:\/\/[^\s<]+[^\s<.,;:)]/g, url => stash(`<a href="${url}">${url.replace(/^https?:\/\//, '')}</a>`));
+    s = s.replace(/!\[([^\]]*)\]\(([^)\s\u0000]+)\)/g, (_, alt, src) => stash(`<img src="${src}" alt="${plain(alt)}" loading="lazy">`));
+    // Links can't nest, so anchors inside link text (e.g. a footnote ref) become spans, keeping any id.
+    const unlink = h => h.replace(/<a\b([^>]*)>/g, (_, attrs) => { const id = attrs.match(/\sid="([^"]*)"/); return id ? `<span id="${id[1]}">` : '<span>'; }).replace(/<\/a>/g, '</span>');
+    s = s.replace(/\[([^\]]+)\]\(([^)\s\u0000]+)\)/g, (_, t, href) => stash(`<a href="${href}">${unlink(unstash(t))}</a>`));
+    // Placeholders (\u0000n\u0000) end a bare URL, so a URL followed by a footnote, code or link stays intact.
+    s = s.replace(/https?:\/\/[^\s<\u0000]+[^\s<.,;:)\u0000]/g, url => stash(`<a href="${url}">${url.replace(/^https?:\/\//, '')}</a>`));
     s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     s = s.replace(/(^|[^*\w])\*([^*\s][^*]*?)\*(?!\w)/g, '$1<em>$2</em>');
-    return s.replace(/\u0000(\d+)\u0000/g, (_, i) => keep[+i]);
+    return unstash(s);
   }
 
   function blocks(src) {
@@ -69,8 +75,14 @@ export function markdownToHtml(md, idPrefix, opts = {}) {
         while (i < lines.length && /^\|/.test(lines[i])) rows.push(lines[i++]);
         const cells = r => r.trim().replace(/^\||\|$/g, '').split('|').map(c => c.trim());
         const [head, , ...body] = rows;
-        out.push('<div class="mk-table"><table><thead><tr>' + cells(head).map(c => `<th scope="col">${inline(c)}</th>`).join('')
-          + '</tr></thead><tbody>' + body.map(r => '<tr>' + cells(r).map((c, j) => j === 0 ? `<th scope="row">${inline(c)}</th>` : `<td>${inline(c)}</td>`).join('') + '</tr>').join('')
+        const heads = cells(head).map(c => inline(c));
+        // Plain-text column names for phones: drop footnote markers, keep image alt text.
+        const labels = heads.map(h => h.replace(/<sup class="fn">.*?<\/sup>/g, '').replace(/<img\b[^>]*\balt="([^"]*)"[^>]*>/g, '$1').replace(/<[^>]*>/g, '').trim());
+        // Explicit roles keep table semantics when phones restyle the cells as blocks; data-label names each cell there.
+        out.push('<div class="mk-table"><table role="table"><thead role="rowgroup"><tr role="row">' + heads.map(h => `<th scope="col" role="columnheader">${h}</th>`).join('')
+          + '</tr></thead><tbody role="rowgroup">' + body.map(r => '<tr role="row">' + cells(r).map((c, j) => j === 0
+            ? `<th scope="row" role="rowheader">${inline(c)}</th>`
+            : `<td role="cell"${labels[j] ? ` data-label="${labels[j]}"` : ''}>${inline(c)}</td>`).join('') + '</tr>').join('')
           + '</tbody></table></div>');
       } else if (/^\[\^[^\]]+\]:/.test(line)) {
         const defs = [];
@@ -95,6 +107,7 @@ export function markdownToHtml(md, idPrefix, opts = {}) {
     return out.join('\n');
   }
 
+  md = md.replace(/\u0000/g, ''); // NUL is the converter's placeholder delimiter
   const html = blocks(md);
   const words = md.replace(/\[\^[^\]]+\]:.*$/gm, '').replace(/[#>*|`[\]()]/g, ' ').split(/\s+/).filter(Boolean).length;
   return { html, words };

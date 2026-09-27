@@ -43,7 +43,8 @@
     set paused(v) { this._paused = v === true || v === 'true'; }
     get paused() { return !!this._paused; }
     set motif(v) { this._motif = v || 'all'; this.redraw(); }
-    redraw() { if (this.ctx && this.reduced) this.frame(performance.now()); }
+    // Draw a still frame whenever the loop isn't drawing (reduced motion or paused), e.g. after a theme change.
+    redraw() { if (this.ctx && (this.reduced || this._paused)) this.frame(performance.now()); }
     get motif() { return this._motif; }
     attributeChangedCallback(n, o, v) { this[n] = v; }
     connectedCallback() {
@@ -53,7 +54,10 @@
       this.canvas.style.cssText = 'width:100%;height:100%;display:block;filter:blur(1.2px)';
       this.appendChild(this.canvas);
       this.ctx = this.canvas.getContext('2d');
-      this.reduced = this.getAttribute('respect-reduced-motion') === 'true' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // The page runtime lower-cases attribute names, so accept both spellings.
+      const optIn = ['respect-reduced-motion', 'respectreducedmotion'].some(a => this.getAttribute(a) === 'true');
+      this.motionQuery = optIn && window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+      this.reduced = !!(this.motionQuery && this.motionQuery.matches);
       this.onResize = () => this.resize();
       this.onMove = e => { this.target = [e.clientX / innerWidth - 0.5, e.clientY / innerHeight - 0.5]; };
       addEventListener('resize', this.onResize);
@@ -61,16 +65,26 @@
       this.build(); this.resize();
       this.t0 = performance.now();
       this.time = 0; this.last = performance.now();
-      const loop = now => { const dt = Math.min(0.1, (now - this.last) / 1000); this.last = now; if (!this._paused) { this.time += dt; this.frame(now); } if (!this.reduced) this.raf = requestAnimationFrame(loop); };
-      this.raf = requestAnimationFrame(loop);
+      this.loop = now => { const dt = Math.min(0.1, (now - this.last) / 1000); this.last = now; if (!this._paused) { this.time += dt; this.frame(now); } if (!this.reduced) this.raf = requestAnimationFrame(this.loop); };
+      this.raf = requestAnimationFrame(this.loop);
+      // Follow the reduced-motion setting live: a static frame when reduced, the animation otherwise.
+      if (this.motionQuery) {
+        this.onMotion = e => {
+          this.reduced = e.matches;
+          cancelAnimationFrame(this.raf);
+          if (this.reduced) this.frame(performance.now());
+          else { this.last = performance.now(); this.raf = requestAnimationFrame(this.loop); }
+        };
+        this.motionQuery.addEventListener('change', this.onMotion);
+      }
     }
-    disconnectedCallback() { cancelAnimationFrame(this.raf); removeEventListener('resize', this.onResize); removeEventListener('pointermove', this.onMove); }
+    disconnectedCallback() { cancelAnimationFrame(this.raf); removeEventListener('resize', this.onResize); removeEventListener('pointermove', this.onMove); if (this.motionQuery) this.motionQuery.removeEventListener('change', this.onMotion); }
     resize() {
       const dpr = Math.min(devicePixelRatio || 1, 2);
       this.w = this.clientWidth || innerWidth; this.h = this.clientHeight || innerHeight;
       this.canvas.width = this.w * dpr; this.canvas.height = this.h * dpr;
       this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      if (this.reduced) this.frame(performance.now());
+      if (this.reduced || this._paused) this.frame(performance.now());
     }
     build() {
       const r = rand(42), k = this._intensity / 10;

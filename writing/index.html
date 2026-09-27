@@ -37,6 +37,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="Matt Kellock: Talks &amp; writing" href="/feed.xml">
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+<noscript><style>x-dc{display:none!important}html body{color:#f0f0f0;background:#0f0f0f;font:18px/1.65 Inter,system-ui,sans-serif;max-width:46em;margin:0 auto;padding:24px 20px}noscript{overflow-wrap:break-word}noscript a{color:#ffe600;text-decoration:underline;overflow-wrap:anywhere}noscript h1{font-size:2.2em;line-height:1.15;margin:.6em 0 .4em}noscript h2{font-size:1.35em;line-height:1.3;margin:1.4em 0 .5em}noscript p,noscript ul,noscript ol,noscript blockquote,noscript figure,noscript table{margin:0 0 1em}noscript ul,noscript ol{padding-left:1.4em}noscript blockquote{border-left:3px solid #ffe600;padding-left:1em}noscript nav{margin-bottom:1.5em}noscript img{max-width:100%;height:auto}noscript img.mk-img-light{display:none}noscript table{border-collapse:collapse}noscript th,noscript td{border:1px solid #6a6a6a;padding:.4em .6em;text-align:left;vertical-align:top}</style></noscript>
 <meta name="cf-2fa-verify" content="flhwq9ls3jrq1m8w">
 <meta name="cf-2fa-verify" content="y3cse5cblh1l0xiy">
 <script type="application/ld+json">
@@ -153,8 +154,9 @@ gtag('config', 'G-1Q0FD5LT9M');
 <script src="/tech-bg.js"></script>
 </head>
 <body>
+<!-- noscript:start -->
 <noscript>
-<nav><a href="/">Matt Kellock</a> · <a href="/writing/">Writing</a> · <a href="/about/">About</a></nav>
+<nav><a href="/">Matt Kellock</a> · <a href="/writing/">Writing</a> · <a href="/about/">About</a> · <a href="/feed.xml">RSS</a></nav>
 <h1>Talks &amp; writing</h1>
 <ul>
 <li><a href="/writing/agent-that-wouldnt-take-no/">The Agent That Wouldn't Take No for an Answer</a> (Article, <time datetime="2026-09-26">26 Sep 2026</time>): Public by design, private by default: what the Medicare portal incident teaches about AI agents.</li>
@@ -163,6 +165,7 @@ gtag('config', 'G-1Q0FD5LT9M');
 </ul>
 <p><a href="/feed.xml">RSS feed</a></p>
 </noscript>
+<!-- noscript:end -->
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -170,8 +173,10 @@ gtag('config', 'G-1Q0FD5LT9M');
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+[data-theme="dark"]{color-scheme:dark}[data-theme="light"]{color-scheme:light}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important}}
+main h1:focus,#main:focus,.mk-md [tabindex="-1"]:focus{outline:none;box-shadow:none}
 :root,[data-theme="dark"]{--bg:#0f0f0f;--bg-alt:#141414;--bg-raised:#1a1a1a;--fg-1:#f0f0f0;--fg-2:#b4b4b4;--fg-3:#8f8f8f;--fg-accent:#ffe600;--accent:#ffe600;--black:#0f0f0f;--border-strong:#4a4a4a;--rule:#f0f0f0}
 [data-theme="light"]{--bg:#f4f4f1;--bg-alt:#eaeae5;--bg-raised:#e2e2dc;--fg-1:#0f0f0f;--fg-2:#333333;--fg-3:#595959;--fg-accent:#6e5f00;--accent:#ffe600;--black:#0f0f0f;--border-strong:#a8a8a0;--rule:#0f0f0f}
 body{font-family:'Inter',sans-serif;background:#0f0f0f;line-height:1.6;-webkit-font-smoothing:antialiased}
@@ -179,9 +184,8 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
 :focus-visible{outline:2px solid var(--fg-1);outline-offset:3px;box-shadow:0 0 0 5px #ffe600}
 .mk-short{display:none}
 ::selection{background:#ffe600;color:#0f0f0f}
-.mk-md{font-size:18px;line-height:1.75;color:var(--fg-2);max-width:42em}
+.mk-md{font-size:18px;line-height:1.75;color:var(--fg-2);max-width:42em;overflow-wrap:break-word}
 .mk-md>*+*{margin-top:24px}
-.mk-md [id]{scroll-margin-top:88px}
 .mk-md h2{font-size:clamp(22px,4vw,27px);font-weight:800;letter-spacing:-0.02em;line-height:1.25;color:var(--fg-1);margin-top:48px}
 .mk-md h3{font-size:20px;font-weight:700;letter-spacing:-0.01em;line-height:1.3;color:var(--fg-1);margin-top:36px}
 .mk-md strong{color:var(--fg-1);font-weight:700}
@@ -195,7 +199,7 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
 .mk-md figure img{display:block;width:100%;height:auto}
 .mk-md figure .mk-img-light,[data-theme="light"] .mk-md figure .mk-img-dark{display:none}
 [data-theme="light"] .mk-md figure .mk-img-light{display:block}
-.mk-md code{font-family:'JetBrains Mono',monospace;font-size:0.88em}
+.mk-md code{font-family:'JetBrains Mono',monospace;font-size:0.88em;overflow-wrap:anywhere}
 .mk-md sup.fn{font-size:0.68em;line-height:0;margin-left:1px}
 .mk-md sup.fn a{font-family:'JetBrains Mono',monospace;font-weight:700;text-decoration:none;padding:0 2px}
 .mk-md hr{border:0;border-top:1px solid var(--border-strong);margin-top:56px}
@@ -205,7 +209,9 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
 .mk-md thead th{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--fg-3);background:var(--bg-alt)}
 .mk-md tbody th{color:var(--fg-1);font-weight:700;min-width:9em}
 .mk-md .mk-refs{font-size:15px;line-height:1.6;color:var(--fg-3);padding-left:2.2em}
-.mk-md .mk-refs li:target{color:var(--fg-1)}
+.mk-md .mk-refs li:target,.mk-md .mk-refs li.mk-target{color:var(--fg-1)}
+.mk-retry{margin-top:16px;min-height:44px;padding:10px 16px;border:1.5px solid var(--border-strong);background:transparent;color:var(--fg-1);font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer}
+.mk-retry:hover{border-color:#ffe600;background:#ffe600;color:#0f0f0f}
 .mk-md .mk-back{text-decoration:none;margin-left:4px}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 @media (max-width:640px){
@@ -220,6 +226,7 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
   .mk-md tr:last-child{border-bottom:1px solid var(--border-strong)}
   .mk-md tbody th,.mk-md td{border:none}
   .mk-md tbody th{padding-bottom:0}
+  .mk-md td[data-label]::before{content:attr(data-label);content:attr(data-label) / "";display:block;margin-bottom:4px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--fg-3)}
   .mk-dek{font-size:19px !important}
   .mk-row{grid-template-columns:1fr !important;gap:10px !important}
   .mk-pad{padding:32px 20px !important}
@@ -255,7 +262,7 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
         <li><a href="/about/" onClick="{{ goAbout }}" aria-current="{{ curAbout }}" style="display:block;padding:12px 0;font-size:13px;color:{{ navAbout }};font-weight:700;text-transform:uppercase;letter-spacing:0.1em;font-family:'JetBrains Mono',monospace;border-bottom:2px solid {{ navAboutBd }}" style-hover="color:var(--fg-accent)">About</a></li>
       </ul>
       <div style="display:flex;gap:8px">
-        <button class="mk-btn" onClick="{{ togglePause }}" aria-label="{{ pauseLabel }}" aria-pressed="{{ pausedStr }}" title="{{ pauseLabel }}" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.5px solid var(--border-strong);background:transparent;color:var(--fg-2);font-size:14px;cursor:pointer" style-hover="border-color:#ffe600;color:#0f0f0f;background:#ffe600"><i class="{{ pauseIcon }}" aria-hidden="true"></i></button>
+        <button class="mk-btn" onClick="{{ togglePause }}" aria-label="Pause background animation" aria-pressed="{{ pausedStr }}" title="Pause background animation" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.5px solid var(--border-strong);background:transparent;color:var(--fg-2);font-size:14px;cursor:pointer" style-hover="border-color:#ffe600;color:#0f0f0f;background:#ffe600"><i class="{{ pauseIcon }}" aria-hidden="true"></i></button>
         <button class="mk-btn" onClick="{{ toggleTheme }}" aria-label="{{ themeLabel }}" title="{{ themeLabel }}" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.5px solid var(--border-strong);background:transparent;color:var(--fg-2);font-size:14px;cursor:pointer" style-hover="border-color:#ffe600;color:#0f0f0f;background:#ffe600"><i class="{{ themeIcon }}" aria-hidden="true"></i></button>
       </div>
     </div>
@@ -691,40 +698,138 @@ const fromHash = hash => {
 };
 // Legacy hash links (/#about, /#speaking, /#<post-id>) win so old URLs still land; otherwise route on the path.
 const fromLocation = () => fromHash(window.location.hash) || fromPath(window.location.pathname) || { page: 'home' };
+const storedTheme = () => { try { return localStorage.getItem('mk-theme'); } catch (e) { return null; } };
+const prefersLight = () => { try { return window.matchMedia('(prefers-color-scheme: light)').matches; } catch (e) { return false; } };
 // Markdown post bodies: read from the generated page's noscript copy, else fetch the built fragment.
-const BODIES = {};
+const BODIES = {}, BODY_ERRORS = {};
 const bodyFor = id => {
   if (id in BODIES) return BODIES[id];
   const ns = document.getElementById('mk-body-' + id);
   BODIES[id] = ns ? ns.textContent : null;
   return BODIES[id];
 };
+// The fragment of the current URL when it names an element rather than a route. Legacy hash routes are handled
+// separately, except About's own section ids (#experience, #contact) once the path is already /about/.
+const anchorHash = () => {
+  const h = window.location.hash || '', name = h.slice(1);
+  if (h.length < 2) return null;
+  if (!fromHash(h)) return h;
+  return LEGACY[name] === 'about' && fromPath(window.location.pathname)?.page === 'about' ? h : null;
+};
 const setMeta = (sel, attr, val) => { const el = document.head.querySelector(sel); if (el) el.setAttribute(attr, val); };
 
 class Component extends DCLogic {
-  state = { copied: null, page: 'home', postId: POSTS[0].id, theme: read('mk-theme', 'dark'), paused: read('mk-bg-paused', 'false') === 'true', ...fromLocation() };
+  // Theme: the reader's saved choice, else the device's light/dark setting.
+  state = { copied: null, copyFailed: null, page: 'home', postId: POSTS[0].id, theme: storedTheme() || (prefersLight() ? 'light' : 'dark'), paused: read('mk-bg-paused', 'false') === 'true', ...fromLocation() };
   componentDidMount() {
     document.documentElement.lang = 'en-AU';
-    this.onPop = () => this.setState(fromLocation());
+    document.documentElement.style.colorScheme = this.state.theme;
+    // Back/Forward: when the view changes, move focus to it (as go() does); same-page anchor jumps are left to the browser.
+    this.onPop = () => {
+      const next = fromLocation(), s = this.state;
+      const same = next.page === s.page && (next.page !== 'article' || next.postId === s.postId);
+      this.clearTargets();
+      this.setState(next);
+      if (same) { this.pendingHash = null; return; }
+      this.pendingHash = anchorHash();
+      this.navPending = true;
+      this.scrollOnFallback = false;
+      requestAnimationFrame(() => this.settle());
+    };
     window.addEventListener('popstate', this.onPop);
+    // Follow the device's light/dark setting until the reader chooses a theme.
+    try {
+      this.schemeQuery = window.matchMedia('(prefers-color-scheme: light)');
+      this.onScheme = e => { if (!this.themeChosen && !storedTheme()) this.setState({ theme: e.matches ? 'light' : 'dark' }); };
+      this.schemeQuery.addEventListener('change', this.onScheme);
+    } catch (e) {}
     const s = this.state, path = pathFor(s.page, s.postId);
-    if (window.location.hash && fromHash(window.location.hash)) {
-      try { window.history.replaceState(null, '', path); } catch (err) {}
+    const legacy = (window.location.hash || '').slice(1);
+    if (legacy && fromHash('#' + legacy)) {
+      // Old /#about, /#experience, /#<post-id> links: move to the real path, keeping About section anchors.
+      const section = LEGACY[legacy] === 'about' && document.getElementById(legacy) ? '#' + legacy : '';
+      try { window.history.replaceState(null, '', path + section); } catch (err) {}
+      this.pendingHash = section || null;
+    } else {
+      // A deep link to a heading or footnote: the body renders after load, so the browser can't find it; do it here.
+      this.pendingHash = anchorHash();
     }
     this.setTitle();
     this.loadBody();
+    this.settle();
+  }
+  // True once the current view can't change any more: not a Markdown article, or its body has loaded or failed.
+  viewSettled() {
+    const s = this.state, p = POSTS.find(x => x.id === s.postId);
+    return s.page !== 'article' || !p || !p.md || bodyFor(p.id) !== null || !!BODY_ERRORS[p.id];
+  }
+  // After a render or navigation: reveal a pending #target, give up on one that will never appear, then move
+  // focus to the new view (and to the top, if a section link's target is missing), and restore focus after a retry.
+  settle() {
+    this.revealHash();
+    if (this.pendingHash && this.viewSettled()) this.pendingHash = null;
+    if (this.navPending && !this.pendingHash) {
+      this.navPending = false;
+      if (this.scrollOnFallback) window.scrollTo(0, 0);
+      this.focusView();
+    }
+    const id = this.focusAfterBody;
+    if (id && (BODY_ERRORS[id] || bodyFor(id) !== null)) {
+      this.focusAfterBody = null;
+      if (BODY_ERRORS[id]) requestAnimationFrame(() => { const b = document.querySelector('.mk-retry'); if (b) b.focus(); });
+      else this.focusView();
+    }
+  }
+  clearTargets() {
+    document.querySelectorAll('.mk-target').forEach(x => { if ('#' + x.id !== window.location.hash) x.classList.remove('mk-target'); });
+  }
+  // Scroll to and focus the element named by pendingHash once it exists (article bodies render late).
+  revealHash() {
+    if (!this.pendingHash) return;
+    let el = null;
+    try { el = document.getElementById(decodeURIComponent(this.pendingHash.slice(1))); } catch (e) {}
+    if (!el) return;
+    this.pendingHash = null;
+    this.navPending = false;
+    document.querySelectorAll('.mk-target').forEach(x => x.classList.remove('mk-target'));
+    el.classList.add('mk-target');
+    if (!el.hasAttribute('tabindex') && !/^(A|BUTTON|INPUT|SELECT|TEXTAREA)$/.test(el.tagName)) el.setAttribute('tabindex', '-1');
+    // Jump instantly: a smooth scroll started before web fonts load stops short of the target.
+    const root = document.documentElement, prev = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    el.scrollIntoView({ block: 'start' });
+    root.style.scrollBehavior = prev;
+    el.focus({ preventScroll: true });
+  }
+  // Move focus to the new view's heading so screen readers announce it.
+  focusView() {
+    requestAnimationFrame(() => {
+      const h = document.querySelector('main h1'), m = document.getElementById('main');
+      if (h && !h.hasAttribute('tabindex')) h.setAttribute('tabindex', '-1');
+      const t = h || m;
+      if (t) t.focus({ preventScroll: true });
+    });
   }
   loadBody() {
     const p = POSTS.find(x => x.id === this.state.postId);
-    if (this.state.page !== 'article' || !p || !p.md || bodyFor(p.id) !== null || this.loading === p.id) return;
+    if (this.state.page !== 'article' || !p || !p.md || bodyFor(p.id) !== null || this.loading === p.id || BODY_ERRORS[p.id]) return;
     this.loading = p.id;
     fetch('/writing/' + p.id + '/body.html')
       .then(r => r.ok ? r.text() : Promise.reject(r.status))
-      .catch(() => '<p>Sorry, this article could not be loaded. Please refresh the page.</p>')
-      .then(html => { BODIES[p.id] = html; this.loading = null; this.setState({ bodyReady: p.id }); });
+      // Failures aren't cached as content: the reader gets an announced error and a retry button.
+      .then(html => { BODIES[p.id] = html; }, () => { BODY_ERRORS[p.id] = true; })
+      .then(() => { this.loading = null; this.setState(st => ({ bodyTick: (st.bodyTick || 0) + 1 })); });
   }
-  componentWillUnmount() { window.removeEventListener('popstate', this.onPop); }
-  componentDidUpdate() { this.setTitle(); this.loadBody(); }
+  componentWillUnmount() {
+    window.removeEventListener('popstate', this.onPop);
+    if (this.schemeQuery) this.schemeQuery.removeEventListener('change', this.onScheme);
+  }
+  componentDidUpdate() {
+    document.documentElement.style.colorScheme = this.state.theme;
+    this.setTitle();
+    this.loadBody();
+    this.settle();
+  }
   // Keep title, description and canonical in step with the pages generated by scripts/build.mjs.
   setTitle() {
     const s = this.state, p = POSTS.find(x => x.id === s.postId);
@@ -748,11 +853,19 @@ class Component extends DCLogic {
   }
   go(page, extra) {
     return e => {
+      // Let modified clicks (new tab or window) and non-primary buttons through to the browser.
+      if (e && (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || (e.button && e.button !== 0))) return;
       if (e) e.preventDefault();
-      try { window.history.pushState(null, '', pathFor(page, extra && extra.postId)); } catch (err) {}
-      this.setState({ page, ...(extra || {}) });
-      window.scrollTo(0, 0);
-      requestAnimationFrame(() => { const m = document.getElementById('main'); if (m) m.focus({ preventScroll: true }); });
+      const { hash = '', ...rest } = extra || {};
+      try { window.history.pushState(null, '', pathFor(page, rest.postId) + hash); } catch (err) {}
+      // A section link reveals its target once the page (and its body) has rendered; see settle().
+      this.pendingHash = hash || null;
+      this.navPending = true;
+      this.scrollOnFallback = !!hash;
+      this.clearTargets();
+      if (!hash) window.scrollTo(0, 0);
+      this.setState({ page, ...rest });
+      requestAnimationFrame(() => this.settle());
     };
   }
   renderVals() {
@@ -767,30 +880,34 @@ class Component extends DCLogic {
     const muted = 'var(--fg-2)', on = 'var(--fg-accent)';
     const wr = s.page === 'writing' || s.page === 'article', ab = s.page === 'about';
     const R = window.React, html = post.md ? bodyFor(post.id) : null;
-    const bodyEl = !post.md ? null : html === null
-      ? R.createElement('p', { className: 'mk-md', 'aria-busy': 'true' }, 'Loading…')
-      : R.createElement('div', { className: 'mk-md', dangerouslySetInnerHTML: { __html: html } });
+    const retry = () => { delete BODY_ERRORS[post.id]; this.focusAfterBody = post.id; this.setState(st => ({ bodyTick: (st.bodyTick || 0) + 1 })); };
+    const bodyEl = !post.md ? null
+      : html !== null ? R.createElement('div', { className: 'mk-md', dangerouslySetInnerHTML: { __html: html } })
+      : BODY_ERRORS[post.id] ? R.createElement('div', { className: 'mk-md', role: 'alert' },
+          R.createElement('p', null, 'Sorry, this article could not be loaded. Check your connection and try again.'),
+          R.createElement('button', { type: 'button', className: 'mk-retry', onClick: retry }, 'Try again'))
+      : R.createElement('p', { className: 'mk-md', role: 'status', 'aria-busy': 'true' }, 'Loading article…');
     return {
       headline: HEADLINE, tagline: TAGLINE, bodyEl,
-      // Internal links inside Markdown bodies navigate in-app instead of reloading.
+      // Internal links inside Markdown bodies navigate in-app instead of reloading, including /writing/<id>/#section links.
       mdClick: e => {
         const a = e.target.closest && e.target.closest('a[href^="/"]');
         if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-        const r = fromPath(a.getAttribute('href'));
-        if (r) this.go(r.page, r)(e);
+        const [path, frag] = a.getAttribute('href').split('#');
+        const r = fromPath(path);
+        if (r) this.go(r.page, { ...r, hash: frag ? '#' + frag : '' })(e);
       },
       theme: s.theme,
       themeIcon: s.theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon',
       themeLabel: s.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode',
-      toggleTheme: () => this.setState(st => { const t = st.theme === 'dark' ? 'light' : 'dark'; write('mk-theme', t); return { theme: t }; }),
+      toggleTheme: () => { this.themeChosen = true; this.setState(st => { const t = st.theme === 'dark' ? 'light' : 'dark'; write('mk-theme', t); return { theme: t }; }); },
       paused: s.paused, pausedStr: String(s.paused),
       pauseIcon: s.paused ? 'fas fa-play' : 'fas fa-pause',
-      pauseLabel: s.paused ? 'Play background animation' : 'Pause background animation',
       togglePause: () => this.setState(st => { write('mk-bg-paused', String(!st.paused)); return { paused: !st.paused }; }),
       intensity: this.props.bgIntensity ?? 6,
       motif: this.props.bgMotif ?? 'all',
       goHome: this.go('home'), goWriting: this.go('writing'), goAbout: this.go('about'),
-      curHome: s.page === 'home' ? 'page' : 'false', curWriting: wr ? 'page' : 'false', curAbout: ab ? 'page' : 'false',
+      curHome: s.page === 'home' ? 'page' : 'false', curWriting: s.page === 'writing' ? 'page' : wr ? 'true' : 'false', curAbout: ab ? 'page' : 'false',
       navWriting: wr ? on : muted, navAbout: ab ? on : muted,
       navWritingBd: wr ? on : 'transparent', navAboutBd: ab ? on : 'transparent',
       isHome: s.page === 'home', isWriting: s.page === 'writing', isArticle: s.page === 'article', isAbout: ab,
@@ -803,7 +920,7 @@ class Component extends DCLogic {
       // Copy link uses the Clipboard API, with a textarea fallback for older browsers.
       copyLink: () => {
         const done = () => {
-          this.setState({ copied: post.id });
+          this.setState({ copied: post.id, copyFailed: null });
           clearTimeout(this.copyTimer);
           this.copyTimer = setTimeout(() => this.setState({ copied: null }), 2000);
         };
@@ -811,15 +928,17 @@ class Component extends DCLogic {
           const ta = document.createElement('textarea');
           ta.value = postUrl; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
           document.body.appendChild(ta); ta.select();
-          try { if (document.execCommand('copy')) done(); } catch (e) {}
+          let ok = false;
+          try { ok = document.execCommand('copy'); } catch (e) {}
           ta.remove();
+          if (ok) done(); else this.setState({ copyFailed: post.id });
         };
         try { navigator.clipboard.writeText(postUrl).then(done, fallback); } catch (e) { fallback(); }
       },
       copyIcon: copied ? 'fas fa-check' : 'fas fa-link',
       copyLabel: copied ? 'Link copied' : 'Copy link',
       copyColor: copied ? 'var(--fg-accent)' : 'var(--fg-2)',
-      copiedNote: copied ? 'Link copied to clipboard' : '',
+      copiedNote: copied ? 'Link copied to clipboard' : s.copyFailed === post.id ? 'Could not copy the link. Copy it from the address bar instead.' : '',
       canShare: typeof navigator !== 'undefined' && typeof navigator.share === 'function',
       nativeShare: () => { try { navigator.share({ title: post.title, text: post.dek, url: postUrl }).catch(() => {}); } catch (e) {} },
       shares: [

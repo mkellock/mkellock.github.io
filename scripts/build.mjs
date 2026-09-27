@@ -24,8 +24,8 @@ let src = readFileSync(join(ROOT, 'index.html'), 'utf8');
 const script = src.match(/<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/)[1];
 const ctx = { DCLogic: class {}, window: { location: { hash: '', pathname: '/' } }, localStorage: { getItem: () => null, setItem() {} } };
 vm.createContext(ctx);
-vm.runInContext(script + '\n;globalThis.__out = { POSTS, HOME_TITLE, HOME_DESC, WRITING_DESC, ABOUT_DESC, HEADLINE, TAGLINE, SOCIALS };', ctx);
-const { POSTS, HOME_TITLE, HOME_DESC, WRITING_DESC, ABOUT_DESC, HEADLINE, TAGLINE, SOCIALS } = ctx.__out;
+vm.runInContext(script + '\n;globalThis.__out = { POSTS, HOME_TITLE, HOME_DESC, WRITING_DESC, ABOUT_DESC, HEADLINE, TAGLINE, SOCIALS, BIO, JOBS };', ctx);
+const { POSTS, HOME_TITLE, HOME_DESC, WRITING_DESC, ABOUT_DESC, HEADLINE, TAGLINE, SOCIALS, BIO, JOBS } = ctx.__out;
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const ld = obj => '<script type="application/ld+json">\n' + JSON.stringify({ '@context': 'https://schema.org', ...obj }, null, 2).replace(/</g, '\\u003c') + '\n</script>';
@@ -147,29 +147,36 @@ function seoHead({ title, ogTitle = title, desc, path, type = 'website', robots 
 }
 const imageLd = image => ({ '@type': 'ImageObject', url: image.url, ...(image.width ? { width: image.width, height: image.height } : {}) });
 
+// The no-JavaScript copy of a page sits between <!-- noscript:start --> and <!-- noscript:end --> at the top of <body>.
+const noscriptSlot = (noscript = '', extraBody = '') =>
+  `<!-- noscript:start -->\n${noscript ? `<noscript>\n${noscript}\n</noscript>\n` : ''}${extraBody}<!-- noscript:end -->`;
 function render({ head, jsonld = '', noscript = '', extraBody = '' }) {
-  let out = src
-    .replace(/<!-- seo:start -->[\s\S]*?<!-- seo:end -->/, `<!-- seo:start -->\n${head}\n<!-- seo:end -->`)
-    .replace(/<!-- seo-ld:start -->[\s\S]*?<!-- seo-ld:end -->/, `<!-- seo-ld:start -->${jsonld ? '\n' + jsonld + '\n' : ''}<!-- seo-ld:end -->`)
-    .replace(/^<!DOCTYPE html>\n/i, `<!DOCTYPE html>\n${MARK}\n`);
-  if (noscript || extraBody) out = out.replace('<body>\n', `<body>\n${noscript ? `<noscript>\n${noscript}\n</noscript>\n` : ''}${extraBody}`);
-  return out;
+  return src
+    // Replacer functions, so '$' sequences in content ($$, $&, $') are inserted literally.
+    .replace(/<!-- seo:start -->[\s\S]*?<!-- seo:end -->/, () => `<!-- seo:start -->\n${head}\n<!-- seo:end -->`)
+    .replace(/<!-- seo-ld:start -->[\s\S]*?<!-- seo-ld:end -->/, () => `<!-- seo-ld:start -->${jsonld ? '\n' + jsonld + '\n' : ''}<!-- seo-ld:end -->`)
+    .replace(/<!-- noscript:start -->[\s\S]*?<!-- noscript:end -->/, () => noscriptSlot(noscript, extraBody))
+    .replace(/^<!DOCTYPE html>\n/i, () => `<!DOCTYPE html>\n${MARK}\n`);
 }
 
-// Home: index.html is the source, so only its marked head block is regenerated in place.
-const homeHead = seoHead({ title: HOME_TITLE, ogTitle: 'Matt Kellock', desc: HOME_DESC, path: '/' });
-const newSrc = src.replace(/<!-- seo:start -->[\s\S]*?<!-- seo:end -->/, `<!-- seo:start -->\n${homeHead}\n<!-- seo:end -->`);
-if (newSrc !== src) { src = newSrc; write('index.html', src); }
-
-const nav = `<nav><a href="/">Matt Kellock</a> · <a href="/writing/">Writing</a> · <a href="/about/">About</a></nav>`;
+const nav = `<nav><a href="/">Matt Kellock</a> · <a href="/writing/">Writing</a> · <a href="/about/">About</a> · <a href="/feed.xml">RSS</a></nav>`;
 const block = b => b.isH ? `<h2>${esc(b.text)}</h2>` : b.isQ ? `<blockquote>${esc(b.text)}</blockquote>` : `<p>${esc(b.text)}</p>`;
 const listing = POSTS.map(p => `<li><a href="/writing/${p.id}/">${esc(p.title)}</a> (${esc(p.type)}, <time datetime="${p.dt}">${esc(p.date)}</time>): ${esc(p.dek)}</li>`).join('\n');
+const contacts = SOCIALS.map(s => `<li><a href="${esc(s.href)}">${esc(s.name)}</a>: ${esc(s.handle)}</li>`).join('\n');
+
+// Home: index.html is the source, so only its marked head and noscript blocks are regenerated in place.
+const homeHead = seoHead({ title: HOME_TITLE, ogTitle: 'Matt Kellock', desc: HOME_DESC, path: '/' });
+const homeNoscript = `${nav}\n<h1>Matt Kellock</h1>\n<p><strong>${esc(HEADLINE)}</strong></p>\n<p>${esc(TAGLINE)}</p>\n<h2>Talks &amp; writing</h2>\n<ul>\n${listing}\n</ul>\n<p><a href="/about/">About Matt Kellock</a></p>`;
+const newSrc = src
+  .replace(/<!-- seo:start -->[\s\S]*?<!-- seo:end -->/, () => `<!-- seo:start -->\n${homeHead}\n<!-- seo:end -->`)
+  .replace(/<!-- noscript:start -->[\s\S]*?<!-- noscript:end -->/, () => noscriptSlot(homeNoscript));
+if (newSrc !== src) { src = newSrc; write('index.html', src); }
 
 // About
 write('about/index.html', render({
   head: seoHead({ title: 'About · Matt Kellock', ogTitle: 'About Matt Kellock', desc: ABOUT_DESC, path: '/about/', type: 'profile' }),
   jsonld: ld({ '@type': 'ProfilePage', url: SITE + '/about/', mainEntity: person, breadcrumb: crumbs([['Home', '/'], ['About', '/about/']]) }),
-  noscript: `${nav}\n<h1>About Matt Kellock</h1>\n<p>${esc(ABOUT_DESC)}</p>`
+  noscript: `${nav}\n<h1>About Matt Kellock</h1>\n<p><strong>${esc(HEADLINE)}</strong></p>\n${BIO.map(b => `<p>${esc(b)}</p>`).join('\n')}\n<h2>Experience</h2>\n<ul>\n${JOBS.map(j => `<li><strong>${esc(j.role)}</strong>, ${esc(j.company)} (${esc(j.date)})</li>`).join('\n')}\n</ul>\n<h2>Contact</h2>\n<ul>\n${contacts}\n</ul>`
 }));
 
 // Writing index
