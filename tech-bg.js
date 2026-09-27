@@ -40,7 +40,8 @@
     get theme() { return this._theme; }
     set intensity(v) { const n = Number(v); if (!isNaN(n)) { const changed = n !== this._intensity; this._intensity = n; if (changed && this.ctx) this.build(); } }
     get intensity() { return this._intensity; }
-    set paused(v) { this._paused = v === true || v === 'true'; }
+    // Pausing leaves a still frame on screen (drawn now if the paused state arrives after the first render).
+    set paused(v) { this._paused = v === true || v === 'true'; if (this._paused) this.redraw(); }
     get paused() { return !!this._paused; }
     set motif(v) { this._motif = v || 'all'; this.redraw(); }
     // Draw a still frame whenever the loop isn't drawing (reduced motion or paused), e.g. after a theme change.
@@ -54,6 +55,7 @@
       this.canvas.style.cssText = 'width:100%;height:100%;display:block;filter:blur(1.2px)';
       this.appendChild(this.canvas);
       this.ctx = this.canvas.getContext('2d');
+      // Optional self-managed reduced motion (kellock.com.au doesn't use it: index.html decides play/pause).
       // The page runtime lower-cases attribute names, so accept both spellings.
       const optIn = ['respect-reduced-motion', 'respectreducedmotion'].some(a => this.getAttribute(a) === 'true');
       this.motionQuery = optIn && window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;

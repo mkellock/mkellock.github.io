@@ -300,7 +300,7 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
 </style>
 </helmet>
 <div id="top" data-theme="{{ theme }}" style="background:var(--bg);color:var(--fg-1);min-height:100vh;font-family:'Inter',sans-serif">
-<x-import component-from-global-scope="tech-bg" respect-reduced-motion="true" theme="{{ theme }}" intensity="{{ intensity }}" motif="{{ motif }}" paused="{{ paused }}" hint-size="0,0"></x-import>
+<x-import component-from-global-scope="tech-bg" theme="{{ theme }}" intensity="{{ intensity }}" motif="{{ motif }}" paused="{{ paused }}" hint-size="0,0"></x-import>
 <div style="position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh">
 
 <a href="#main" style="position:absolute;left:-9999px;top:8px;z-index:300;background:#ffe600;color:#0f0f0f;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:12px 16px" style-focus="left:24px">Skip to content</a>
@@ -752,6 +752,9 @@ const fromHash = hash => {
 const fromLocation = () => fromHash(window.location.hash) || fromPath(window.location.pathname) || { page: 'home' };
 const storedTheme = () => { try { return localStorage.getItem('mk-theme'); } catch (e) { return null; } };
 const prefersLight = () => { try { return window.matchMedia('(prefers-color-scheme: light)').matches; } catch (e) { return false; } };
+// Background animation: the reader's saved play/pause choice, else paused when the device asks for reduced motion.
+const storedPaused = () => { try { const v = localStorage.getItem('mk-bg-paused'); return v === null ? null : v === 'true'; } catch (e) { return null; } };
+const prefersReducedMotion = () => { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
 // Markdown post bodies: read from the generated page's noscript copy, else fetch the built fragment.
 const BODIES = {}, BODY_ERRORS = {};
 const bodyFor = id => {
@@ -772,7 +775,7 @@ const setMeta = (sel, attr, val) => { const el = document.head.querySelector(sel
 
 class Component extends DCLogic {
   // Theme: the reader's saved choice, else the device's light/dark setting.
-  state = { copied: null, copyFailed: null, page: 'home', postId: POSTS[0].id, theme: storedTheme() || (prefersLight() ? 'light' : 'dark'), paused: read('mk-bg-paused', 'false') === 'true', ...fromLocation() };
+  state = { copied: null, copyFailed: null, page: 'home', postId: POSTS[0].id, theme: storedTheme() || (prefersLight() ? 'light' : 'dark'), paused: storedPaused() ?? prefersReducedMotion(), ...fromLocation() };
   componentDidMount() {
     document.documentElement.lang = 'en-AU';
     document.documentElement.style.colorScheme = this.state.theme;
@@ -794,6 +797,12 @@ class Component extends DCLogic {
       this.schemeQuery = window.matchMedia('(prefers-color-scheme: light)');
       this.onScheme = e => { if (!this.themeChosen && !storedTheme()) this.setState({ theme: e.matches ? 'light' : 'dark' }); };
       this.schemeQuery.addEventListener('change', this.onScheme);
+    } catch (e) {}
+    // Likewise follow the device's reduced-motion setting until the reader presses play or pause.
+    try {
+      this.motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      this.onMotion = e => { if (!this.motionChosen && storedPaused() === null) this.setState({ paused: e.matches }); };
+      this.motionQuery.addEventListener('change', this.onMotion);
     } catch (e) {}
     const s = this.state, path = pathFor(s.page, s.postId);
     const legacy = (window.location.hash || '').slice(1);
@@ -875,6 +884,7 @@ class Component extends DCLogic {
   componentWillUnmount() {
     window.removeEventListener('popstate', this.onPop);
     if (this.schemeQuery) this.schemeQuery.removeEventListener('change', this.onScheme);
+    if (this.motionQuery) this.motionQuery.removeEventListener('change', this.onMotion);
   }
   componentDidUpdate() {
     document.documentElement.style.colorScheme = this.state.theme;
@@ -955,7 +965,8 @@ class Component extends DCLogic {
       toggleTheme: () => { this.themeChosen = true; this.setState(st => { const t = st.theme === 'dark' ? 'light' : 'dark'; write('mk-theme', t); return { theme: t }; }); },
       paused: s.paused, pausedStr: String(s.paused),
       pauseIcon: s.paused ? 'fas fa-play' : 'fas fa-pause',
-      togglePause: () => this.setState(st => { write('mk-bg-paused', String(!st.paused)); return { paused: !st.paused }; }),
+      // The reader's choice overrides the device setting and is remembered.
+      togglePause: () => { this.motionChosen = true; this.setState(st => { write('mk-bg-paused', String(!st.paused)); return { paused: !st.paused }; }); },
       intensity: this.props.bgIntensity ?? 6,
       motif: this.props.bgMotif ?? 'all',
       goHome: this.go('home'), goWriting: this.go('writing'), goAbout: this.go('about'),
