@@ -48,7 +48,7 @@
       "@type": "Person",
       "@id": "https://kellock.com.au/#person",
       "name": "Matt Kellock",
-      "honorificSuffix": "MACS CP",
+      "honorificSuffix": "AACS CP",
       "jobTitle": "Technology leader: platform engineering, security and governance",
       "description": "Twenty-five years leading platform, DevOps and security engineering through scale, migration and acquisition. Former CTO and company director.",
       "url": "https://kellock.com.au/",
@@ -243,7 +243,7 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
   <section class="mk-hero" aria-labelledby="hero-name" style="padding:112px 24px 80px;text-shadow:0 0 4px var(--bg),0 0 12px var(--bg),0 0 24px var(--bg)">
     <div style="max-width:1120px;margin:0 auto;display:flex;flex-wrap:wrap;gap:48px;align-items:flex-end;justify-content:space-between">
       <div style="flex:1 1 560px;min-width:0">
-        <p style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--fg-3);margin-bottom:20px">Melbourne, Australia · MACS CP</p>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--fg-3);margin-bottom:20px">Melbourne, Australia · AACS CP</p>
         <h1 id="hero-name" style="font-size:clamp(3rem,8vw,6rem);font-weight:800;letter-spacing:-0.04em;line-height:1;color:var(--fg-1);margin-bottom:18px">Matt Kellock</h1>
         <p style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--fg-accent);margin-bottom:20px">{{ headline }}</p>
         <p style="font-size:19px;line-height:1.6;color:var(--fg-2);max-width:36em;margin-bottom:32px;text-wrap:pretty">{{ tagline }}</p>
@@ -348,7 +348,7 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
       <img src="/images/portrait.jpg" alt="" style="width:44px;height:44px;object-fit:cover;border:2px solid #ffe600;filter:grayscale(30%)">
       <p style="display:flex;flex-direction:column">
         <span style="font-size:15px;font-weight:700">Matt Kellock</span>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-3)">MACS CP · Melbourne</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-3)">AACS CP · Melbourne</span>
       </p>
     </div>
     <sc-if value="{{ post.isMd }}" hint-placeholder-val="{{ false }}">
@@ -612,7 +612,7 @@ const JOBS = [
 const CREDENTIALS = [
   { icon: 'fas fa-user-tie', title: 'Company director, 2004 to 2017', detail: 'Director and General Manager of Imperial Crest Hair Company Pty Ltd, with full P&L and statutory accountability.' },
   { icon: 'fas fa-clipboard-check', title: 'Accountable owner of external audits', detail: 'ISO 27001 across applications and cloud for a global payroll business; initiated the ISO 27001 programme at Smart Badge.' },
-  { icon: 'fas fa-id-card', title: 'Australian Computer Society, MACS CP', detail: 'Member and Certified Professional.' },
+  { icon: 'fas fa-id-card', title: 'Australian Computer Society, AACS CP', detail: 'Associate and Certified Professional.' },
   { icon: 'fas fa-graduation-cap', title: 'Bachelor of Information Technology', detail: 'RMIT University.' }
 ];
 
@@ -630,9 +630,9 @@ const read = (k, d) => { try { return localStorage.getItem(k) || d; } catch (e) 
 const write = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
 const SITE = 'https://kellock.com.au';
 const HOME_TITLE = 'Matt Kellock – Technology leader, platform engineering and DevSecOps';
-const HOME_DESC = 'Matt Kellock MACS CP, Melbourne technology leader. Twenty-five years leading platform, DevOps and security engineering through scale, migration and acquisition in regulated environments. Former CTO and company director.';
+const HOME_DESC = 'Matt Kellock AACS CP, Melbourne technology leader. Twenty-five years leading platform, DevOps and security engineering through scale, migration and acquisition in regulated environments. Former CTO and company director.';
 const WRITING_DESC = 'Talks and articles by Matt Kellock on platform engineering, DevSecOps, security and technology governance.';
-const ABOUT_DESC = 'Background, experience, governance credentials and skills of Matt Kellock MACS CP, Melbourne technology leader and former CTO.';
+const ABOUT_DESC = 'Background, experience, governance credentials and skills of Matt Kellock AACS CP, Melbourne technology leader and former CTO.';
 const LEGACY = { experience: 'about', contact: 'about', certifications: 'about', speaking: 'writing', talks: 'writing' };
 const pathFor = (page, postId) => page === 'home' ? '/' : page === 'article' ? '/writing/' + postId + '/' : '/' + page + '/';
 const fromPath = path => {
