@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!-- Social share card (1200x630). scripts/build.mjs renders it with headless Chrome, passing the
+     card data as base64 JSON in the URL hash: { kind: 'post' | 'site', eyebrow, title, dek, headline }. -->
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=block" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1200px;height:630px;overflow:hidden;background:#0f0f0f;color:#f0f0f0;font-family:Inter,'Helvetica Neue',Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.card{position:relative;width:1200px;height:630px;padding:52px 64px 60px;display:flex;flex-direction:column}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:700;text-transform:uppercase}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:32px;padding-bottom:20px;border-bottom:2px solid #f0f0f0}
+.eyebrow{font-size:19px;letter-spacing:.14em;color:#ffe600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.domain{font-size:16px;letter-spacing:.14em;color:#8f8f8f;white-space:nowrap}
+.main{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0;padding:24px 0}
+.text{display:flex;flex-direction:column;gap:20px;min-width:0}
+.title{font-weight:800;letter-spacing:-.035em;line-height:1.04;font-size:76px;overflow-wrap:break-word}
+.dek{font-size:26px;line-height:1.42;color:#b4b4b4;max-width:31em;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.foot{display:flex;align-items:center;gap:20px}
+.foot img{width:84px;height:84px;object-fit:cover;border:3px solid #ffe600;filter:grayscale(30%)}
+.name{font-size:28px;font-weight:700;letter-spacing:-.01em}
+.creds{font-size:15px;letter-spacing:.12em;color:#8f8f8f;margin-top:6px}
+.bar{position:absolute;left:0;right:0;bottom:0;height:10px;background:#ffe600}
+/* Site card: name as the title, headline in yellow, larger portrait on the right. */
+.site .main{flex-direction:row;align-items:center;gap:56px}
+.site .text{flex:1;display:flex;flex-direction:column;gap:22px;min-width:0}
+.site .title{font-size:104px}
+.site .headline{font-size:22px;letter-spacing:.08em;color:#ffe600;line-height:1.5}
+.site .dek{-webkit-line-clamp:3}
+.site .big{width:250px;height:250px;object-fit:cover;border:4px solid #ffe600;filter:grayscale(30%);flex-shrink:0}
+.site .foot{display:none}
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="top"><span class="eyebrow mono" id="eyebrow"></span><span class="domain mono">kellock.com.au</span></div>
+  <div class="main" id="main">
+    <div class="text">
+      <div class="title" id="title"></div>
+      <div class="headline mono" id="headline" hidden></div>
+      <div class="dek" id="dek"></div>
+    </div>
+    <img class="big" id="big" src="../images/portrait.jpg" alt="" hidden>
+  </div>
+  <div class="foot">
+    <img src="../images/portrait.jpg" alt="">
+    <div><div class="name">Matt Kellock</div><div class="creds mono">AACS CP · Melbourne</div></div>
+  </div>
+  <div class="bar"></div>
+</div>
+<script>
+const data = JSON.parse(decodeURIComponent(escape(atob(location.hash.slice(1)))));
+const $ = id => document.getElementById(id);
+$('eyebrow').textContent = data.eyebrow || '';
+$('title').textContent = data.title || '';
+$('dek').textContent = data.dek || '';
+if (data.kind === 'site') {
+  $('card').classList.add('site');
+  $('headline').textContent = data.headline || '';
+  $('headline').hidden = false;
+  $('big').hidden = false;
+}
+// Step the title size down until the title and dek fit the space between the header and footer.
+function fit() {
+  const main = $('main'), title = $('title');
+  let size = parseFloat(getComputedStyle(title).fontSize);
+  while (size > 44 && main.scrollHeight > main.clientHeight + 1) {
+    size -= 2;
+    title.style.fontSize = size + 'px';
+  }
+}
+document.fonts.ready.then(fit);
+</script>
+</body>
+</html>
