@@ -133,6 +133,14 @@
 window.heap = window.heap || [], heap.load = function (e, t) { window.heap.appid = e, window.heap.config = t = t || {}; var r = document.createElement("script"); r.type = "text/javascript", r.async = !0, r.src = "https://cdn.heapanalytics.com/js/heap-" + e + ".js"; var a = document.getElementsByTagName("script")[0]; a.parentNode.insertBefore(r, a); for (var n = function (e) { return function () { heap.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }, p = ["addEventProperties", "addUserProperties", "clearEventProperties", "identify", "resetIdentity", "removeEventProperty", "setEventProperties", "track", "unsetEventProperty"], o = 0; o < p.length; o++)heap[p[o]] = n(p[o]) };
 heap.load("2371692256");
 </script>
+<!-- Google tag (gtag.js). GA4 enhanced measurement records the app's pushState page changes. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1Q0FD5LT9M"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-1Q0FD5LT9M');
+</script>
 <script src="/support.js"></script>
 <script src="/tech-bg.js"></script>
 </head>
@@ -330,24 +338,7 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
     </div>
   </section>
 
-  <section class="mk-sec" aria-labelledby="focus-h" style="padding:0 24px 80px">
-    <div style="max-width:1120px;margin:0 auto">
-      <div style="padding:14px 0;border-bottom:2px solid var(--rule);background:var(--bg)">
-        <h2 id="focus-h" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-3)">What I bring</h2>
-      </div>
-      <ul style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(460px,100%),1fr));border-left:1px solid var(--border-strong);list-style:none">
-        <sc-for list="{{ focus }}" as="f" hint-placeholder-count="4">
-          <li style="display:flex;flex-direction:column;gap:14px;padding:32px;background:var(--bg);border-right:1px solid var(--border-strong);border-bottom:1px solid var(--border-strong)">
-            <span style="display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--fg-3)"><span aria-hidden="true">{{ f.num }}</span><i class="{{ f.icon }}" aria-hidden="true" style="font-size:18px;color:var(--fg-accent)"></i></span>
-            <h3 style="font-size:23px;font-weight:800;letter-spacing:-0.025em;line-height:1.2;text-wrap:balance">{{ f.title }}</h3>
-            <p style="font-size:16px;line-height:1.65;color:var(--fg-2)">{{ f.body }}</p>
-          </li>
-        </sc-for>
-      </ul>
-    </div>
-  </section>
-
-  <section class="mk-sec" aria-labelledby="latest-h" style="padding:0 24px 96px">
+  <section class="mk-sec" aria-labelledby="latest-h" style="padding:0 24px 80px">
     <div style="max-width:1120px;margin:0 auto">
       <div style="display:flex;justify-content:space-between;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--border-strong);margin-bottom:24px;background:var(--bg)">
         <h2 id="latest-h" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-3)">Talks &amp; writing</h2>
@@ -376,10 +367,35 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
           </sc-for>
         </ul>
       </sc-if>
-      <div style="margin-top:64px;background:var(--bg);border:1px solid var(--border-strong);border-left:3px solid #ffe600;padding:32px;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center">
+    </div>
+  </section>
+
+  <section class="mk-sec" aria-labelledby="about-home-h" style="padding:0 24px 80px">
+    <div style="max-width:1120px;margin:0 auto">
+      <div style="padding:14px 0;border-bottom:2px solid var(--rule);background:var(--bg)">
+        <h2 id="about-home-h" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-3)">About me</h2>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border-strong);border-top:none;border-left:3px solid #ffe600;padding:32px;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center">
         <p style="font-size:17px;line-height:1.7;color:var(--fg-2);max-width:40em">Currently DevOps &amp; Infrastructure Manager for a global payroll and HR technology company. Previously Chief Technology Officer at Smart Badge, Technical Lead at Iress, and for thirteen years a company director.</p>
         <a href="/about/" onClick="{{ goAbout }}" style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap;padding:8px 0">Experience →</a>
       </div>
+    </div>
+  </section>
+
+  <section class="mk-sec" aria-labelledby="focus-h" style="padding:0 24px 96px">
+    <div style="max-width:1120px;margin:0 auto">
+      <div style="padding:14px 0;border-bottom:2px solid var(--rule);background:var(--bg)">
+        <h2 id="focus-h" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-3)">What I bring</h2>
+      </div>
+      <ul style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(460px,100%),1fr));border-left:1px solid var(--border-strong);list-style:none">
+        <sc-for list="{{ focus }}" as="f" hint-placeholder-count="4">
+          <li style="display:flex;flex-direction:column;gap:14px;padding:32px;background:var(--bg);border-right:1px solid var(--border-strong);border-bottom:1px solid var(--border-strong)">
+            <span style="display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--fg-3)"><span aria-hidden="true">{{ f.num }}</span><i class="{{ f.icon }}" aria-hidden="true" style="font-size:18px;color:var(--fg-accent)"></i></span>
+            <h3 style="font-size:23px;font-weight:800;letter-spacing:-0.025em;line-height:1.2;text-wrap:balance">{{ f.title }}</h3>
+            <p style="font-size:16px;line-height:1.65;color:var(--fg-2)">{{ f.body }}</p>
+          </li>
+        </sc-for>
+      </ul>
     </div>
   </section>
 </sc-if>
