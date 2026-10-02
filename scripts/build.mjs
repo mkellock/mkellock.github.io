@@ -24,8 +24,9 @@ let src = readFileSync(join(ROOT, 'index.html'), 'utf8');
 const script = src.match(/<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/)[1];
 const ctx = { DCLogic: class {}, window: { location: { hash: '', pathname: '/' } }, localStorage: { getItem: () => null, setItem() {} } };
 vm.createContext(ctx);
-vm.runInContext(script + '\n;globalThis.__out = { POSTS, HOME_TITLE, HOME_DESC, WRITING_TITLE, WRITING_DESC, ABOUT_TITLE, ABOUT_DESC, ABOUT_TAGLINE, ABOUT_UPDATED, HEADLINE, TAGLINE, HOME_ABOUT, SOCIALS, BIO, JOBS, FOCUS, CREDENTIALS, SKILLS };', ctx);
-const { POSTS, HOME_TITLE, HOME_DESC, WRITING_TITLE, WRITING_DESC, ABOUT_TITLE, ABOUT_DESC, ABOUT_TAGLINE, ABOUT_UPDATED, HEADLINE, TAGLINE, HOME_ABOUT, SOCIALS, BIO, JOBS, FOCUS, CREDENTIALS, SKILLS } = ctx.__out;
+vm.runInContext(script + '\n;globalThis.__out = { POSTS, HOME_TITLE, HOME_DESC, WRITING_TITLE, WRITING_DESC, ABOUT_TITLE, ABOUT_DESC, ABOUT_TAGLINE, ABOUT_UPDATED, HEADLINE, TAGLINE, HOME_ABOUT, SOCIALS, BIO, JOBS, FOCUS, CREDENTIALS, SKILLS, BOARD, SPEAKING, CONTACT_NOTE, WRITING_INTRO };', ctx);
+const { POSTS, HOME_TITLE, HOME_DESC, WRITING_TITLE, WRITING_DESC, ABOUT_TITLE, ABOUT_DESC, ABOUT_TAGLINE, ABOUT_UPDATED, HEADLINE, TAGLINE, HOME_ABOUT, SOCIALS, BIO, JOBS, FOCUS, CREDENTIALS, SKILLS, BOARD, SPEAKING, CONTACT_NOTE, WRITING_INTRO } = ctx.__out;
+for (const p of POSTS) if (p.related && !POSTS.some(x => x.id === p.related)) throw new Error(`POSTS: ${p.id} relates to unknown post ${p.related}`);
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const ld = obj => '<script type="application/ld+json">\n' + JSON.stringify({ '@context': 'https://schema.org', ...obj }, null, 2).replace(/</g, '\\u003c') + '\n</script>';
@@ -91,9 +92,22 @@ const imageLd = image => ({ '@type': 'ImageObject', url: image.url, ...(image.wi
 
 // ---- Headless Chrome ----
 const hasChrome = existsSync(CHROME);
-function screenshot(url, out, width, height, scale) {
-  if (!hasChrome) return false;
+// PLAYWRIGHT_MODULE (a path to an installed playwright package) renders with Playwright instead of Chrome's
+// --screenshot, which clips the bottom of the page in some headless builds.
+const playwright = process.env.PLAYWRIGHT_MODULE ? (await import(process.env.PLAYWRIGHT_MODULE)).default ?? (await import(process.env.PLAYWRIGHT_MODULE)) : null;
+async function screenshot(url, out, width, height, scale) {
+  if (!hasChrome && !playwright) return false;
   mkdirSync(dirname(join(ROOT, out)), { recursive: true });
+  if (playwright) {
+    const browser = await playwright.chromium.launch({ executablePath: hasChrome ? CHROME : undefined, args: (process.env.CHROME_FLAGS || '').split(' ').filter(Boolean) });
+    try {
+      const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: scale });
+      await page.goto(url, { waitUntil: 'networkidle' });
+      await page.evaluate(() => document.fonts.ready);
+      await page.waitForTimeout(300);
+      await page.screenshot({ path: join(ROOT, out) });
+    } catch (e) { console.warn('warning: playwright render failed:', e.message); } finally { await browser.close(); }
+  } else
   // CHROME_FLAGS adds flags, e.g. "--no-sandbox --ignore-certificate-errors" when rendering as root behind a TLS-inspecting proxy.
   spawnSync(CHROME, [...(process.env.CHROME_FLAGS || '').split(' ').filter(Boolean), '--headless=new', '--disable-gpu', '--hide-scrollbars', `--force-device-scale-factor=${scale}`,
     `--window-size=${width},${height}`, '--virtual-time-budget=10000', `--screenshot=${join(ROOT, out)}`, url], { stdio: 'ignore', timeout: 60000 });
@@ -106,16 +120,16 @@ function screenshot(url, out, width, height, scale) {
 // ---- Share cards: images/cards/<key>-<hash>.png, re-rendered only when their content changes. ----
 const CARD_DIR = 'images/cards';
 const cardTemplate = join(ROOT, 'scripts/card-template.html');
-const cardVersion = createHash('sha256').update(readFileSync(cardTemplate)).update(readFileSync(join(ROOT, 'images/portrait.jpg'))).digest('hex');
+const cardVersion = createHash('sha256').update('1x').update(readFileSync(cardTemplate)).update(readFileSync(join(ROOT, 'images/portrait.jpg'))).digest('hex');
 const usedCards = new Set();
 const PORTRAIT = imageFor('/images/portrait.jpg', 'Portrait of Matt Kellock');
 const FALLBACK = PORTRAIT;
-function card(key, data, alt) {
+async function card(key, data, alt) {
   const hash = createHash('sha256').update(cardVersion + JSON.stringify(data)).digest('hex').slice(0, 8);
   let rel = `/${CARD_DIR}/${key}-${hash}.png`;
   if (!existsSync(join(ROOT, rel))) {
     const url = pathToFileURL(cardTemplate).href + '#' + Buffer.from(JSON.stringify(data)).toString('base64');
-    if (screenshot(url, rel.slice(1), 1200, 630, 2)) console.log('rendered', rel.slice(1));
+    if (await screenshot(url, rel.slice(1), 1200, 630, 1)) console.log('rendered', rel.slice(1));
     else {
       // No Chrome or the render failed: keep the previous card for this key if there is one.
       const prev = existsSync(join(ROOT, CARD_DIR)) && readdirSync(join(ROOT, CARD_DIR)).find(f => f.startsWith(key + '-') && f.endsWith('.png'));
@@ -128,16 +142,16 @@ function card(key, data, alt) {
   return imageFor(rel, alt);
 }
 const eyebrow = p => [p.type, p.date, p.venue].filter(Boolean).join(' · ');
-const siteCard = card('site', { kind: 'site', eyebrow: 'Melbourne, Australia · AACS CP', title: 'Matt Kellock', headline: HEADLINE, dek: TAGLINE },
+const siteCard = await card('site', { kind: 'site', eyebrow: 'Melbourne, Australia · AACS CP', title: 'Matt Kellock', headline: HEADLINE, dek: TAGLINE },
   'Matt Kellock: ' + HEADLINE);
-const postImage = p => p.image
+const postImage = async p => p.image
   ? imageFor(p.image, p.imageAlt || p.title)
-  : card(p.id, { kind: 'post', eyebrow: eyebrow(p), title: p.title, dek: p.dek }, `${p.title}, by Matt Kellock`);
+  : await card(p.id, { kind: 'post', eyebrow: eyebrow(p), title: p.title, dek: p.dek }, `${p.title}, by Matt Kellock`);
 
 // ---- App icons from favicon.svg (rendered once; delete the PNGs to regenerate) ----
 const iconPage = pathToFileURL(join(ROOT, 'scripts/icon-template.html')).href;
 for (const [file, px] of [['apple-touch-icon.png', 180], ['icon-192.png', 192], ['icon-512.png', 512]]) {
-  if (!existsSync(join(ROOT, file)) && screenshot(iconPage, file, px, px, 1)) console.log('rendered', file);
+  if (!existsSync(join(ROOT, file)) && await screenshot(iconPage, file, px, px, 1)) console.log('rendered', file);
 }
 
 // ---- <head> metadata ----
@@ -179,11 +193,14 @@ function render({ head, jsonld = '', noscript = '', extraBody = '' }) {
 
 const nav = `<nav><a href="/">Matt Kellock</a> · <a href="/writing/">Writing</a> · <a href="/about/">About</a> · <a href="/feed.xml">RSS</a></nav>`;
 const block = b => b.isH ? `<h2>${esc(b.text)}</h2>` : b.isQ ? `<blockquote>${esc(b.text)}</blockquote>` : `<p>${esc(b.text)}</p>`;
-const listing = POSTS.map(p => `<li><a href="/writing/${p.id}/">${esc(p.title)}</a> (${esc(p.type)}, <time datetime="${p.dt}">${esc(p.date)}</time>): ${esc(p.dek)}</li>`).join('\n');
+const listing = POSTS.map(p => `<li><a href="/writing/${p.id}/">${esc(p.title)}</a> (${esc(p.type)}, <time datetime="${p.dt}">${esc(p.date)}</time>${p.audience ? ', ' + esc(p.audience.toLowerCase()) : ''}): ${esc(p.dek)}</li>`).join('\n');
 const contacts = SOCIALS.map(s => `<li><a href="${esc(s.href)}">${esc(s.name)}</a>: ${esc(s.handle)}</li>`).join('\n');
 const focusList = `<h2>Focus</h2>\n<ul>\n${FOCUS.map(f => `<li><strong>${esc(f.title)}</strong>: ${esc(f.body)}</li>`).join('\n')}\n</ul>`;
 const jobsList = `<h2>Experience</h2>\n${JOBS.map(j => `<h3>${esc(j.role)}, ${esc(j.company)} (${esc(j.date)})</h3>\n<p>${esc(j.context)}</p>${j.points.length ? `\n<ul>\n${j.points.map(pt => `<li>${esc(pt)}</li>`).join('\n')}\n</ul>` : ''}`).join('\n')}`;
 const credentialsList = `<h2>Governance &amp; profession</h2>\n<ul>\n${CREDENTIALS.map(c => `<li><strong>${esc(c.title)}</strong>: ${esc(c.detail)}</li>`).join('\n')}\n</ul>`;
+const boardSection = `<h2 id="boards">Boards &amp; governance</h2>\n<p>${esc(BOARD.intro)}</p>\n<h3>What I offer a board</h3>\n<ul>\n${BOARD.offers.map(o => `<li>${esc(o)}</li>`).join('\n')}\n</ul>\n<h3>${esc(BOARD.bioLabel)}</h3>\n<p>${esc(BOARD.bio)}</p>`;
+const talksList = POSTS.filter(p => p.type === 'Talk').map(p => `<li><a href="/writing/${p.id}/">${esc(p.title)}</a>, ${esc(p.venue || '')}, <time datetime="${p.dt}">${esc(p.date)}</time></li>`).join('\n');
+const speakingSection = `<h2 id="speaking">Speaking</h2>\n<p>${esc(SPEAKING.intro)}</p>\n<h3>Topics</h3>\n<ul>\n${SPEAKING.topics.map(t => `<li>${esc(t)}</li>`).join('\n')}\n</ul>\n<h3>Past talks</h3>\n<ul>\n${talksList}\n</ul>\n<h3>Speaker bio</h3>\n<p>${esc(SPEAKING.bio)}</p>`;
 const skillsList = `<h2>Skills</h2>\n<dl>\n${SKILLS.map(sk => `<dt>${esc(sk.k)}</dt>\n<dd>${esc(sk.v)}</dd>`).join('\n')}\n</dl>`;
 
 // Home: index.html is the source, so only its marked head and noscript blocks are regenerated in place.
@@ -201,7 +218,7 @@ write('about/index.html', render({
   head: seoHead({ title: ABOUT_TITLE, ogTitle: 'About Matt Kellock', desc: ABOUT_DESC, path: '/about/', type: 'profile',
     extra: ['<meta property="profile:first_name" content="Matt">', '<meta property="profile:last_name" content="Kellock">'] }),
   jsonld: graph({ '@type': 'ProfilePage', url: SITE + '/about/', dateModified: isoTime(ABOUT_UPDATED), mainEntity: person, breadcrumb: crumbs([['Home', '/'], ['About', '/about/']]) }),
-  noscript: `${nav}\n<h1>About Matt Kellock</h1>\n<p><strong>${esc(HEADLINE)}</strong></p>\n<p>${esc(ABOUT_TAGLINE)}</p>\n<h2>Background</h2>\n${BIO.map(b => `<p>${esc(b)}</p>`).join('\n')}\n${jobsList}\n${credentialsList}\n${skillsList}\n<h2 id="contact">Contact &amp; elsewhere</h2>\n<ul>\n${contacts}\n</ul>`
+  noscript: `${nav}\n<h1>About Matt Kellock</h1>\n<p><strong>${esc(HEADLINE)}</strong></p>\n<p>${esc(ABOUT_TAGLINE)}</p>\n<h2>Background</h2>\n${BIO.map(b => `<p>${esc(b)}</p>`).join('\n')}\n${boardSection}\n${jobsList}\n${credentialsList}\n${skillsList}\n${speakingSection}\n<h2 id="contact">Contact &amp; elsewhere</h2>\n<p>${esc(CONTACT_NOTE)}</p>\n<ul>\n${contacts}\n</ul>`
 }));
 
 // Writing index
@@ -212,7 +229,7 @@ write('writing/index.html', render({
     hasPart: POSTS.map(p => ({ '@type': 'Article', headline: p.title, url: `${SITE}/writing/${p.id}/`, datePublished: isoTime(p.dt) })),
     breadcrumb: crumbs([['Home', '/'], ['Talks & writing', '/writing/']])
   }),
-  noscript: `${nav}\n<h1>Talks &amp; writing</h1>\n<ul>\n${listing}\n</ul>\n<p><a href="/feed.xml">RSS feed</a></p>`
+  noscript: `${nav}\n<h1>Talks &amp; writing</h1>\n<p>${esc(WRITING_INTRO)}</p>\n<ul>\n${listing}\n</ul>\n<p><a href="/feed.xml">RSS feed</a></p>`
 }));
 
 // Figure images with a sibling "<name>-light.<ext>" get a light-theme variant.
@@ -227,7 +244,7 @@ const links = p => (p.links || []).length ? `<h2>Elsewhere</h2>\n<ul>\n${p.links
 const built = [];
 for (const p of POSTS) {
   const path = `/writing/${p.id}/`;
-  const image = postImage(p);
+  const image = await postImage(p);
   let bodyHtml, words;
   if (p.md) {
     ({ html: bodyHtml, words } = markdownToHtml(readFileSync(join(ROOT, 'posts', p.id + '.md'), 'utf8'), p.id, { lightSrc }));
@@ -242,7 +259,7 @@ for (const p of POSTS) {
   const header = `${nav}\n${p.md ? '' : '<article>\n'}<p>${esc(p.type)} · <time datetime="${p.dt}">${esc(p.date)}</time>${p.venue ? ' · ' + esc(p.venue) : ''}</p>\n<h1>${esc(p.title)}</h1>\n<p>${esc(p.dek)}</p>`;
   write(`writing/${p.id}/index.html`, render({
     head: seoHead({
-      title: p.title + ' · Matt Kellock', ogTitle: p.title, desc: p.dek, path, type: 'article', image,
+      title: (p.searchTitle || p.title) + ' · Matt Kellock', ogTitle: p.title, desc: p.dek, path, type: 'article', image,
       extra: [
         `<meta property="article:published_time" content="${published}">`,
         `<meta property="article:modified_time" content="${modified}">`,
@@ -260,10 +277,12 @@ for (const p of POSTS) {
     jsonld: graph(
         {
           '@type': 'Article', headline: p.title, description: p.dek, datePublished: published, dateModified: modified,
-          inLanguage: 'en-AU', image: imageLd(image), url: SITE + path, mainEntityOfPage: SITE + path, isPartOf: website,
+          inLanguage: 'en-AU', image: imageLd(image), url: SITE + path, mainEntityOfPage: SITE + path, ...(p.series ? {} : { isPartOf: website }),
           articleSection: p.tag, keywords: [p.tag, p.type].join(', '), genre: p.type, author: person, publisher: person,
           wordCount: words, timeRequired: `PT${readMins(words)}M`,
           ...(p.links && p.links.length ? { citation: p.links.map(l => l.href) } : {}),
+          ...(p.audience ? { audience: { '@type': 'Audience', audienceType: p.audience } } : {}),
+          ...(p.series ? { isPartOf: [website, { '@type': 'CreativeWorkSeries', name: p.series }] } : {}),
           ...(p.venue ? { locationCreated: { '@type': 'Place', name: p.venue } } : {})
         },
         crumbs([['Home', '/'], ['Talks & writing', '/writing/'], [p.title, path]])
