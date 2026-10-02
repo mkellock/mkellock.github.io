@@ -189,13 +189,13 @@ const tocFor = (p, c) => {
 };
 
 // ---- <head> metadata ----
-function seoHead({ title, ogTitle = title, desc, path, type = 'website', robots = 'index, follow, max-image-preview:large, max-snippet:-1', image = siteCard, extra = [] }) {
+function seoHead({ title, ogTitle = title, desc, path, type = 'website', robots = 'index, follow, max-image-preview:large, max-snippet:-1', image = siteCard, extra = [], canonical = true }) {
   const url = SITE + path;
   return [
     `<title>${esc(title)}</title>`,
     `<meta name="description" content="${esc(desc)}">`,
     `<meta name="robots" content="${robots}">`,
-    `<link rel="canonical" href="${url}">`,
+    canonical && `<link rel="canonical" href="${url}">`,
     `<meta property="og:type" content="${type}">`,
     `<meta property="og:url" content="${url}">`,
     `<meta property="og:title" content="${esc(ogTitle)}">`,
@@ -226,7 +226,7 @@ function render({ head, jsonld = '', noscript = '', extraBody = '' }) {
     .replace(/^<!DOCTYPE html>\n/i, () => `<!DOCTYPE html>\n${MARK}\n`);
 }
 
-const nav = `<nav><a href="/">Matt Kellock</a> · <a href="/writing/">Writing</a> · <a href="/about/">About</a> · <a href="/feed.xml">RSS</a></nav>`;
+const nav = `<nav><a href="/">Matt Kellock</a> · <a href="/writing/">Talks &amp; writing</a> · <a href="/about/">About</a> · <a href="/feed.xml">RSS</a></nav>`;
 const listing = POSTS.map(p => `<li><a href="/writing/${p.id}/">${esc(p.title)}</a> (${esc(p.type)}, <time datetime="${p.dt}">${esc(p.date)}</time>${p.audience ? ', ' + esc(p.audience.toLowerCase()) : ''}): ${esc(p.dek)}</li>`).join('\n');
 const contacts = SOCIALS.map(s => `<li><a href="${esc(s.href)}">${esc(s.name)}</a>: ${esc(s.handle)}</li>`).join('\n');
 const focusList = `<h2>Focus</h2>\n<ul>\n${FOCUS.map(f => `<li><strong>${esc(f.title)}</strong>: ${esc(f.body)}</li>`).join('\n')}\n</ul>`;
@@ -330,7 +330,7 @@ for (const d of readdirSync(wdir, { withFileTypes: true })) {
 
 // 404: GitHub Pages serves this for unknown paths; the app falls back to the home view.
 write('404.html', render({
-  head: seoHead({ title: 'Page not found · Matt Kellock', desc: HOME_DESC, path: '/', robots: 'noindex, follow' }),
+  head: seoHead({ title: 'Page not found · Matt Kellock', desc: HOME_DESC, path: '/', robots: 'noindex, follow', canonical: false }),
   jsonld: graph(),
   noscript: `${nav}\n<h1>Page not found</h1>\n<p>The page you asked for does not exist. Try one of these:</p>\n<ul>\n${listing}\n</ul>\n<p><a href="/about/">About Matt Kellock</a></p>`
 }));
