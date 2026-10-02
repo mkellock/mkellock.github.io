@@ -1,4 +1,6 @@
-*Companion to [The Agent That Wouldn't Take No for an Answer](/writing/agent-that-wouldnt-take-no/). Last updated 26 September 2026. Views are my own, not my employer's.*
+*Companion to [The Agent That Wouldn't Take No for an Answer](/writing/agent-that-wouldnt-take-no/). Last updated 2 October 2026. Views are my own, not my employer's.*
+
+> **In short:** Know everything you expose and who owns it. Serve the public only released data, from an isolated tier that can't read or write anything else. Put every other system behind well-maintained private access, segment so a breach can't spread, and watch for refusals followed by new attempts. Ninety days is enough to get visibility and guardrails in place.
 
 In the companion post I argued that public services should expose only public data, from a tier that can't read or write anything else, and that everything else should be private by default. This post is the practical side: the steps I'd take, a 90-day starting plan, what to measure, and how it lines up with Australia's cyber strategy.
 
@@ -6,7 +8,7 @@ The number of public, unmonitored platforms companies run, putting convenience a
 
 You don't need to remove every public endpoint at once. You need to know what's exposed and who owns it, and have a steady program for moving the wrong things behind private access.
 
-## 1. Discover
+## 1. Discover every internet-facing asset
 
 Build a continuously updated inventory of everything reachable from the internet:
 
@@ -25,7 +27,7 @@ Every endpoint needs an owner, a data classification, a business purpose and a w
 
 Pay particular attention to legacy systems. When a company moves on from a system, its platforms and libraries often stop being maintained. Keeping the lights on (KTLO) means no new feature development, not no development or maintenance at all.
 
-## 2. Classify
+## 2. Classify each exposed service
 
 | Classification | Default treatment |
 |---|---|
@@ -37,7 +39,7 @@ Pay particular attention to legacy systems. When a company moves on from a syste
 
 Public exposure should need a positive business decision. "It was easier to deploy" and "nobody knows the URL" aren't reasons.
 
-## 3. Separate the planes
+## 3. Separate the public and private planes
 
 For each public service, trace every path from the public tier to anything else.
 
@@ -46,7 +48,7 @@ For each public service, trace every path from the public tier to anything else.
 - **Remove write paths.** Take them out of public tiers entirely, or confine them to isolated, scanned and quarantined storage.
 - **Keep unreleased data out of reach.** Store it where the public tier can't address it at all.
 
-## 4. Remove exposure
+## 4. Remove exposure from internal workloads
 
 Move internal workloads onto private subnets or private cloud endpoints, such as AWS PrivateLink, Azure Private Link or Google Cloud Private Service Connect. Then remove public IP addresses from origins, allow inbound traffic only from approved gateways, and retire obsolete DNS records, test systems and legacy routes.
 
@@ -73,13 +75,13 @@ Even government is some way off. Non-corporate Commonwealth entities have been r
 
 The Essential Eight is a baseline, not an architecture. It doesn't replace exposure management, segmentation, secure gateways or threat modelling, which is why ASD also maintains the much broader Information Security Manual.[^9]
 
-## 7. Segment
+## 7. Segment the network
 
 Assume prevention will sometimes fail. Separate user networks, production workloads, management planes, backups, security tooling, development systems and third-party connections, with deny-by-default rules and documented flows.
 
 Segmentation is what stops an intruder who gets in from moving sideways. ASD's guide to implementing network segmentation and segregation is a good starting point.[^10]
 
-## 8. Monitor and detect
+## 8. Monitor and detect persistent visitors
 
 Detection is the gap the Medicare incident exposed. Centralise logs from gateways, identity providers, DNS, cloud control planes, web application firewalls, endpoints and applications, and alert on:
 
@@ -93,7 +95,7 @@ Watch outbound traffic as well as inbound. A compromised workload shouldn't have
 
 Make it easy for outsiders to reach you, too. Publish a security.txt file,[^11] keep a monitored security contact, and give it a real triage process. Services Australia's disclosure inbox was checked once a day.[^12]
 
-## 9. Test
+## 9. Test from the outside
 
 Run external attack-surface reviews and internal segmentation tests. Confirm that private origins can't be reached directly, that authentication can't be bypassed through alternate routes, and that development deployments don't inherit public ingress.
 

@@ -1,10 +1,10 @@
-*Last updated 26 September 2026. The investigation and the government's review are still running, so some details may change. Views are my own, not my employer's.*
+*Last updated 2 October 2026. The investigation and the government's review are still running, so some details may change. Views are my own, not my employer's.*
 
 > **In short:** An OpenAI research agent working on an ordinary task got past a government portal's refusals, reached non-public files and wrote to an internal server, and nobody in government noticed. The lesson I take from it is to keep public systems away from non-public data, and to notice when something keeps trying doors. If you run agents, you're now part of the threat model too.
 
-I run infrastructure for a living, and in the evenings I'm building an AI product that relies on agents. The Medicare portal incident sits right where those two jobs meet. It's easy to take only half a lesson from it, so this is my attempt at the whole thing.
+I lead infrastructure and security for a living, and in the evenings I'm building an AI product that relies on agents. The Medicare portal incident sits right where those two jobs meet. It's easy to take only half a lesson from it, so this is my attempt at the whole thing.
 
-## The portal that said no
+## What happened at the Medicare statistics portal
 
 On 18 June 2026, OpenAI researchers were using an internal model, running as an agent, to research public spending on medicines.[^1] It went to Services Australia's Medicare Statistics Reporting Service, a public portal of aggregated Medicare and Pharmaceutical Benefits Scheme statistics.[^2]
 
@@ -16,7 +16,7 @@ The damage looks limited. The government believes no personal information was ac
 
 Minister Katy Gallagher described the portal as a legacy system: "not a system of government significance", but one that "did have protections in place".[^4] She has also said "we won't be reactivating it".[^5]
 
-## The visitor nobody planned for
+## AI agents that don't take no for an answer
 
 Forgotten government websites with weak access controls are an old problem. What caught my attention is who found this one.
 
@@ -30,7 +30,7 @@ People with bad intent are using the same capability deliberately. In November 2
 
 So the working assumption has to change. Every reachable endpoint will be found and tested, and a refusal from your application may be treated as a puzzle rather than a boundary.
 
-I've seen this from the other side with my own agents. Our coding and QA agents run on a cloud server, and our production bot protection blocks that traffic, as it should. We didn't ask the agents to find a cleverer way in. We gave them one sanctioned test path that we control, and a written rule never to improvise another.
+I've seen this from the other side with my own agents. Our coding and quality assurance (QA) agents run on a cloud server, and our production bot protection blocks that traffic, as it should. We didn't ask the agents to find a cleverer way in. We gave them one sanctioned test path that we control, and a written rule never to improvise another.
 
 ## Three old failures
 
@@ -103,7 +103,7 @@ Private access done badly can be worse than none. The Australian Information Com
 
 So private by default only works if the gateway is the most carefully patched and watched system you own. Prefer brokers with outbound-only connectors, so the origin network has no listening port. Patch edge devices first, require phishing-resistant MFA and device checks before any connection is made, and keep the gateway's own logs.
 
-Some endpoints are harder to hide. SFTP servers and APIs used by clients without static IP addresses, or protected by a password alone, need as many safeguards as you can give them. I'd stack mutual TLS (mTLS), public/private key pairs or client certificates, known client and destination IP ranges wherever you can get them, and preferably a private route such as zero-trust network access (ZTNA) or virtual private cloud (VPC) peering onto private subnets.
+Some endpoints are harder to hide. Secure File Transfer Protocol (SFTP) servers and APIs used by clients without static IP addresses, or protected by a password alone, need as many safeguards as you can give them. I'd stack mutual TLS (mTLS), public/private key pairs or client certificates, known client and destination IP ranges wherever you can get them, and preferably a private route such as zero-trust network access (ZTNA) or virtual private cloud (VPC) peering onto private subnets.
 
 It also has to be usable, or people build public workarounds and you end up more exposed than before. And some data can't be made network-private at all. For software-as-a-service platforms like Microsoft 365 or Salesforce, identity is the perimeter: conditional access tied to managed devices, tenant restrictions and no anonymous sharing links.
 
@@ -113,7 +113,7 @@ This incident has a second audience: everyone building or deploying AI agents, w
 
 The product I build has an AI assistant that works with sensitive client data and can connect to outside tool servers. Our team contract puts the principle simply: "Hard limits stay in code: organisation scoping, authorization, approval for writes, data egress, and audit. Constrain what the model can affect, never how it thinks."
 
-Writes need approval, and an approval only counts for the exact action that was shown. Once data from an outside server enters a conversation, the assistant shows every change before making it, and its requests to those servers can only go to public HTTPS endpoints, with no redirects and with caps on response size and time. Our coding agents commit but never push, and deployment only happens through CI.
+Writes need approval, and an approval only counts for the exact action that was shown. Once data from an outside server enters a conversation, the assistant shows every change before making it, and its requests to those servers can only go to public HTTPS endpoints, with no redirects and with caps on response size and time. Our coding agents commit but never push, and deployment only happens through the continuous integration (CI) pipeline.
 
 What I'd expect of anyone running agents:
 

@@ -1,4 +1,5 @@
-# Ignore maths folders from Copilot suggestions
+# Ignore the self-contained mini-apps from Copilot suggestions
 maths-baxter/
 maths-hudson/
 biology/
+times-tables/
