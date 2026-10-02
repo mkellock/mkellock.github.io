@@ -24,14 +24,30 @@ let src = readFileSync(join(ROOT, 'index.html'), 'utf8');
 const script = src.match(/<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/)[1];
 const ctx = { DCLogic: class {}, window: { location: { hash: '', pathname: '/' } }, localStorage: { getItem: () => null, setItem() {} } };
 vm.createContext(ctx);
-vm.runInContext(script + '\n;globalThis.__out = { POSTS, HOME_TITLE, HOME_DESC, WRITING_DESC, ABOUT_DESC, HEADLINE, TAGLINE, SOCIALS, BIO, JOBS };', ctx);
-const { POSTS, HOME_TITLE, HOME_DESC, WRITING_DESC, ABOUT_DESC, HEADLINE, TAGLINE, SOCIALS, BIO, JOBS } = ctx.__out;
+vm.runInContext(script + '\n;globalThis.__out = { POSTS, HOME_TITLE, HOME_DESC, WRITING_TITLE, WRITING_DESC, ABOUT_TITLE, ABOUT_DESC, ABOUT_TAGLINE, ABOUT_UPDATED, HEADLINE, TAGLINE, HOME_ABOUT, SOCIALS, BIO, JOBS, FOCUS, CREDENTIALS, SKILLS };', ctx);
+const { POSTS, HOME_TITLE, HOME_DESC, WRITING_TITLE, WRITING_DESC, ABOUT_TITLE, ABOUT_DESC, ABOUT_TAGLINE, ABOUT_UPDATED, HEADLINE, TAGLINE, HOME_ABOUT, SOCIALS, BIO, JOBS, FOCUS, CREDENTIALS, SKILLS } = ctx.__out;
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const ld = obj => '<script type="application/ld+json">\n' + JSON.stringify({ '@context': 'https://schema.org', ...obj }, null, 2).replace(/</g, '\\u003c') + '\n</script>';
 const sameAs = SOCIALS.filter(s => /^https?:/.test(s.href)).map(s => s.href);
-const person = { '@type': 'Person', '@id': SITE + '/#person', name: 'Matt Kellock', url: SITE + '/about/', sameAs };
-const website = { '@id': SITE + '/#website' };
+// One WebSite and one Person node on every page; other nodes reference them by @id.
+const person = { '@type': 'Person', '@id': SITE + '/#person' };
+const website = { '@type': 'WebSite', '@id': SITE + '/#website' };
+const WEBSITE_NODE = { ...website, name: 'Matt Kellock', url: SITE + '/', inLanguage: 'en-AU', publisher: person };
+const personNode = image => ({
+  ...person, name: 'Matt Kellock', honorificSuffix: 'AACS CP',
+  jobTitle: 'Technology leader: platform engineering, security and governance',
+  description: TAGLINE, url: SITE + '/about/', image: imageLd(image), email: 'mailto:matt@kellock.com.au', sameAs,
+  address: { '@type': 'PostalAddress', addressLocality: 'Melbourne', addressRegion: 'Victoria', addressCountry: 'AU' },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'RMIT University' },
+  memberOf: { '@type': 'Organization', name: 'Australian Computer Society' },
+  hasCredential: [
+    { '@type': 'EducationalOccupationalCredential', name: 'Certified Professional (AACS CP)', recognizedBy: { '@type': 'Organization', name: 'Australian Computer Society' } },
+    { '@type': 'EducationalOccupationalCredential', name: 'Bachelor of Information Technology', recognizedBy: { '@type': 'CollegeOrUniversity', name: 'RMIT University' } }
+  ],
+  knowsAbout: ['Platform engineering', 'DevSecOps', 'ISO 27001', 'Cloud migration', 'M&A technology integration', 'Technology governance', 'AI governance', 'Technology risk and audit']
+});
+const graph = (...nodes) => ld({ '@graph': [WEBSITE_NODE, personNode(PORTRAIT), ...nodes] });
 const crumbs = items => ({ '@type': 'BreadcrumbList', itemListElement: items.map(([name, path], i) => ({ '@type': 'ListItem', position: i + 1, name, item: SITE + path })) });
 
 function write(rel, content) {
@@ -71,13 +87,15 @@ function imageSize(rel) {
   return null;
 }
 const imageFor = (rel, alt) => ({ url: SITE + rel, alt, ...(imageSize(rel) || {}) });
+const imageLd = image => ({ '@type': 'ImageObject', url: image.url, ...(image.width ? { width: image.width, height: image.height } : {}) });
 
 // ---- Headless Chrome ----
 const hasChrome = existsSync(CHROME);
 function screenshot(url, out, width, height, scale) {
   if (!hasChrome) return false;
   mkdirSync(dirname(join(ROOT, out)), { recursive: true });
-  spawnSync(CHROME, ['--headless=new', '--disable-gpu', '--hide-scrollbars', `--force-device-scale-factor=${scale}`,
+  // CHROME_FLAGS adds flags, e.g. "--no-sandbox --ignore-certificate-errors" when rendering as root behind a TLS-inspecting proxy.
+  spawnSync(CHROME, [...(process.env.CHROME_FLAGS || '').split(' ').filter(Boolean), '--headless=new', '--disable-gpu', '--hide-scrollbars', `--force-device-scale-factor=${scale}`,
     `--window-size=${width},${height}`, '--virtual-time-budget=10000', `--screenshot=${join(ROOT, out)}`, url], { stdio: 'ignore', timeout: 60000 });
   const size = existsSync(join(ROOT, out)) && imageSize(out);
   if (size && size.width === width * scale && size.height === height * scale) return true;
@@ -90,7 +108,8 @@ const CARD_DIR = 'images/cards';
 const cardTemplate = join(ROOT, 'scripts/card-template.html');
 const cardVersion = createHash('sha256').update(readFileSync(cardTemplate)).update(readFileSync(join(ROOT, 'images/portrait.jpg'))).digest('hex');
 const usedCards = new Set();
-const FALLBACK = imageFor('/images/profile.jpg', 'Portrait of Matt Kellock');
+const PORTRAIT = imageFor('/images/portrait.jpg', 'Portrait of Matt Kellock');
+const FALLBACK = PORTRAIT;
 function card(key, data, alt) {
   const hash = createHash('sha256').update(cardVersion + JSON.stringify(data)).digest('hex').slice(0, 8);
   let rel = `/${CARD_DIR}/${key}-${hash}.png`;
@@ -100,7 +119,7 @@ function card(key, data, alt) {
     else {
       // No Chrome or the render failed: keep the previous card for this key if there is one.
       const prev = existsSync(join(ROOT, CARD_DIR)) && readdirSync(join(ROOT, CARD_DIR)).find(f => f.startsWith(key + '-') && f.endsWith('.png'));
-      console.warn(`warning: could not render share card "${key}"${prev ? ', reusing ' + prev : ', using profile.jpg'}`);
+      console.warn(`warning: could not render share card "${key}"${prev ? ', reusing ' + prev : ', using portrait.jpg'}`);
       if (!prev) return FALLBACK;
       rel = `/${CARD_DIR}/${prev}`;
     }
@@ -145,7 +164,6 @@ function seoHead({ title, ogTitle = title, desc, path, type = 'website', robots 
     ...extra
   ].filter(Boolean).join('\n');
 }
-const imageLd = image => ({ '@type': 'ImageObject', url: image.url, ...(image.width ? { width: image.width, height: image.height } : {}) });
 
 // The no-JavaScript copy of a page sits between <!-- noscript:start --> and <!-- noscript:end --> at the top of <body>.
 const noscriptSlot = (noscript = '', extraBody = '') =>
@@ -163,26 +181,33 @@ const nav = `<nav><a href="/">Matt Kellock</a> · <a href="/writing/">Writing</a
 const block = b => b.isH ? `<h2>${esc(b.text)}</h2>` : b.isQ ? `<blockquote>${esc(b.text)}</blockquote>` : `<p>${esc(b.text)}</p>`;
 const listing = POSTS.map(p => `<li><a href="/writing/${p.id}/">${esc(p.title)}</a> (${esc(p.type)}, <time datetime="${p.dt}">${esc(p.date)}</time>): ${esc(p.dek)}</li>`).join('\n');
 const contacts = SOCIALS.map(s => `<li><a href="${esc(s.href)}">${esc(s.name)}</a>: ${esc(s.handle)}</li>`).join('\n');
+const focusList = `<h2>Focus</h2>\n<ul>\n${FOCUS.map(f => `<li><strong>${esc(f.title)}</strong>: ${esc(f.body)}</li>`).join('\n')}\n</ul>`;
+const jobsList = `<h2>Experience</h2>\n${JOBS.map(j => `<h3>${esc(j.role)}, ${esc(j.company)} (${esc(j.date)})</h3>\n<p>${esc(j.context)}</p>${j.points.length ? `\n<ul>\n${j.points.map(pt => `<li>${esc(pt)}</li>`).join('\n')}\n</ul>` : ''}`).join('\n')}`;
+const credentialsList = `<h2>Governance &amp; profession</h2>\n<ul>\n${CREDENTIALS.map(c => `<li><strong>${esc(c.title)}</strong>: ${esc(c.detail)}</li>`).join('\n')}\n</ul>`;
+const skillsList = `<h2>Skills</h2>\n<dl>\n${SKILLS.map(sk => `<dt>${esc(sk.k)}</dt>\n<dd>${esc(sk.v)}</dd>`).join('\n')}\n</dl>`;
 
 // Home: index.html is the source, so only its marked head and noscript blocks are regenerated in place.
 const homeHead = seoHead({ title: HOME_TITLE, ogTitle: 'Matt Kellock', desc: HOME_DESC, path: '/' });
-const homeNoscript = `${nav}\n<h1>Matt Kellock</h1>\n<p><strong>${esc(HEADLINE)}</strong></p>\n<p>${esc(TAGLINE)}</p>\n<h2>Talks &amp; writing</h2>\n<ul>\n${listing}\n</ul>\n<p><a href="/about/">About Matt Kellock</a></p>`;
+const homeNoscript = `${nav}\n<h1>Matt Kellock</h1>\n<p><strong>${esc(HEADLINE)}</strong></p>\n<p>${esc(TAGLINE)}</p>\n<h2>Talks &amp; writing</h2>\n<ul>\n${listing}\n</ul>\n<h2>About me</h2>\n<p>${esc(HOME_ABOUT)}</p>\n<p><a href="/about/">About Matt Kellock</a> · <a href="/about/#contact">Contact</a></p>\n${focusList}`;
+const homeLd = graph();
 const newSrc = src
   .replace(/<!-- seo:start -->[\s\S]*?<!-- seo:end -->/, () => `<!-- seo:start -->\n${homeHead}\n<!-- seo:end -->`)
+  .replace(/<!-- seo-ld:start -->[\s\S]*?<!-- seo-ld:end -->/, () => `<!-- seo-ld:start -->\n${homeLd}\n<!-- seo-ld:end -->`)
   .replace(/<!-- noscript:start -->[\s\S]*?<!-- noscript:end -->/, () => noscriptSlot(homeNoscript));
 if (newSrc !== src) { src = newSrc; write('index.html', src); }
 
 // About
 write('about/index.html', render({
-  head: seoHead({ title: 'About · Matt Kellock', ogTitle: 'About Matt Kellock', desc: ABOUT_DESC, path: '/about/', type: 'profile' }),
-  jsonld: ld({ '@type': 'ProfilePage', url: SITE + '/about/', mainEntity: person, breadcrumb: crumbs([['Home', '/'], ['About', '/about/']]) }),
-  noscript: `${nav}\n<h1>About Matt Kellock</h1>\n<p><strong>${esc(HEADLINE)}</strong></p>\n${BIO.map(b => `<p>${esc(b)}</p>`).join('\n')}\n<h2>Experience</h2>\n<ul>\n${JOBS.map(j => `<li><strong>${esc(j.role)}</strong>, ${esc(j.company)} (${esc(j.date)})</li>`).join('\n')}\n</ul>\n<h2>Contact</h2>\n<ul>\n${contacts}\n</ul>`
+  head: seoHead({ title: ABOUT_TITLE, ogTitle: 'About Matt Kellock', desc: ABOUT_DESC, path: '/about/', type: 'profile',
+    extra: ['<meta property="profile:first_name" content="Matt">', '<meta property="profile:last_name" content="Kellock">'] }),
+  jsonld: graph({ '@type': 'ProfilePage', url: SITE + '/about/', dateModified: isoTime(ABOUT_UPDATED), mainEntity: person, breadcrumb: crumbs([['Home', '/'], ['About', '/about/']]) }),
+  noscript: `${nav}\n<h1>About Matt Kellock</h1>\n<p><strong>${esc(HEADLINE)}</strong></p>\n<p>${esc(ABOUT_TAGLINE)}</p>\n<h2>Background</h2>\n${BIO.map(b => `<p>${esc(b)}</p>`).join('\n')}\n${jobsList}\n${credentialsList}\n${skillsList}\n<h2 id="contact">Contact &amp; elsewhere</h2>\n<ul>\n${contacts}\n</ul>`
 }));
 
 // Writing index
 write('writing/index.html', render({
-  head: seoHead({ title: 'Talks & writing · Matt Kellock', ogTitle: 'Talks & writing by Matt Kellock', desc: WRITING_DESC, path: '/writing/' }),
-  jsonld: ld({
+  head: seoHead({ title: WRITING_TITLE, ogTitle: 'Talks & writing by Matt Kellock', desc: WRITING_DESC, path: '/writing/' }),
+  jsonld: graph({
     '@type': 'CollectionPage', name: 'Talks & writing', url: SITE + '/writing/', author: person, isPartOf: website,
     hasPart: POSTS.map(p => ({ '@type': 'Article', headline: p.title, url: `${SITE}/writing/${p.id}/`, datePublished: isoTime(p.dt) })),
     breadcrumb: crumbs([['Home', '/'], ['Talks & writing', '/writing/']])
@@ -232,8 +257,7 @@ for (const p of POSTS) {
         `<meta name="twitter:data2" content="${esc(p.type === 'Talk' && p.venue ? p.venue : 'Matt Kellock')}">`
       ]
     }),
-    jsonld: ld({
-      '@graph': [
+    jsonld: graph(
         {
           '@type': 'Article', headline: p.title, description: p.dek, datePublished: published, dateModified: modified,
           inLanguage: 'en-AU', image: imageLd(image), url: SITE + path, mainEntityOfPage: SITE + path, isPartOf: website,
@@ -243,8 +267,7 @@ for (const p of POSTS) {
           ...(p.venue ? { locationCreated: { '@type': 'Place', name: p.venue } } : {})
         },
         crumbs([['Home', '/'], ['Talks & writing', '/writing/'], [p.title, path]])
-      ]
-    }),
+    ),
     // Markdown bodies get their own noscript: crawlers without JS read it, and the app reads
     // its text on first load instead of fetching body.html.
     noscript: p.md ? header : `${header}\n${bodyHtml}\n${links(p)}\n</article>`,
@@ -265,7 +288,8 @@ for (const d of readdirSync(wdir, { withFileTypes: true })) {
 // 404: GitHub Pages serves this for unknown paths; the app falls back to the home view.
 write('404.html', render({
   head: seoHead({ title: 'Page not found · Matt Kellock', desc: HOME_DESC, path: '/', robots: 'noindex, follow' }),
-  noscript: `${nav}\n<h1>Page not found</h1>`
+  jsonld: graph(),
+  noscript: `${nav}\n<h1>Page not found</h1>\n<p>The page you asked for does not exist. Try one of these:</p>\n<ul>\n${listing}\n</ul>\n<p><a href="/about/">About Matt Kellock</a></p>`
 }));
 
 // Remove share cards that are no longer referenced (only files this build owns).
@@ -314,8 +338,9 @@ write('feed.xml', [
 
 // Sitemap, with each page's share image.
 const postImages = Object.fromEntries(built.map(b => [b.path, b.image.url]));
+const newest = POSTS.map(p => p.updated || p.dt).sort().pop();
 const urls = [
-  ['/', POSTS[0]?.dt, siteCard.url], ['/writing/', POSTS[0]?.dt, siteCard.url], ['/about/', null, siteCard.url],
+  ['/', [newest, ABOUT_UPDATED].sort().pop(), siteCard.url], ['/writing/', newest, siteCard.url], ['/about/', ABOUT_UPDATED, siteCard.url],
   ...POSTS.map(p => [`/writing/${p.id}/`, p.updated || p.dt, postImages[`/writing/${p.id}/`]])
 ];
 write('sitemap.xml', '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n'

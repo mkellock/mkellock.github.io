@@ -1,5 +1,14 @@
+# AI search crawlers may index; training-only crawlers may not.
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: CCBot
+User-agent: Bytespider
+User-agent: Google-Extended
+Disallow: /
+
 User-agent: *
 Allow: /
+Disallow: /writing/*/body.html
 Disallow: /maths-baxter/
 Disallow: /maths-hudson/
 Disallow: /biology/

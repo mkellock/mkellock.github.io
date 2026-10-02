@@ -1,0 +1,5 @@
+# Security contact for kellock.com.au (RFC 9116)
+Contact: mailto:matt@kellock.com.au
+Expires: 2027-09-01T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://kellock.com.au/.well-known/security.txt
