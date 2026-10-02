@@ -5,7 +5,7 @@
 // posts with `md: true` take their body from posts/<id>.md (see scripts/markdown.mjs).
 // Share cards and icons are rendered with headless Chrome (CHROME_PATH, default: the macOS app);
 // without Chrome the build still succeeds and reuses existing images.
-import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createHash } from 'node:crypto';
@@ -154,6 +154,40 @@ for (const [file, px] of [['apple-touch-icon.png', 180], ['icon-192.png', 192], 
   if (!existsSync(join(ROOT, file)) && await screenshot(iconPage, file, px, px, 1)) console.log('rendered', file);
 }
 
+const slug = t => t.toLowerCase().replace(/[&<>"]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const block = (b, id) => b.isH ? `<h2 id="${id}-${slug(b.text)}">${esc(b.text)}</h2>` : b.isQ ? `<blockquote>${esc(b.text)}</blockquote>` : `<p>${esc(b.text)}</p>`;
+// Figure images with a sibling "<name>-light.<ext>" get a light-theme variant, and their intrinsic size.
+const lightSrc = s => {
+  const light = s.replace(/(\.\w+)$/, '-light$1');
+  return s.startsWith('/') && existsSync(join(ROOT, light)) ? light : null;
+};
+const figureSize = s => s.startsWith('/') && existsSync(join(ROOT, s)) ? imageSize(s) : null;
+
+// Markdown posts are converted once; the result feeds body.html, the static copy, the feed and the word counts.
+const converted = new Map();
+for (const p of POSTS) {
+  if (p.md) {
+    const md = readFileSync(join(ROOT, 'posts', p.id + '.md'), 'utf8');
+    const expect = new Date(isoTime(p.updated || p.dt)).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Australia/Melbourne' });
+    const shown = md.match(/Last updated (\d{1,2} [A-Z][a-z]+ \d{4})/);
+    if (shown && shown[1] !== expect) throw new Error(`posts/${p.id}.md says "Last updated ${shown[1]}" but POSTS gives ${expect} (updated || dt)`);
+    converted.set(p.id, markdownToHtml(md, p.id, { lightSrc, imageSize: figureSize }));
+  } else {
+    converted.set(p.id, { html: p.body.map(b => block(b, p.id)).join('\n'), words: p.body.map(b => b.text).join(' ').split(/\s+/).filter(Boolean).length, headings: [] });
+  }
+}
+// Reading time per post, published in every page head for the app to show.
+const readMap = Object.fromEntries(POSTS.map(p => [p.id, readMins(converted.get(p.id).words)]));
+const readScript = `<script type="application/json" id="mk-read">${JSON.stringify(readMap)}</script>`;
+// A contents list for long Markdown posts (four or more sections), inserted before the first section heading.
+const tocFor = (p, c) => {
+  const items = c.headings.filter(h => h.text !== 'References');
+  if (!p.md || items.length < 4) return c.html;
+  const toc = `<nav class="mk-toc" aria-labelledby="${p.id}-toc-h"><h2 id="${p.id}-toc-h">Contents</h2><ul>${items.map(h => `<li><a href="#${h.id}">${esc(h.text)}</a></li>`).join('')}</ul></nav>`;
+  const i = c.html.indexOf('<h2 ');
+  return i < 0 ? c.html : c.html.slice(0, i) + toc + '\n' + c.html.slice(i);
+};
+
 // ---- <head> metadata ----
 function seoHead({ title, ogTitle = title, desc, path, type = 'website', robots = 'index, follow, max-image-preview:large, max-snippet:-1', image = siteCard, extra = [] }) {
   const url = SITE + path;
@@ -175,7 +209,8 @@ function seoHead({ title, ogTitle = title, desc, path, type = 'website', robots 
     `<meta name="twitter:description" content="${esc(desc)}">`,
     `<meta name="twitter:image" content="${image.url}">`,
     `<meta name="twitter:image:alt" content="${esc(image.alt)}">`,
-    ...extra
+    ...extra,
+    readScript
   ].filter(Boolean).join('\n');
 }
 
@@ -192,7 +227,6 @@ function render({ head, jsonld = '', noscript = '', extraBody = '' }) {
 }
 
 const nav = `<nav><a href="/">Matt Kellock</a> · <a href="/writing/">Writing</a> · <a href="/about/">About</a> · <a href="/feed.xml">RSS</a></nav>`;
-const block = b => b.isH ? `<h2>${esc(b.text)}</h2>` : b.isQ ? `<blockquote>${esc(b.text)}</blockquote>` : `<p>${esc(b.text)}</p>`;
 const listing = POSTS.map(p => `<li><a href="/writing/${p.id}/">${esc(p.title)}</a> (${esc(p.type)}, <time datetime="${p.dt}">${esc(p.date)}</time>${p.audience ? ', ' + esc(p.audience.toLowerCase()) : ''}): ${esc(p.dek)}</li>`).join('\n');
 const contacts = SOCIALS.map(s => `<li><a href="${esc(s.href)}">${esc(s.name)}</a>: ${esc(s.handle)}</li>`).join('\n');
 const focusList = `<h2>Focus</h2>\n<ul>\n${FOCUS.map(f => `<li><strong>${esc(f.title)}</strong>: ${esc(f.body)}</li>`).join('\n')}\n</ul>`;
@@ -226,17 +260,11 @@ write('writing/index.html', render({
   head: seoHead({ title: WRITING_TITLE, ogTitle: 'Talks & writing by Matt Kellock', desc: WRITING_DESC, path: '/writing/' }),
   jsonld: graph({
     '@type': 'CollectionPage', name: 'Talks & writing', url: SITE + '/writing/', author: person, isPartOf: website,
-    hasPart: POSTS.map(p => ({ '@type': 'Article', headline: p.title, url: `${SITE}/writing/${p.id}/`, datePublished: isoTime(p.dt) })),
+    hasPart: POSTS.map(p => ({ '@type': 'BlogPosting', headline: p.title, url: `${SITE}/writing/${p.id}/`, datePublished: isoTime(p.dt), dateModified: isoTime(p.updated || p.dt) })),
     breadcrumb: crumbs([['Home', '/'], ['Talks & writing', '/writing/']])
   }),
   noscript: `${nav}\n<h1>Talks &amp; writing</h1>\n<p>${esc(WRITING_INTRO)}</p>\n<ul>\n${listing}\n</ul>\n<p><a href="/feed.xml">RSS feed</a></p>`
 }));
-
-// Figure images with a sibling "<name>-light.<ext>" get a light-theme variant.
-const lightSrc = s => {
-  const light = s.replace(/(\.\w+)$/, '-light$1');
-  return s.startsWith('/') && existsSync(join(ROOT, light)) ? light : null;
-};
 
 // One page per talk or article
 const postDirs = new Set(POSTS.map(p => p.id));
@@ -245,18 +273,14 @@ const built = [];
 for (const p of POSTS) {
   const path = `/writing/${p.id}/`;
   const image = await postImage(p);
-  let bodyHtml, words;
-  if (p.md) {
-    ({ html: bodyHtml, words } = markdownToHtml(readFileSync(join(ROOT, 'posts', p.id + '.md'), 'utf8'), p.id, { lightSrc }));
-    // Fragment the app fetches when the article is opened from another page.
-    write(`writing/${p.id}/body.html`, bodyHtml + '\n');
-  } else {
-    bodyHtml = p.body.map(block).join('\n');
-    words = p.body.map(b => b.text).join(' ').split(/\s+/).filter(Boolean).length;
-  }
+  const conv = converted.get(p.id), words = conv.words;
+  const pageHtml = tocFor(p, conv), bodyHtml = conv.html;
+  // Fragment the app fetches when the article is opened from another page (with the contents list).
+  if (p.md) write(`writing/${p.id}/body.html`, pageHtml + '\n');
   const published = isoTime(p.dt), modified = isoTime(p.updated || p.dt);
   built.push({ p, path, image, bodyHtml });
-  const header = `${nav}\n${p.md ? '' : '<article>\n'}<p>${esc(p.type)} · <time datetime="${p.dt}">${esc(p.date)}</time>${p.venue ? ' · ' + esc(p.venue) : ''}</p>\n<h1>${esc(p.title)}</h1>\n<p>${esc(p.dek)}</p>`;
+  const companion = p.related && POSTS.find(x => x.id === p.related);
+  const header = `${nav}\n${p.md ? '' : '<article>\n'}<p>${esc(p.type)} · <time datetime="${p.dt}">${esc(p.date)}</time>${p.venue ? ' · ' + esc(p.venue) : ''}${p.audience ? ' · ' + esc(p.audience) : ''} · ${readMins(words)} min read</p>\n<h1>${esc(p.title)}</h1>\n<p>${esc(p.dek)}</p>\n<p>By <a href="/about/" rel="author">Matt Kellock</a>${p.updated ? `. Updated <time datetime="${p.updated}">${esc(new Date(isoTime(p.updated)).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Australia/Melbourne' }))}</time>` : ''}</p>${companion ? `\n<p>Companion piece: <a href="/writing/${companion.id}/">${esc(companion.title)}</a></p>` : ''}`;
   write(`writing/${p.id}/index.html`, render({
     head: seoHead({
       title: (p.searchTitle || p.title) + ' · Matt Kellock', ogTitle: p.title, desc: p.dek, path, type: 'article', image,
@@ -276,21 +300,21 @@ for (const p of POSTS) {
     }),
     jsonld: graph(
         {
-          '@type': 'Article', headline: p.title, description: p.dek, datePublished: published, dateModified: modified,
+          '@type': 'BlogPosting', headline: p.title, description: p.dek, datePublished: published, dateModified: modified,
           inLanguage: 'en-AU', image: imageLd(image), url: SITE + path, mainEntityOfPage: SITE + path, ...(p.series ? {} : { isPartOf: website }),
           articleSection: p.tag, keywords: [p.tag, p.type].join(', '), genre: p.type, author: person, publisher: person,
           wordCount: words, timeRequired: `PT${readMins(words)}M`,
           ...(p.links && p.links.length ? { citation: p.links.map(l => l.href) } : {}),
           ...(p.audience ? { audience: { '@type': 'Audience', audienceType: p.audience } } : {}),
           ...(p.series ? { isPartOf: [website, { '@type': 'CreativeWorkSeries', name: p.series }] } : {}),
-          ...(p.venue ? { locationCreated: { '@type': 'Place', name: p.venue } } : {})
+          ...(p.venue ? { about: { '@type': 'Event', name: p.venue, startDate: published, location: { '@type': 'Place', name: p.venue }, performer: person } } : {})
         },
         crumbs([['Home', '/'], ['Talks & writing', '/writing/'], [p.title, path]])
     ),
     // Markdown bodies get their own noscript: crawlers without JS read it, and the app reads
     // its text on first load instead of fetching body.html.
     noscript: p.md ? header : `${header}\n${bodyHtml}\n${links(p)}\n</article>`,
-    extraBody: p.md ? `<noscript id="mk-body-${p.id}">\n${bodyHtml}\n</noscript>\n${links(p) ? `<noscript>\n${links(p)}\n</noscript>\n` : ''}` : ''
+    extraBody: p.md ? `<noscript id="mk-body-${p.id}">\n${pageHtml}\n</noscript>\n${links(p) ? `<noscript>\n${links(p)}\n</noscript>\n` : ''}` : ''
   }));
 }
 
@@ -324,10 +348,20 @@ if (existsSync(join(ROOT, CARD_DIR))) {
 // RSS feed with full content. Relative links become absolute for feed readers.
 const absolute = (html, path) => html
   .replace(/<img class="mk-img-light"[^>]*>/g, '')
+  .replace(/ <a class="mk-anchor"[^>]*>#<\/a>/g, '')
+  .replace(/<div class="mk-callout" role="note">/g, '<blockquote>').replace(/<\/div><!--\/callout-->/g, '</blockquote>')
   .replace(/(href|src)="\/(?!\/)/g, `$1="${SITE}/`)
   .replace(/href="#/g, `href="${SITE}${path}#`);
 const cdata = s => `<![CDATA[${s.replace(/]]>/g, ']]]]><![CDATA[>')}]]>`;
-const feedItems = built.map(({ p, path, bodyHtml }) => [
+const enclosure = image => {
+  const rel = image.url.slice(SITE.length);
+  const file = join(ROOT, rel);
+  if (!existsSync(file) || !image.type) return [];
+  const length = statSync(file).size;
+  return [`      <enclosure url="${image.url}" length="${length}" type="${image.type}"/>`,
+    `      <media:content url="${image.url}" medium="image" type="${image.type}" width="${image.width}" height="${image.height}"/>`];
+};
+const feedItems = built.map(({ p, path, image, bodyHtml }) => [
   '    <item>',
   `      <title>${esc(p.title)}</title>`,
   `      <link>${SITE}${path}</link>`,
@@ -336,12 +370,13 @@ const feedItems = built.map(({ p, path, bodyHtml }) => [
   `      <dc:creator>Matt Kellock</dc:creator>`,
   `      <category>${esc(p.tag)}</category>`,
   `      <description>${esc(p.dek)}</description>`,
+  ...enclosure(image),
   `      <content:encoded>${cdata(absolute(`<p><em>${esc(p.dek)}</em></p>\n${bodyHtml}\n${links(p)}`, path))}</content:encoded>`,
   '    </item>'
 ].join('\n'));
 write('feed.xml', [
   '<?xml version="1.0" encoding="UTF-8"?>',
-  '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">',
+  '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:media="http://search.yahoo.com/mrss/">',
   '  <channel>',
   '    <title>Matt Kellock: Talks &amp; writing</title>',
   `    <link>${SITE}/writing/</link>`,

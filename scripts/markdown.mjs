@@ -4,6 +4,8 @@
 // bare URLs, and footnotes ([^n] references with [^n]: definitions).
 // idPrefix keeps footnote and heading ids unique per post. opts.lightSrc(src) may return a
 // light-theme variant of a figure image; both are emitted and CSS shows the one for the theme.
+// opts.imageSize(src) may return { width, height } for intrinsic image dimensions.
+// Returns { html, words, headings } where headings lists the ## sections (id, text) for a contents list.
 
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const slug = s => s.toLowerCase().replace(/<[^>]+>/g, '').replace(/&[a-z]+;/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -11,6 +13,7 @@ const slug = s => s.toLowerCase().replace(/<[^>]+>/g, '').replace(/&[a-z]+;/g, '
 export function markdownToHtml(md, idPrefix, opts = {}) {
   const notes = new Map();
   const refCount = new Map();
+  const headings = [];
 
   function inline(text) {
     const keep = [];
@@ -23,7 +26,8 @@ export function markdownToHtml(md, idPrefix, opts = {}) {
     s = s.replace(/\[\^([^\]]+)\]/g, (_, n) => {
       const k = (refCount.get(n) || 0) + 1;
       refCount.set(n, k);
-      return stash(`<sup class="fn"><a href="#${idPrefix}-fn-${n}"${k === 1 ? ` id="${idPrefix}-ref-${n}"` : ''} aria-label="Reference ${n}">${n}</a></sup>`);
+      // Every citation gets its own id so the reference list can link back to each use.
+      return stash(`<sup class="fn"><a href="#${idPrefix}-fn-${n}" id="${idPrefix}-ref-${n}${k === 1 ? '' : '-' + k}" role="doc-noteref" aria-label="Reference ${n}">${n}</a></sup>`);
     });
     s = s.replace(/!\[([^\]]*)\]\(([^)\s\u0000]+)\)/g, (_, alt, src) => stash(`<img src="${src}" alt="${plain(alt)}" loading="lazy">`));
     // Links can't nest, so anchors inside link text (e.g. a footnote ref) become spans, keeping any id.
@@ -51,7 +55,11 @@ export function markdownToHtml(md, idPrefix, opts = {}) {
       if ((m = line.match(/^(#{1,6}) (.*)$/))) {
         const level = Math.max(2, m[1].length);
         const html = inline(m[2]);
-        out.push(`<h${level} id="${idPrefix}-${slug(html)}">${html}</h${level}>`);
+        const id = `${idPrefix}-${slug(html)}`;
+        const text = html.replace(/<sup class="fn">.*?<\/sup>/g, '').replace(/<[^>]*>/g, '').trim();
+        if (level === 2) headings.push({ id, text });
+        // The # link gives readers a section URL; it is hidden from assistive tech (the heading itself is the landmark).
+        out.push(`<h${level} id="${id}">${html} <a class="mk-anchor" href="#${id}" aria-hidden="true" tabindex="-1">#</a></h${level}>`);
         i++;
       } else if (/^---+\s*$/.test(line)) {
         out.push('<hr>');
@@ -59,7 +67,9 @@ export function markdownToHtml(md, idPrefix, opts = {}) {
       } else if (/^> ?/.test(line)) {
         const inner = [];
         while (i < lines.length && /^>/.test(lines[i])) inner.push(lines[i++].replace(/^> ?/, ''));
-        out.push(`<blockquote>${blocks(inner.join('\n'))}</blockquote>`);
+        // A block opening with a short bold label ("**In short:**") is a callout, not a quotation.
+        const label = inner[0].match(/^\*\*([^*]{1,40})\*\*/);
+        out.push(label ? `<div class="mk-callout" role="note">${blocks(inner.join('\n'))}</div><!--/callout-->` : `<blockquote>${blocks(inner.join('\n'))}</blockquote>`);
       } else if (/^[-*] /.test(line) || /^\d+\. /.test(line)) {
         const ordered = /^\d+\. /.test(line);
         const re = ordered ? /^\d+\. / : /^[-*] /;
@@ -91,11 +101,17 @@ export function markdownToHtml(md, idPrefix, opts = {}) {
           if (d) { defs.push([d[1], d[2]]); notes.set(d[1], true); }
           else defs[defs.length - 1][1] += ' ' + lines[i - 1].trim();
         }
-        out.push('<ol class="mk-refs">' + defs.map(([n, t]) =>
-          `<li id="${idPrefix}-fn-${n}" value="${esc(n)}">${inline(t)} <a href="#${idPrefix}-ref-${n}" class="mk-back" aria-label="Back to reference ${n} in the text">↩</a></li>`).join('') + '</ol>');
+        const backs = n => {
+          const k = refCount.get(n) || 1;
+          return Array.from({ length: k }, (_, i) => `<a href="#${idPrefix}-ref-${n}${i ? '-' + (i + 1) : ''}" class="mk-back" role="doc-backlink" aria-label="Back to ${k > 1 ? `use ${i + 1} of ` : ''}reference ${n} in the text">↩${k > 1 ? `<sup>${i + 1}</sup>` : ''}</a>`).join(' ');
+        };
+        out.push('<ol class="mk-refs" role="doc-endnotes">' + defs.map(([n, t]) =>
+          `<li id="${idPrefix}-fn-${n}" value="${esc(n)}">${inline(t)} ${backs(n)}</li>`).join('') + '</ol>');
       } else if ((m = line.match(/^!\[(.*)\]\((\S+)\)\s*$/))) {
         const light = opts.lightSrc && opts.lightSrc(m[2]);
-        const img = (src, cls) => `<img${cls ? ` class="${cls}"` : ''} src="${src}" alt="${esc(m[1])}" loading="lazy">`;
+        // Intrinsic size (opts.imageSize) stops the layout shifting as the figure loads. `class` stays first: the feed strips the light variant by regex.
+        const dims = src => { const d = opts.imageSize && opts.imageSize(src); return d ? ` width="${d.width}" height="${d.height}"` : ''; };
+        const img = (src, cls) => `<img${cls ? ` class="${cls}"` : ''} src="${src}" alt="${esc(m[1])}" loading="lazy"${dims(src)}>`;
         out.push(`<figure>${light ? img(m[2], 'mk-img-dark') + img(light, 'mk-img-light') : img(m[2])}</figure>`);
         i++;
       } else {
@@ -110,5 +126,5 @@ export function markdownToHtml(md, idPrefix, opts = {}) {
   md = md.replace(/\u0000/g, ''); // NUL is the converter's placeholder delimiter
   const html = blocks(md);
   const words = md.replace(/\[\^[^\]]+\]:.*$/gm, '').replace(/[#>*|`[\]()]/g, ' ').split(/\s+/).filter(Boolean).length;
-  return { html, words };
+  return { html, words, headings };
 }
