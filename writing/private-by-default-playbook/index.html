@@ -209,10 +209,18 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-1Q0FD5LT9M');
 </script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Before the app boots: hide the raw template and paint the saved theme's background so there is no flash. -->
+<style>x-dc{display:none}html{background:#0f0f0f}html[data-pre="light"]{background:#f4f4f1}</style>
+<script>try{var mkT=localStorage.getItem('mk-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-pre',mkT)}catch(e){}</script>
+<!-- If the runtime cannot run (very old browser), show the static copies instead of a blank page. -->
+<script>window.addEventListener('error',function(e){if(!e||!e.filename||!/support\.js|react/.test(e.filename))return;var ns=document.querySelectorAll('noscript');for(var i=0;i<ns.length;i++){var d=document.createElement('div');d.innerHTML=ns[i].textContent;ns[i].parentNode.insertBefore(d,ns[i]);}var x=document.querySelector('x-dc');if(x)x.remove();});</script>
 <!-- React and ReactDOM 18.3.1 are served from /lib/ (same bytes as the unpkg builds support.js would fetch; see lib/LICENSE). Setting __resources also stops the runtime refetching the page. -->
 <script>window.__resources={"https://unpkg.com/react@18.3.1/umd/react.production.min.js":"/lib/react.production.min.js","https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js":"/lib/react-dom.production.min.js"};</script>
-<script src="/support.js"></script>
-<script src="/tech-bg.js"></script>
+<script defer src="/support.js?v=8fe7df74"></script>
+<script defer src="/tech-bg.js?v=dcae13db"></script>
 </head>
 <body>
 <!-- noscript:start -->
@@ -289,11 +297,9 @@ gtag('config', 'G-1Q0FD5LT9M');
 <!-- noscript:end -->
 <x-dc>
 <helmet>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+.mk-icon{width:1em;height:1em;fill:currentColor;display:inline-block;vertical-align:-0.125em}
 html{scroll-behavior:smooth;scroll-padding-top:88px}
 [data-theme="dark"]{color-scheme:dark}[data-theme="light"]{color-scheme:light}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important}}
@@ -410,8 +416,8 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
         <li><a href="/about/" onClick="{{ goAbout }}" aria-current="{{ curAbout }}" style="display:block;padding:12px 0;font-size:0.875rem;color:{{ navAbout }};font-weight:700;text-transform:uppercase;letter-spacing:0.1em;font-family:'JetBrains Mono',monospace;border-bottom:2px solid {{ navAboutBd }}" style-hover="color:var(--fg-accent)">About</a></li>
       </ul>
       <div style="display:flex;gap:8px">
-        <button class="mk-btn" onClick="{{ togglePause }}" aria-label="{{ pauseLabel }}" title="{{ pauseLabel }}" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.5px solid var(--border-strong);background:transparent;color:var(--fg-2);font-size:0.875rem;cursor:pointer" style-hover="border-color:#ffe600;color:#0f0f0f;background:#ffe600"><i class="{{ pauseIcon }}" aria-hidden="true"></i></button>
-        <button class="mk-btn" onClick="{{ toggleTheme }}" aria-label="{{ themeLabel }}" title="{{ themeLabel }}" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.5px solid var(--border-strong);background:transparent;color:var(--fg-2);font-size:0.875rem;cursor:pointer" style-hover="border-color:#ffe600;color:#0f0f0f;background:#ffe600"><i class="{{ themeIcon }}" aria-hidden="true"></i></button>
+        <button class="mk-btn" onClick="{{ togglePause }}" aria-label="{{ pauseLabel }}" title="{{ pauseLabel }}" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.5px solid var(--border-strong);background:transparent;color:var(--fg-2);font-size:0.875rem;cursor:pointer" style-hover="border-color:#ffe600;color:#0f0f0f;background:#ffe600"><svg class="mk-icon" aria-hidden="true" focusable="false"><use sc-camel-xlink-href="{{ pauseIcon }}"></use></svg></button>
+        <button class="mk-btn" onClick="{{ toggleTheme }}" aria-label="{{ themeLabel }}" title="{{ themeLabel }}" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.5px solid var(--border-strong);background:transparent;color:var(--fg-2);font-size:0.875rem;cursor:pointer" style-hover="border-color:#ffe600;color:#0f0f0f;background:#ffe600"><svg class="mk-icon" aria-hidden="true" focusable="false"><use sc-camel-xlink-href="{{ themeIcon }}"></use></svg></button>
       </div>
     </div>
   </nav>
@@ -428,7 +434,7 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
         <p style="font-family:'JetBrains Mono',monospace;font-size:0.875rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--fg-accent);margin-bottom:20px">{{ headline }}</p>
         <p style="font-size:1.1875rem;line-height:1.6;color:var(--fg-2);max-width:36em;margin-bottom:32px;text-wrap:pretty">{{ tagline }}</p>
         <ul role="list" aria-label="Social profiles" style="display:flex;flex-wrap:wrap;gap:8px;list-style:none">
-          <sc-for list="{{ socials }}" as="s" hint-placeholder-count="5"><li><a href="{{ s.href }}" target="{{ s.target }}" rel="noopener" aria-label="{{ s.label }}" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.5px solid var(--border-strong);background:var(--bg);color:var(--fg-2);font-size:1.0625rem" style-hover="border-color:#ffe600;color:#0f0f0f;background:#ffe600"><i class="{{ s.icon }}" aria-hidden="true"></i></a></li></sc-for>
+          <sc-for list="{{ socials }}" as="s" hint-placeholder-count="5"><li><a href="{{ s.href }}" target="{{ s.target }}" rel="{{ s.rel }}" aria-label="{{ s.label }}" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.5px solid var(--border-strong);background:var(--bg);color:var(--fg-2);font-size:1.0625rem" style-hover="border-color:#ffe600;color:#0f0f0f;background:#ffe600"><svg class="mk-icon" aria-hidden="true" focusable="false"><use sc-camel-xlink-href="{{ s.icon }}"></use></svg></a></li></sc-for>
         </ul>
       </div>
       <img src="/images/portrait.jpg" alt="Portrait of Matt Kellock" style="width:160px;height:160px;object-fit:cover;border:3px solid #ffe600;display:block;filter:grayscale(30%);flex-shrink:0">
@@ -487,7 +493,7 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
       <ul role="list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(460px,100%),1fr));border-left:1px solid var(--border-strong);list-style:none">
         <sc-for list="{{ focus }}" as="f" hint-placeholder-count="4">
           <li style="display:flex;flex-direction:column;gap:14px;padding:32px;background:var(--bg);border-right:1px solid var(--border-strong);border-bottom:1px solid var(--border-strong)">
-            <span style="display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:0.875rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--fg-3)"><span aria-hidden="true">{{ f.num }}</span><i class="{{ f.icon }}" aria-hidden="true" style="font-size:1.125rem;color:var(--fg-accent)"></i></span>
+            <span style="display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:0.875rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--fg-3)"><span aria-hidden="true">{{ f.num }}</span><svg class="mk-icon" aria-hidden="true" focusable="false" style="font-size:1.125rem;color:var(--fg-accent)"><use sc-camel-xlink-href="{{ f.icon }}"></use></svg></span>
             <h3 style="font-size:1.4375rem;font-weight:800;letter-spacing:-0.025em;line-height:1.2;text-wrap:balance">{{ f.title }}</h3>
             <p style="font-size:1rem;line-height:1.65;color:var(--fg-2)">{{ f.body }}</p>
           </li>
@@ -523,7 +529,7 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;background:var(--bg);border:1px solid var(--border-strong);border-bottom:2px solid var(--rule);padding:2px 24px;font-family:'JetBrains Mono',monospace;font-size:0.875rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase">
         <p style="color:var(--fg-3);padding:10px 0">{{ countLabel }}</p>
-        <a href="/feed.xml" style="display:inline-flex;align-items:center;gap:8px;padding:10px 0"><i class="fas fa-rss" aria-hidden="true"></i>RSS feed</a>
+        <a href="/feed.xml" style="display:inline-flex;align-items:center;gap:8px;padding:10px 0"><svg class="mk-icon" aria-hidden="true" focusable="false"><use href="#icon-rss"></use></svg>RSS feed</a>
       </div>
       <ul role="list" style="display:flex;flex-direction:column;list-style:none">
         <sc-for list="{{ posts }}" as="p" hint-placeholder-count="1">
@@ -562,6 +568,7 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
         <a href="/about/" rel="author" onClick="{{ goAbout }}" style="font-size:0.9375rem;font-weight:700;color:var(--fg-1)">Matt Kellock</a>
         <span style="font-family:'JetBrains Mono',monospace;font-size:0.875rem;font-weight:600;letter-spacing:0.02em;color:var(--fg-3)">AACS CP <span aria-hidden="true">·</span> Melbourne</span>
       </p>
+      <button type="button" class="mk-noprint" onClick="{{ copyLink }}" aria-label="{{ copyLabel }}" title="{{ copyLabel }}" style="margin-left:auto;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.5px solid var(--border-strong);color:{{ copyColor }};font-size:1rem;background:transparent;cursor:pointer" style-hover="border-color:#ffe600;color:#0f0f0f;background:#ffe600"><svg class="mk-icon" aria-hidden="true" focusable="false"><use sc-camel-xlink-href="{{ copyIcon }}"></use></svg></button>
     </div>
     <sc-if value="{{ post.isMd }}" hint-placeholder-val="{{ false }}">
       <div onClick="{{ mdClick }}">{{ bodyEl }}</div>
@@ -592,10 +599,10 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
       <span style="font-family:'JetBrains Mono',monospace;font-size:0.875rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-accent);border:1px solid var(--fg-accent);padding:3px 8px">{{ post.tag }}</span>
       <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
         <span style="font-family:'JetBrains Mono',monospace;font-size:0.875rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--fg-3);margin-right:8px">Share</span>
-        <sc-for list="{{ shares }}" as="s" hint-placeholder-count="3"><a href="{{ s.href }}" target="_blank" rel="noopener" aria-label="{{ s.name }}" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.5px solid var(--border-strong);color:var(--fg-2);font-size:1rem" style-hover="border-color:#ffe600;color:#0f0f0f;background:#ffe600"><i class="{{ s.icon }}" aria-hidden="true"></i></a></sc-for>
-        <button type="button" onClick="{{ copyLink }}" aria-label="{{ copyLabel }}" title="{{ copyLabel }}" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.5px solid var(--border-strong);color:{{ copyColor }};font-size:1rem;background:transparent;cursor:pointer" style-hover="border-color:#ffe600;color:#0f0f0f;background:#ffe600"><i class="{{ copyIcon }}" aria-hidden="true"></i></button>
-        <button type="button" onClick="{{ printPage }}" aria-label="Print or save as PDF" title="Print or save as PDF" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.5px solid var(--border-strong);color:var(--fg-2);font-size:1rem;background:transparent;cursor:pointer" style-hover="border-color:#ffe600;color:#0f0f0f;background:#ffe600"><i class="fas fa-print" aria-hidden="true"></i></button>
-        <sc-if value="{{ canShare }}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{ nativeShare }}" aria-label="Share using your device" title="Share using your device" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.5px solid var(--border-strong);color:var(--fg-2);font-size:1rem;background:transparent;cursor:pointer" style-hover="border-color:#ffe600;color:#0f0f0f;background:#ffe600"><i class="fas fa-share-nodes" aria-hidden="true"></i></button></sc-if>
+        <sc-for list="{{ shares }}" as="s" hint-placeholder-count="4"><a href="{{ s.href }}" target="{{ s.target }}" rel="noopener" onClick="{{ s.track }}" aria-label="{{ s.name }}" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.5px solid var(--border-strong);color:var(--fg-2);font-size:1rem" style-hover="border-color:#ffe600;color:#0f0f0f;background:#ffe600"><svg class="mk-icon" aria-hidden="true" focusable="false"><use sc-camel-xlink-href="{{ s.icon }}"></use></svg></a></sc-for>
+        <button type="button" onClick="{{ copyLink }}" aria-label="{{ copyLabel }}" title="{{ copyLabel }}" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.5px solid var(--border-strong);color:{{ copyColor }};font-size:1rem;background:transparent;cursor:pointer" style-hover="border-color:#ffe600;color:#0f0f0f;background:#ffe600"><svg class="mk-icon" aria-hidden="true" focusable="false"><use sc-camel-xlink-href="{{ copyIcon }}"></use></svg></button>
+        <button type="button" onClick="{{ printPage }}" aria-label="Print or save as PDF" title="Print or save as PDF" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.5px solid var(--border-strong);color:var(--fg-2);font-size:1rem;background:transparent;cursor:pointer" style-hover="border-color:#ffe600;color:#0f0f0f;background:#ffe600"><svg class="mk-icon" aria-hidden="true" focusable="false"><use href="#icon-print"></use></svg></button>
+        <sc-if value="{{ canShare }}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{ nativeShare }}" aria-label="Share using your device" title="Share using your device" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.5px solid var(--border-strong);color:var(--fg-2);font-size:1rem;background:transparent;cursor:pointer" style-hover="border-color:#ffe600;color:#0f0f0f;background:#ffe600"><svg class="mk-icon" aria-hidden="true" focusable="false"><use href="#icon-share-nodes"></use></svg></button></sc-if>
         <span aria-live="polite" class="mk-sr">{{ copiedNote }}</span>
       </div>
     </footer>
@@ -666,7 +673,7 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
           <ul role="list" style="display:flex;flex-direction:column;list-style:none;max-width:44em">
             <sc-for list="{{ credentials }}" as="c" hint-placeholder-count="4">
               <li style="display:flex;align-items:center;gap:20px;padding:20px 24px;border:1px solid var(--border-strong);margin-top:-1px;background:var(--bg-alt)">
-                <i class="{{ c.icon }}" aria-hidden="true" style="font-size:1.375rem;color:var(--fg-accent);width:32px;text-align:center;flex-shrink:0"></i>
+                <svg class="mk-icon" aria-hidden="true" focusable="false" style="font-size:1.375rem;color:var(--fg-accent);width:32px;flex-shrink:0"><use sc-camel-xlink-href="{{ c.icon }}"></use></svg>
                 <div><h3 style="font-size:1.0625rem;font-weight:600;margin-bottom:2px">{{ c.title }}</h3><p style="font-size:0.875rem;line-height:1.55;color:var(--fg-3)">{{ c.detail }}</p></div>
               </li>
             </sc-for>
@@ -705,8 +712,8 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
           <p style="color:var(--fg-2);font-size:1.0625rem;line-height:1.7;max-width:40em;margin-bottom:8px">{{ contactNote }}</p>
           <ul role="list" style="display:flex;flex-direction:column;list-style:none;max-width:44em">
             <sc-for list="{{ socials }}" as="s" hint-placeholder-count="5">
-              <li><a href="{{ s.href }}" target="{{ s.target }}" rel="noopener" style="display:flex;align-items:center;gap:16px;font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:600;letter-spacing:0.02em;color:var(--fg-1);padding:18px 0;border-bottom:1px solid var(--border-strong);position:relative" style-hover="color:var(--fg-accent)">
-                <i class="{{ s.icon }}" aria-hidden="true" style="font-size:1.0625rem;color:var(--fg-accent);width:18px;text-align:center"></i>
+              <li><a href="{{ s.href }}" target="{{ s.target }}" rel="{{ s.rel }}" style="display:flex;align-items:center;gap:16px;font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:600;letter-spacing:0.02em;color:var(--fg-1);padding:18px 0;border-bottom:1px solid var(--border-strong);position:relative" style-hover="color:var(--fg-accent)">
+                <svg class="mk-icon" aria-hidden="true" focusable="false" style="font-size:1.0625rem;color:var(--fg-accent);width:18px"><use sc-camel-xlink-href="{{ s.icon }}"></use></svg>
                 <span style="flex:1;overflow-wrap:anywhere">{{ s.handle }}</span>
                 <span style="font-size:0.875rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--fg-3)">{{ s.name }}<span class="mk-sr">{{ s.srNote }}</span></span>
               </a></li>
@@ -731,8 +738,8 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
       <li><a href="/feed.xml" style="display:inline-block;padding:12px 0">RSS</a></li>
     </ul></nav>
     <ul role="list" aria-label="Social profiles" style="display:flex;gap:4px;list-style:none">
-      <sc-for list="{{ socials }}" as="s" hint-placeholder-count="5"><li><a href="{{ s.href }}" target="{{ s.target }}" rel="noopener" aria-label="{{ s.label }}" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;color:var(--fg-2);font-size:1rem" style-hover="color:var(--fg-accent)"><i class="{{ s.icon }}" aria-hidden="true"></i></a></li></sc-for>
-      <li><a href="/feed.xml" aria-label="RSS feed of talks and writing" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;color:var(--fg-2);font-size:1rem" style-hover="color:var(--fg-accent)"><i class="fas fa-rss" aria-hidden="true"></i></a></li>
+      <sc-for list="{{ socials }}" as="s" hint-placeholder-count="5"><li><a href="{{ s.href }}" target="{{ s.target }}" rel="{{ s.rel }}" aria-label="{{ s.label }}" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;color:var(--fg-2);font-size:1rem" style-hover="color:var(--fg-accent)"><svg class="mk-icon" aria-hidden="true" focusable="false"><use sc-camel-xlink-href="{{ s.icon }}"></use></svg></a></li></sc-for>
+      <li><a href="/feed.xml" aria-label="RSS feed of talks and writing" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;color:var(--fg-2);font-size:1rem" style-hover="color:var(--fg-accent)"><svg class="mk-icon" aria-hidden="true" focusable="false"><use href="#icon-rss"></use></svg></a></li>
     </ul>
   </div>
 </footer>
@@ -740,6 +747,8 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
 </div>
 </div>
 </x-dc>
+<!-- Icons: Font Awesome Free 6.7.2 (https://fontawesome.com), CC BY 4.0, Copyright 2024 Fonticons, Inc. Inlined as a sprite instead of loading the full stylesheet and webfonts. -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="icon-layer-group" viewBox="0 0 576 512"><path d="M264.5 5.2c14.9-6.9 32.1-6.9 47 0l218.6 101c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 149.8C37.4 145.8 32 137.3 32 128s5.4-17.9 13.9-21.8L264.5 5.2zM476.9 209.6l53.2 24.6c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 277.8C37.4 273.8 32 265.3 32 256s5.4-17.9 13.9-21.8l53.2-24.6 152 70.2c23.4 10.8 50.4 10.8 73.8 0l152-70.2zm-152 198.2l152-70.2 53.2 24.6c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 405.8C37.4 401.8 32 393.3 32 384s5.4-17.9 13.9-21.8l53.2-24.6 152 70.2c23.4 10.8 50.4 10.8 73.8 0z"/></symbol><symbol id="icon-shield-halved" viewBox="0 0 512 512"><path d="M256 0c4.6 0 9.2 1 13.4 2.9L457.7 82.8c22 9.3 38.4 31 38.3 57.2c-.5 99.2-41.3 280.7-213.6 363.2c-16.7 8-36.1 8-52.8 0C57.3 420.7 16.5 239.2 16 140c-.1-26.2 16.3-47.9 38.3-57.2L242.7 2.9C246.8 1 251.4 0 256 0zm0 66.8l0 378.1C394 378 431.1 230.1 432 141.4L256 66.8s0 0 0 0z"/></symbol><symbol id="icon-code-merge" viewBox="0 0 448 512"><path d="M80 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm32.4 97.2c28-12.4 47.6-40.5 47.6-73.2c0-44.2-35.8-80-80-80S0 35.8 0 80c0 32.8 19.7 61 48 73.3l0 205.3C19.7 371 0 399.2 0 432c0 44.2 35.8 80 80 80s80-35.8 80-80c0-32.8-19.7-61-48-73.3l0-86.6c26.7 20.1 60 32 96 32l86.7 0c12.3 28.3 40.5 48 73.3 48c44.2 0 80-35.8 80-80s-35.8-80-80-80c-32.8 0-61 19.7-73.3 48L208 240c-49.9 0-91-38.1-95.6-86.8zM80 408a24 24 0 1 1 0 48 24 24 0 1 1 0-48zM344 272a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"/></symbol><symbol id="icon-compass" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm50.7-186.9L162.4 380.6c-19.4 7.5-38.5-11.6-31-31l55.5-144.3c3.3-8.5 9.9-15.1 18.4-18.4l144.3-55.5c19.4-7.5 38.5 11.6 31 31L325.1 306.7c-3.2 8.5-9.9 15.1-18.4 18.4zM288 256a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></symbol><symbol id="icon-linkedin" viewBox="0 0 448 512"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></symbol><symbol id="icon-envelope" viewBox="0 0 512 512"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></symbol><symbol id="icon-bluesky" viewBox="0 0 512 512"><path d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2c42.1-31.6 110.3-56 110.3 21.8c0 15.5-8.9 130.5-14.1 149.2C478.2 298 412 314.6 353.1 304.5c102.9 17.5 129.1 75.5 72.5 133.5c-107.4 110.2-154.3-27.6-166.3-62.9l0 0c-1.7-4.9-2.6-7.8-3.3-7.8s-1.6 3-3.3 7.8l0 0c-12 35.3-59 173.1-166.3 62.9c-56.5-58-30.4-116 72.5-133.5C100 314.6 33.8 298 15.7 233.1C10.4 214.4 1.5 99.4 1.5 83.9c0-77.8 68.2-53.4 110.3-21.8z"/></symbol><symbol id="icon-x-twitter" viewBox="0 0 512 512"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></symbol><symbol id="icon-github" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></symbol><symbol id="icon-user-tie" viewBox="0 0 448 512"><path d="M96 128a128 128 0 1 0 256 0A128 128 0 1 0 96 128zm94.5 200.2l18.6 31L175.8 483.1l-36-146.9c-2-8.1-9.8-13.4-17.9-11.3C51.9 342.4 0 405.8 0 481.3c0 17 13.8 30.7 30.7 30.7l131.7 0c0 0 0 0 .1 0l5.5 0 112 0 5.5 0c0 0 0 0 .1 0l131.7 0c17 0 30.7-13.8 30.7-30.7c0-75.5-51.9-138.9-121.9-156.4c-8.1-2-15.9 3.3-17.9 11.3l-36 146.9L238.9 359.2l18.6-31c6.4-10.7-1.3-24.2-13.7-24.2L224 304l-19.7 0c-12.4 0-20.1 13.6-13.7 24.2z"/></symbol><symbol id="icon-clipboard-check" viewBox="0 0 384 512"><path d="M192 0c-41.8 0-77.4 26.7-90.5 64L64 64C28.7 64 0 92.7 0 128L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64l-37.5 0C269.4 26.7 233.8 0 192 0zm0 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64zM305 273L177 401c-9.4 9.4-24.6 9.4-33.9 0L79 337c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L271 239c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></symbol><symbol id="icon-id-card" viewBox="0 0 576 512"><path d="M0 96l576 0c0-35.3-28.7-64-64-64L64 32C28.7 32 0 60.7 0 96zm0 32L0 416c0 35.3 28.7 64 64 64l448 0c35.3 0 64-28.7 64-64l0-288L0 128zM64 405.3c0-29.5 23.9-53.3 53.3-53.3l117.3 0c29.5 0 53.3 23.9 53.3 53.3c0 5.9-4.8 10.7-10.7 10.7L74.7 416c-5.9 0-10.7-4.8-10.7-10.7zM176 192a64 64 0 1 1 0 128 64 64 0 1 1 0-128zm176 16c0-8.8 7.2-16 16-16l128 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-128 0c-8.8 0-16-7.2-16-16zm0 64c0-8.8 7.2-16 16-16l128 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-128 0c-8.8 0-16-7.2-16-16zm0 64c0-8.8 7.2-16 16-16l128 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-128 0c-8.8 0-16-7.2-16-16z"/></symbol><symbol id="icon-graduation-cap" viewBox="0 0 640 512"><path d="M320 32c-8.1 0-16.1 1.4-23.7 4.1L15.8 137.4C6.3 140.9 0 149.9 0 160s6.3 19.1 15.8 22.6l57.9 20.9C57.3 229.3 48 259.8 48 291.9l0 28.1c0 28.4-10.8 57.7-22.3 80.8c-6.5 13-13.9 25.8-22.5 37.6C0 442.7-.9 448.3 .9 453.4s6 8.9 11.2 10.2l64 16c4.2 1.1 8.7 .3 12.4-2s6.3-6.1 7.1-10.4c8.6-42.8 4.3-81.2-2.1-108.7C90.3 344.3 86 329.8 80 316.5l0-24.6c0-30.2 10.2-58.7 27.9-81.5c12.9-15.5 29.6-28 49.2-35.7l157-61.7c8.2-3.2 17.5 .8 20.7 9s-.8 17.5-9 20.7l-157 61.7c-12.4 4.9-23.3 12.4-32.2 21.6l159.6 57.6c7.6 2.7 15.6 4.1 23.7 4.1s16.1-1.4 23.7-4.1L624.2 182.6c9.5-3.4 15.8-12.5 15.8-22.6s-6.3-19.1-15.8-22.6L343.7 36.1C336.1 33.4 328.1 32 320 32zM128 408c0 35.3 86 72 192 72s192-36.7 192-72L496.7 262.6 354.5 314c-11.1 4-22.8 6-34.5 6s-23.5-2-34.5-6L143.3 262.6 128 408z"/></symbol><symbol id="icon-people-group" viewBox="0 0 640 512"><path d="M72 88a56 56 0 1 1 112 0A56 56 0 1 1 72 88zM64 245.7C54 256.9 48 271.8 48 288s6 31.1 16 42.3l0-84.7zm144.4-49.3C178.7 222.7 160 261.2 160 304c0 34.3 12 65.8 32 90.5l0 21.5c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32-14.3-32-32l0-26.8C26.2 371.2 0 332.7 0 288c0-61.9 50.1-112 112-112l32 0c24 0 46.2 7.5 64.4 20.3zM448 416l0-21.5c20-24.7 32-56.2 32-90.5c0-42.8-18.7-81.3-48.4-107.7C449.8 183.5 472 176 496 176l32 0c61.9 0 112 50.1 112 112c0 44.7-26.2 83.2-64 101.2l0 26.8c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32-14.3-32-32zm8-328a56 56 0 1 1 112 0A56 56 0 1 1 456 88zM576 245.7l0 84.7c10-11.3 16-26.1 16-42.3s-6-31.1-16-42.3zM320 32a64 64 0 1 1 0 128 64 64 0 1 1 0-128zM240 304c0 16.2 6 31 16 42.3l0-84.7c-10 11.3-16 26.1-16 42.3zm144-42.3l0 84.7c10-11.3 16-26.1 16-42.3s-6-31.1-16-42.3zM448 304c0 44.7-26.2 83.2-64 101.2l0 42.8c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32-14.3-32-32l0-42.8c-37.8-18-64-56.5-64-101.2c0-61.9 50.1-112 112-112l32 0c61.9 0 112 50.1 112 112z"/></symbol><symbol id="icon-sun" viewBox="0 0 512 512"><path d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"/></symbol><symbol id="icon-moon" viewBox="0 0 384 512"><path d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"/></symbol><symbol id="icon-play" viewBox="0 0 384 512"><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80L0 432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></symbol><symbol id="icon-pause" viewBox="0 0 320 512"><path d="M48 64C21.5 64 0 85.5 0 112L0 400c0 26.5 21.5 48 48 48l32 0c26.5 0 48-21.5 48-48l0-288c0-26.5-21.5-48-48-48L48 64zm192 0c-26.5 0-48 21.5-48 48l0 288c0 26.5 21.5 48 48 48l32 0c26.5 0 48-21.5 48-48l0-288c0-26.5-21.5-48-48-48l-32 0z"/></symbol><symbol id="icon-check" viewBox="0 0 448 512"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></symbol><symbol id="icon-link" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></symbol><symbol id="icon-share-nodes" viewBox="0 0 448 512"><path d="M352 224c53 0 96-43 96-96s-43-96-96-96s-96 43-96 96c0 4 .2 8 .7 11.9l-94.1 47C145.4 170.2 121.9 160 96 160c-53 0-96 43-96 96s43 96 96 96c25.9 0 49.4-10.2 66.6-26.9l94.1 47c-.5 3.9-.7 7.8-.7 11.9c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-25.9 0-49.4 10.2-66.6 26.9l-94.1-47c.5-3.9 .7-7.8 .7-11.9s-.2-8-.7-11.9l94.1-47C302.6 213.8 326.1 224 352 224z"/></symbol><symbol id="icon-print" viewBox="0 0 512 512"><path d="M128 0C92.7 0 64 28.7 64 64l0 96 64 0 0-96 226.7 0L384 93.3l0 66.7 64 0 0-66.7c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0L128 0zM384 352l0 32 0 64-256 0 0-64 0-16 0-16 256 0zm64 32l32 0c17.7 0 32-14.3 32-32l0-96c0-35.3-28.7-64-64-64L64 192c-35.3 0-64 28.7-64 64l0 96c0 17.7 14.3 32 32 32l32 0 0 64c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-64zM432 248a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"/></symbol><symbol id="icon-rss" viewBox="0 0 448 512"><path d="M0 64C0 46.3 14.3 32 32 32c229.8 0 416 186.2 416 416c0 17.7-14.3 32-32 32s-32-14.3-32-32C384 253.6 226.4 96 32 96C14.3 96 0 81.7 0 64zM0 416a64 64 0 1 1 128 0A64 64 0 1 1 0 416zM32 160c159.1 0 288 128.9 288 288c0 17.7-14.3 32-32 32s-32-14.3-32-32c0-123.7-100.3-224-224-224c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/></symbol></svg>
 <script type="text/x-dc" data-dc-script data-props="{&quot;bgMotif&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;all&quot;,&quot;polyhedra&quot;,&quot;network&quot;,&quot;topology&quot;],&quot;default&quot;:&quot;all&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Background&quot;},&quot;bgIntensity&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:1,&quot;max&quot;:10,&quot;step&quot;:1,&quot;default&quot;:6,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Background&quot;}}">
 const HEADLINE = 'Technology leader · Platform, security & governance';
 // Career from 1999, leading teams since 2008 (and a company director 2004 to 2017): keep any year figure derivable from JOBS.
@@ -796,10 +805,10 @@ const POSTS = [
 ];
 
 const FOCUS = [
-  { icon: 'fas fa-compass', title: 'Leadership and governance', body: 'Profit and loss ownership, org design, distributed teams across three countries, and executive and board reporting in regulated sectors: payroll, financial markets, wealth and industrial safety.' },
-  { icon: 'fas fa-shield-halved', title: 'Security, compliance and assurance', body: 'Accountable ownership of external audits, ISO 27001 across applications and cloud, cloud security posture and policy as code, and AI brought into delivery with deterministic guardrails.' },
-  { icon: 'fas fa-code-merge', title: 'Integration through acquisition', body: 'Planning integration order, dependencies and decision rights across two organisations that do not yet trust each other, from team transitions to consolidating an acquired estate.' },
-  { icon: 'fas fa-layer-group', title: 'Platform engineering at scale', body: 'Kubernetes, Terraform, GitOps, observability and cost engineering across multi-country estates, with enough hands-on depth to review the pull request as well as the budget.' }
+  { icon: '#icon-compass', title: 'Leadership and governance', body: 'Profit and loss ownership, org design, distributed teams across three countries, and executive and board reporting in regulated sectors: payroll, financial markets, wealth and industrial safety.' },
+  { icon: '#icon-shield-halved', title: 'Security, compliance and assurance', body: 'Accountable ownership of external audits, ISO 27001 across applications and cloud, cloud security posture and policy as code, and AI brought into delivery with deterministic guardrails.' },
+  { icon: '#icon-code-merge', title: 'Integration through acquisition', body: 'Planning integration order, dependencies and decision rights across two organisations that do not yet trust each other, from team transitions to consolidating an acquired estate.' },
+  { icon: '#icon-layer-group', title: 'Platform engineering at scale', body: 'Kubernetes, Terraform, GitOps, observability and cost engineering across multi-country estates, with enough hands-on depth to review the pull request as well as the budget.' }
 ];
 
 const BIO = [
@@ -837,12 +846,12 @@ const CONTACT_NOTE = 'Board, advisory, speaking and media enquiries are welcome.
 const WRITING_INTRO = "I write for two readers: the directors and executives who have to govern technology they don't operate, and the engineers and technology leaders who run it. Each piece says which it is for, and every claim is footnoted to a primary source.";
 
 const SOCIALS = [
-  { name: 'LinkedIn', icon: 'fab fa-linkedin', href: 'https://www.linkedin.com/in/mkellock/', handle: 'linkedin.com/in/mkellock' },
-  { name: 'Email', icon: 'fas fa-envelope', href: 'mailto:matt@kellock.com.au', handle: 'matt@kellock.com.au', mail: true },
-  { name: 'Bluesky', icon: 'fab fa-bluesky', href: 'https://bsky.app/profile/mattkellock.bsky.social', handle: '@mattkellock.bsky.social' },
-  { name: 'X', icon: 'fab fa-x-twitter', href: 'https://x.com/MattKellock', handle: '@MattKellock' },
-  { name: 'GitHub', icon: 'fab fa-github', href: 'https://github.com/mkellock', handle: 'github.com/mkellock' }
-].map(s => ({ ...s, target: s.mail ? '_self' : '_blank', label: s.mail ? 'Email Matt Kellock' : s.name + ' (opens in new tab)', srNote: s.mail ? '' : ' (opens in new tab)' }));
+  { name: 'LinkedIn', icon: '#icon-linkedin', href: 'https://www.linkedin.com/in/mkellock/', handle: 'linkedin.com/in/mkellock' },
+  { name: 'Email', icon: '#icon-envelope', href: 'mailto:matt@kellock.com.au', handle: 'matt@kellock.com.au', mail: true },
+  { name: 'Bluesky', icon: '#icon-bluesky', href: 'https://bsky.app/profile/mattkellock.bsky.social', handle: '@mattkellock.bsky.social' },
+  { name: 'X', icon: '#icon-x-twitter', href: 'https://x.com/MattKellock', handle: '@MattKellock' },
+  { name: 'GitHub', icon: '#icon-github', href: 'https://github.com/mkellock', handle: 'github.com/mkellock' }
+].map(s => ({ ...s, target: s.mail ? '_self' : '_blank', rel: s.mail ? 'noopener' : 'me noopener', label: s.mail ? 'Email Matt Kellock' : s.name + ' (opens in new tab)', srNote: s.mail ? '' : ' (opens in new tab)' }));
 
 const JOBS = [
   { date: 'Jan 2022 – Present', role: 'DevOps & Infrastructure Manager', company: 'Global payroll & HR technology company', current: true,
@@ -898,11 +907,11 @@ const JOBS = [
 ];
 
 const CREDENTIALS = [
-  { icon: 'fas fa-user-tie', title: 'Owner-director and general manager, 2004 to 2017', detail: 'Executive director of Imperial Crest Hair Company Pty Ltd, a two-site private company, accountable for its finances, people, systems and statutory obligations.' },
-  { icon: 'fas fa-people-group', title: 'Executive leadership team, Smart Badge', detail: 'Chief Technology Officer and member of the executive team, 2020 to 2021.' },
-  { icon: 'fas fa-clipboard-check', title: 'Accountable owner of external audits', detail: 'ISO 27001 across applications and cloud for a global payroll business; initiated the ISO 27001 programme at Smart Badge.' },
-  { icon: 'fas fa-id-card', title: 'Australian Computer Society, AACS CP', detail: 'Associate and Certified Professional.' },
-  { icon: 'fas fa-graduation-cap', title: 'Bachelor of Information Technology', detail: 'RMIT University.' }
+  { icon: '#icon-user-tie', title: 'Owner-director and general manager, 2004 to 2017', detail: 'Executive director of Imperial Crest Hair Company Pty Ltd, a two-site private company, accountable for its finances, people, systems and statutory obligations.' },
+  { icon: '#icon-people-group', title: 'Executive leadership team, Smart Badge', detail: 'Chief Technology Officer and member of the executive team, 2020 to 2021.' },
+  { icon: '#icon-clipboard-check', title: 'Accountable owner of external audits', detail: 'ISO 27001 across applications and cloud for a global payroll business; initiated the ISO 27001 programme at Smart Badge.' },
+  { icon: '#icon-id-card', title: 'Australian Computer Society, AACS CP', detail: 'Associate and Certified Professional.' },
+  { icon: '#icon-graduation-cap', title: 'Bachelor of Information Technology', detail: 'RMIT University.' }
 ];
 
 const SKILLS = [
@@ -1157,6 +1166,10 @@ class Component extends DCLogic {
     const next = related || posts[(posts.indexOf(post) + 1) % posts.length];
     const postUrl = SITE + pathFor('article', post.id), copied = s.copied === post.id;
     const url = encodeURIComponent(postUrl), txt = encodeURIComponent(post.title);
+    // Share analytics: one GA4 "share" event per channel, so the channels that work can be told apart.
+    const track = method => { try { if (typeof window.gtag === 'function') window.gtag('event', 'share', { method, content_type: post.type.toLowerCase(), item_id: post.id }); } catch (e) {} };
+    const bskyLine = post.title + ' by @mattkellock.bsky.social';
+    const bskyText = (bskyLine + ' ' + post.dek).length + postUrl.length + 1 <= 290 ? bskyLine + ' ' + post.dek : bskyLine;
     const muted = 'var(--fg-2)', on = 'var(--fg-accent)';
     const wr = s.page === 'writing' || s.page === 'article', ab = s.page === 'about';
     const R = window.React, html = post.md ? bodyFor(post.id) : null;
@@ -1192,11 +1205,11 @@ class Component extends DCLogic {
         if (r) this.go(r.page, { ...r, hash: frag ? '#' + frag : '' })(e);
       },
       theme: s.theme,
-      themeIcon: s.theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon',
+      themeIcon: s.theme === 'dark' ? '#icon-sun' : '#icon-moon',
       themeLabel: s.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode',
       toggleTheme: () => { this.themeChosen = true; this.setState(st => { const t = st.theme === 'dark' ? 'light' : 'dark'; write('mk-theme', t); return { theme: t }; }); },
       paused: s.paused, pausedStr: String(s.paused),
-      pauseIcon: s.paused ? 'fas fa-play' : 'fas fa-pause',
+      pauseIcon: s.paused ? '#icon-play' : '#icon-pause',
       pauseLabel: s.paused ? 'Play background animation' : 'Pause background animation',
       // The reader's choice overrides the device setting and is remembered.
       togglePause: () => { this.motionChosen = true; this.setState(st => { write('mk-bg-paused', String(!st.paused)); return { paused: !st.paused }; }); },
@@ -1215,6 +1228,7 @@ class Component extends DCLogic {
       post, next, nextLabel: related ? 'Companion' : 'Next', hasNext: posts.length > 1,
       // Copy link uses the Clipboard API, with a textarea fallback for older browsers.
       copyLink: () => {
+        track('copy_link');
         const done = () => {
           this.setState({ copied: post.id, copyFailed: null });
           clearTimeout(this.copyTimer);
@@ -1231,18 +1245,19 @@ class Component extends DCLogic {
         };
         try { navigator.clipboard.writeText(postUrl).then(done, fallback); } catch (e) { fallback(); }
       },
-      copyIcon: copied ? 'fas fa-check' : 'fas fa-link',
+      copyIcon: copied ? '#icon-check' : '#icon-link',
       copyLabel: 'Copy link',
       copyColor: copied ? 'var(--fg-accent)' : 'var(--fg-2)',
       copiedNote: copied ? 'Link copied to clipboard' : s.copyFailed === post.id ? 'Could not copy the link. Copy it from the address bar instead.' : '',
       canShare: typeof navigator !== 'undefined' && typeof navigator.share === 'function',
-      printPage: () => { try { window.print(); } catch (e) {} },
-      nativeShare: () => { try { navigator.share({ title: post.title, text: post.dek, url: postUrl }).catch(() => {}); } catch (e) {} },
+      printPage: () => { track('print'); try { window.print(); } catch (e) {} },
+      nativeShare: () => { track('web_share'); try { navigator.share({ title: post.title, text: post.dek, url: postUrl }).catch(() => {}); } catch (e) {} },
       shares: [
-        { name: 'Share on LinkedIn (opens in new tab)', icon: 'fab fa-linkedin', href: 'https://www.linkedin.com/sharing/share-offsite/?url=' + url },
-        { name: 'Share on Bluesky (opens in new tab)', icon: 'fab fa-bluesky', href: 'https://bsky.app/intent/compose?text=' + txt + '%20' + url },
-        { name: 'Share on X (opens in new tab)', icon: 'fab fa-x-twitter', href: 'https://x.com/intent/post?text=' + txt + '&url=' + url + '&via=MattKellock' }
-      ],
+        { name: 'Share on LinkedIn (opens in new tab)', icon: '#icon-linkedin', method: 'linkedin', href: 'https://www.linkedin.com/sharing/share-offsite/?url=' + url },
+        { name: 'Share on Bluesky (opens in new tab)', icon: '#icon-bluesky', method: 'bluesky', href: 'https://bsky.app/intent/compose?text=' + encodeURIComponent(bskyText) + '%20' + url },
+        { name: 'Share on X (opens in new tab)', icon: '#icon-x-twitter', method: 'x', href: 'https://x.com/intent/post?text=' + txt + '&url=' + url + '&via=MattKellock' },
+        { name: 'Share by email', icon: '#icon-envelope', method: 'email', target: '_self', href: 'mailto:?subject=' + txt + '&body=' + encodeURIComponent(post.dek + '\n\n' + postUrl) }
+      ].map(x => ({ target: '_blank', ...x, track: () => track(x.method) })),
       jobs: JOBS.map(j => ({ ...j, dot: j.current ? 'var(--accent-line)' : 'var(--border-strong)', dotSize: j.current ? '7px' : '5px', dotLeft: j.current ? '-5px' : '-4px', dotTop: j.current ? '5px' : '6px', anim: j.current && !s.paused ? 'blink 1.6s ease-in-out infinite' : 'none' }))
     };
   }
