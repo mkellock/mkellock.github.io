@@ -1,6 +1,6 @@
 // Minimal Markdown to HTML for posts/*.md. Covers what the articles use:
 // ## / ### headings, paragraphs, > callouts (nested), - and 1. lists, pipe tables,
-// standalone images (as figures), ---, **bold**, *italic*, `code`, [links](url),
+// standalone images (as figures), ---, ``` fenced code blocks, **bold**, *italic*, `code`, [links](url),
 // bare URLs, and footnotes ([^n] references with [^n]: definitions).
 // idPrefix keeps footnote and heading ids unique per post. opts.lightSrc(src) may return a
 // light-theme variant of a figure image; both are emitted and CSS shows the one for the theme.
@@ -45,14 +45,22 @@ export function markdownToHtml(md, idPrefix, opts = {}) {
     const out = [];
     let i = 0;
     const isBlank = l => !l.trim();
-    const startsBlock = l => /^(#{1,6} |> ?|[-*] |\d+\. |\|)/.test(l) || /^---+\s*$/.test(l) || /^\[\^[^\]]+\]:/.test(l) || /^!\[.*\]\(.*\)\s*$/.test(l);
+    const startsBlock = l => /^(#{1,6} |> ?|[-*] |\d+\. |\||```)/.test(l) || /^---+\s*$/.test(l) || /^\[\^[^\]]+\]:/.test(l) || /^!\[.*\]\(.*\)\s*$/.test(l);
 
     while (i < lines.length) {
       const line = lines[i];
       if (isBlank(line)) { i++; continue; }
 
       let m;
-      if ((m = line.match(/^(#{1,6}) (.*)$/))) {
+      if (/^```/.test(line)) {
+        // Fenced code: lines are kept verbatim (escaped, never parsed as Markdown) until the closing fence.
+        // tabindex lets keyboard users scroll a block that overflows on a narrow screen.
+        const code = [];
+        i++;
+        while (i < lines.length && !/^```\s*$/.test(lines[i])) code.push(lines[i++]);
+        i++;
+        out.push(`<pre class="mk-code" tabindex="0"><code>${esc(code.join('\n'))}</code></pre>`);
+      } else if ((m = line.match(/^(#{1,6}) (.*)$/))) {
         const level = Math.max(2, m[1].length);
         const html = inline(m[2]);
         const id = `${idPrefix}-${slug(html)}`;

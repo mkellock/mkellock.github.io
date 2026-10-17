@@ -32,7 +32,7 @@
 <meta name="twitter:data1" content="8 min read">
 <meta name="twitter:label2" content="Written by">
 <meta name="twitter:data2" content="Matt Kellock">
-<script type="application/json" id="mk-read">{"decision-models-in-practice":4,"agent-that-wouldnt-take-no":12,"private-by-default-playbook":8,"shift-left-vs-ai":2}</script>
+<script type="application/json" id="mk-read">{"decision-models-in-practice":8,"agent-that-wouldnt-take-no":12,"private-by-default-playbook":8,"shift-left-vs-ai":2}</script>
 <!-- seo:end -->
 <meta name="author" content="Matt Kellock">
 <meta property="og:site_name" content="Matt Kellock">
@@ -48,7 +48,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="Matt Kellock: Talks &amp; writing" href="/feed.xml">
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
-<noscript><style>x-dc{display:none!important}html body{color:#f0f0f0;background:#0f0f0f;font:1.125rem/1.65 Inter,system-ui,sans-serif;max-width:40rem;margin:0 auto;padding:24px 20px}noscript{overflow-wrap:break-word}noscript a{color:#ffe600;text-decoration:underline;overflow-wrap:anywhere}noscript h1{font-size:2.2em;line-height:1.15;margin:.6em 0 .4em}noscript h2{font-size:1.35em;line-height:1.3;margin:1.4em 0 .5em}noscript p,noscript ul,noscript ol,noscript blockquote,noscript figure,noscript table{margin:0 0 1em}noscript ul,noscript ol{padding-left:1.4em}noscript blockquote,noscript .mk-callout{border-left:3px solid #ffe600;padding-left:1em}noscript .mk-anchor{display:none}noscript .mk-toc{border:1px solid #6a6a6a;padding:.8em 1em;margin-bottom:1em}noscript nav{margin-bottom:1.5em}noscript img{max-width:100%;height:auto}noscript img.mk-img-light{display:none}noscript table{border-collapse:collapse}noscript th,noscript td{border:1px solid #6a6a6a;padding:.4em .6em;text-align:left;vertical-align:top}</style></noscript>
+<noscript><style>x-dc{display:none!important}html body{color:#f0f0f0;background:#0f0f0f;font:1.125rem/1.65 Inter,system-ui,sans-serif;max-width:40rem;margin:0 auto;padding:24px 20px}noscript{overflow-wrap:break-word}noscript a{color:#ffe600;text-decoration:underline;overflow-wrap:anywhere}noscript h1{font-size:2.2em;line-height:1.15;margin:.6em 0 .4em}noscript h2{font-size:1.35em;line-height:1.3;margin:1.4em 0 .5em}noscript p,noscript ul,noscript ol,noscript blockquote,noscript figure,noscript table{margin:0 0 1em}noscript ul,noscript ol{padding-left:1.4em}noscript blockquote,noscript .mk-callout{border-left:3px solid #ffe600;padding-left:1em}noscript .mk-anchor{display:none}noscript .mk-toc{border:1px solid #6a6a6a;padding:.8em 1em;margin-bottom:1em}noscript nav{margin-bottom:1.5em}noscript img{max-width:100%;height:auto}noscript img.mk-img-light{display:none}noscript table{border-collapse:collapse}noscript th,noscript td{border:1px solid #6a6a6a;padding:.4em .6em;text-align:left;vertical-align:top}noscript pre{overflow-x:auto;border:1px solid #6a6a6a;padding:.8em 1em;margin:0 0 1em;font-size:.875em}</style></noscript>
 <meta name="cf-2fa-verify" content="flhwq9ls3jrq1m8w">
 <meta name="cf-2fa-verify" content="y3cse5cblh1l0xiy">
 <!-- seo-ld:start -->
@@ -337,6 +337,10 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
 .mk-md figure .mk-img-light,[data-theme="light"] .mk-md figure .mk-img-dark{display:none}
 [data-theme="light"] .mk-md figure .mk-img-light{display:block}
 .mk-md code{font-family:'JetBrains Mono',monospace;font-size:0.88em;overflow-wrap:anywhere}
+.mk-md pre{margin:28px 0;padding:16px 18px;background:var(--bg-alt);border:1px solid var(--border-strong);overflow-x:auto;font-size:0.875rem;line-height:1.6;tab-size:2}
+.mk-md pre code{font-size:inherit;overflow-wrap:normal;white-space:pre;color:var(--fg-1)}
+.mk-md pre:focus-visible{outline:2px solid var(--accent-line);outline-offset:2px}
+@media (max-width:600px){.mk-md pre{padding:14px;font-size:0.8125rem}}
 .mk-md sup.fn{font-size:0.68em;line-height:0;margin-left:1px}
 .mk-md sup.fn a{font-family:'JetBrains Mono',monospace;font-weight:700;text-decoration:none;padding:0 2px}
 .mk-md hr{border:0;border-top:1px solid var(--border-strong);margin-top:56px}
@@ -360,7 +364,7 @@ a{color:var(--fg-accent);text-decoration:none}a:hover{color:var(--fg-1)}
 @media (prefers-reduced-transparency: reduce){tech-bg{display:none !important}}
 @media (forced-colors: active){tech-bg{display:none !important}:focus-visible{outline:3px solid CanvasText;box-shadow:none}.mk-md .mk-target,.mk-md :target{outline:3px solid Highlight}}
 @media (max-height:480px){.mk-header{position:static !important}}
-@media print{tech-bg,header,footer,.mk-noprint{display:none !important}:root,[data-theme="dark"],[data-theme="light"]{--bg:#fff;--bg-alt:#f4f4f1;--bg-raised:#eee;--fg-1:#000;--fg-2:#222;--fg-3:#444;--fg-accent:#4a4000;--accent-line:#4a4000;--border-strong:#888;--rule:#000}body,#top{background:#fff !important;color:#000;min-height:0 !important}.mk-page,.mk-article,.mk-hero,.mk-sec{padding:0 !important;border:none !important}.mk-md figure .mk-img-dark{display:none}.mk-md figure .mk-img-light{display:block}.mk-md a[href^="http"]::after{content:" (" attr(href) ")";font-size:0.8em;color:#444;overflow-wrap:anywhere}.mk-md .mk-anchor{display:none}figure,table,blockquote,.mk-callout{break-inside:avoid}h1,h2,h3{break-after:avoid}}
+@media print{tech-bg,header,footer,.mk-noprint{display:none !important}:root,[data-theme="dark"],[data-theme="light"]{--bg:#fff;--bg-alt:#f4f4f1;--bg-raised:#eee;--fg-1:#000;--fg-2:#222;--fg-3:#444;--fg-accent:#4a4000;--accent-line:#4a4000;--border-strong:#888;--rule:#000}body,#top{background:#fff !important;color:#000;min-height:0 !important}.mk-page,.mk-article,.mk-hero,.mk-sec{padding:0 !important;border:none !important}.mk-md figure .mk-img-dark{display:none}.mk-md figure .mk-img-light{display:block}.mk-md a[href^="http"]::after{content:" (" attr(href) ")";font-size:0.8em;color:#444;overflow-wrap:anywhere}.mk-md .mk-anchor{display:none}figure,table,blockquote,.mk-callout,.mk-md pre{break-inside:avoid}.mk-md pre,.mk-md pre code{white-space:pre-wrap;overflow:visible}h1,h2,h3{break-after:avoid}}
 @media (max-width:640px){
   .mk-hero{padding:56px 16px 48px !important}
   .mk-page{padding:48px 16px 64px !important}
@@ -769,7 +773,6 @@ const POSTS = [
     title: 'Let the Model Choose, Let Code Act',
     searchTitle: 'Where decision models fit in AI pipelines',
     dek: 'What decision models such as Jev are, where they fit in AI pipelines and agents, and how I tested one before it made choices in my own automation.',
-    audience: 'For technology leaders',
     image: '/images/writing/deciding-vs-acting-v1.png', imageAlt: 'Before and after diagram: moving the decision out of an agent that holds tools, so code acts on it first'
   },
   {
@@ -777,7 +780,7 @@ const POSTS = [
     title: "The Agent That Wouldn't Take No for an Answer",
     searchTitle: 'OpenAI agent and the Medicare portal incident',
     dek: "How an OpenAI agent got past Services Australia's Medicare statistics portal, and what it teaches about AI agents, public systems and private by default.",
-    audience: 'For technology leaders', series: 'Private by default', related: 'private-by-default-playbook',
+    series: 'Private by default', related: 'private-by-default-playbook',
     image: '/images/writing/public-private-planes-v2.png', imageAlt: 'Before and after diagram: separating a public portal from private systems and data'
   },
   {
@@ -788,7 +791,7 @@ const POSTS = [
   },
   {
     id: 'shift-left-vs-ai', type: 'Talk', tag: 'Security', date: '15 Jul 2026', dt: '2026-07-15',
-    venue: 'AppSec & DevSecOps Melbourne 2026', audience: 'For technology leaders',
+    venue: 'AppSec & DevSecOps Melbourne 2026',
     title: 'Shift Left vs AI: Who Owns the Future of AppSec?',
     dek: 'Opening debate at AppSec & DevSecOps Melbourne 2026, arguing the negative: shift-left security stays foundational and AI strengthens it.',
     body: [
@@ -851,7 +854,7 @@ const SPEAKING = {
 };
 
 const CONTACT_NOTE = 'Board, advisory, speaking and media enquiries are welcome. Email is the best first step.';
-const WRITING_INTRO = "I write for two readers: the directors and executives who have to govern technology they don't operate, and the engineers and technology leaders who run it. Each piece says which it is for, and every claim is footnoted to a primary source.";
+const WRITING_INTRO = "I write for two readers: the directors and executives who have to govern technology they don't operate, and the engineers and technology leaders who run it. Every claim is footnoted to a primary source.";
 
 const SOCIALS = [
   { name: 'LinkedIn', icon: '#icon-linkedin', href: 'https://www.linkedin.com/in/mkellock/', handle: 'linkedin.com/in/mkellock' },
