@@ -32,7 +32,7 @@
 <meta name="twitter:data1" content="2 min read">
 <meta name="twitter:label2" content="Event">
 <meta name="twitter:data2" content="AppSec &amp; DevSecOps Melbourne 2026">
-<script type="application/json" id="mk-read">{"agent-that-wouldnt-take-no":12,"private-by-default-playbook":8,"shift-left-vs-ai":2}</script>
+<script type="application/json" id="mk-read">{"decision-models-in-practice":4,"agent-that-wouldnt-take-no":12,"private-by-default-playbook":8,"shift-left-vs-ai":2}</script>
 <!-- seo:end -->
 <meta name="author" content="Matt Kellock">
 <meta property="og:site_name" content="Matt Kellock">
@@ -732,6 +732,14 @@ const Q = t => ({ isQ: true, text: t });
 // Optional: `venue`, `image` + `imageAlt` (social preview), `links` (label, source, href) for an "Elsewhere" list,
 // `searchTitle` (the <title> only), `audience`, `series`, `related` (the post id the Next card prefers) and `updated`.
 const POSTS = [
+  {
+    id: 'decision-models-in-practice', type: 'Article', tag: 'AI governance', date: '18 Oct 2026', dt: '2026-10-18', md: true,
+    title: 'Let the Model Choose, Let Code Act',
+    searchTitle: 'Where decision models fit in AI pipelines',
+    dek: 'What decision models such as Jev are, where they fit in AI pipelines and agents, and how I tested one before it made choices in my own automation.',
+    audience: 'For technology leaders',
+    image: '/images/writing/deciding-vs-acting-v1.png', imageAlt: 'Before and after diagram: moving the decision out of an agent that holds tools, so code acts on it first'
+  },
   {
     id: 'agent-that-wouldnt-take-no', type: 'Article', tag: 'Security', date: '26 Sep 2026', dt: '2026-09-26', updated: '2026-10-02', md: true,
     title: "The Agent That Wouldn't Take No for an Answer",

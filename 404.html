@@ -21,7 +21,7 @@
 <meta name="twitter:description" content="Matt Kellock AACS CP, Melbourne. Former CTO and company director: platform, security and engineering leadership in regulated environments, and technology governance for boards.">
 <meta name="twitter:image" content="https://kellock.com.au/images/cards/site-22dfe768.png">
 <meta name="twitter:image:alt" content="Matt Kellock: Technology leader · Platform, security &amp; governance">
-<script type="application/json" id="mk-read">{"agent-that-wouldnt-take-no":12,"private-by-default-playbook":8,"shift-left-vs-ai":2}</script>
+<script type="application/json" id="mk-read">{"decision-models-in-practice":4,"agent-that-wouldnt-take-no":12,"private-by-default-playbook":8,"shift-left-vs-ai":2}</script>
 <!-- seo:end -->
 <meta name="author" content="Matt Kellock">
 <meta property="og:site_name" content="Matt Kellock">
@@ -152,6 +152,7 @@ gtag('config', 'G-1Q0FD5LT9M');
 <h1>Page not found</h1>
 <p>The page you asked for does not exist. Try one of these:</p>
 <ul>
+<li><a href="/writing/decision-models-in-practice/">Let the Model Choose, Let Code Act</a> (Article, <time datetime="2026-10-18">18 Oct 2026</time>, for technology leaders): What decision models such as Jev are, where they fit in AI pipelines and agents, and how I tested one before it made choices in my own automation.</li>
 <li><a href="/writing/agent-that-wouldnt-take-no/">The Agent That Wouldn't Take No for an Answer</a> (Article, <time datetime="2026-09-26">26 Sep 2026</time>, for technology leaders): How an OpenAI agent got past Services Australia's Medicare statistics portal, and what it teaches about AI agents, public systems and private by default.</li>
 <li><a href="/writing/private-by-default-playbook/">Private by Default: A Practical Playbook</a> (Article, <time datetime="2026-09-26">26 Sep 2026</time>, for engineers): The practical side of private by default: the steps I'd take, a 90-day starting plan, what to measure, and how it lines up with Australia's cyber strategy.</li>
 <li><a href="/writing/shift-left-vs-ai/">Shift Left vs AI: Who Owns the Future of AppSec?</a> (Talk, <time datetime="2026-07-15">15 Jul 2026</time>, for technology leaders): Opening debate at AppSec &amp; DevSecOps Melbourne 2026, arguing the negative: shift-left security stays foundational and AI strengthens it.</li>
@@ -628,6 +629,14 @@ const Q = t => ({ isQ: true, text: t });
 // Optional: `venue`, `image` + `imageAlt` (social preview), `links` (label, source, href) for an "Elsewhere" list,
 // `searchTitle` (the <title> only), `audience`, `series`, `related` (the post id the Next card prefers) and `updated`.
 const POSTS = [
+  {
+    id: 'decision-models-in-practice', type: 'Article', tag: 'AI governance', date: '18 Oct 2026', dt: '2026-10-18', md: true,
+    title: 'Let the Model Choose, Let Code Act',
+    searchTitle: 'Where decision models fit in AI pipelines',
+    dek: 'What decision models such as Jev are, where they fit in AI pipelines and agents, and how I tested one before it made choices in my own automation.',
+    audience: 'For technology leaders',
+    image: '/images/writing/deciding-vs-acting-v1.png', imageAlt: 'Before and after diagram: moving the decision out of an agent that holds tools, so code acts on it first'
+  },
   {
     id: 'agent-that-wouldnt-take-no', type: 'Article', tag: 'Security', date: '26 Sep 2026', dt: '2026-09-26', updated: '2026-10-02', md: true,
     title: "The Agent That Wouldn't Take No for an Answer",
