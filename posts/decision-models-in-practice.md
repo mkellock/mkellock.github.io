@@ -8,7 +8,7 @@ Over time I noticed how often a heavy model was doing light work. An agent would
 
 ## What a decision model is
 
-A decision model is a stripped-down cousin of an LLM, typically built on one with the text generation taken out.[^1] You give it some input, such as an email, plus typed questions, and it answers each with probabilities attached, without writing a response or explaining itself.[^2] TypeSafe AI, which released Jev on 15 September, calls it "unstructured state in, typed probabilistic decisions out".[^3]
+A decision model is a stripped-down cousin of an LLM, typically built on one with the text generation taken out.[^1] You give it some input, such as an email, plus typed questions, and it answers each with probabilities attached, without writing a response or explaining itself.[^2] TypeSafe AI, which launched Jev on 15 September, calls it "unstructured state in, typed probabilistic decisions out".[^3]
 
 There are three kinds of question:[^2]
 
@@ -20,7 +20,7 @@ Microsoft's score is a probability-weighted average of the levels, so it can lan
 
 ## What a decision model's output looks like
 
-Here's a request asking all three kinds of question about one email, in the format TypeSafe introduced and open models such as Kev copy. Microsoft's takes the same state and questions.[^4][^2]
+Here's a request asking all three kinds of question about one email, in the format TypeSafe introduced and open models such as Kev match. Microsoft's takes the same state and questions.[^4][^2]
 
 ```json
 {
@@ -55,7 +55,7 @@ Here's a request asking all three kinds of question about one email, in the form
 }
 ```
 
-And a response. The numbers are made up, but the shape is the point: each answer comes back under the name of its question, ready for code to check without parsing a word of prose.[^4]
+And a trimmed response. The numbers are made up, but the shape is the point: each answer comes back under the name of its question, ready for code to check without parsing a word of prose.[^4]
 
 ```json
 {
@@ -83,7 +83,7 @@ And a response. The numbers are made up, but the shape is the point: each answer
 }
 ```
 
-You can force an LLM into a similar shape with structured outputs, but any confidence it reports is just another field it fills in.[^5] TypeSafe says Jev "can't hallucinate".[^3] That's true in a narrow sense, because it can only pick from the options you supplied, but it can still pick the wrong one.
+You can force an LLM into a similar shape with structured outputs,[^5] but any confidence it reports is just another field it fills in. TypeSafe says Jev "can't hallucinate".[^3] That's true in a narrow sense, because it can only pick from the options you supplied, but it can still pick the wrong one.
 
 ## What decision models are good for
 
@@ -95,11 +95,11 @@ Decision models earn their keep on repeated, bounded choices. Microsoft lists fi
 - grading model output against a rubric;
 - choosing which model, tool or agent handles a request.
 
-Marc Brooker, whose side project became Amazon's open decision model, put it more simply: they "make a perfect decider for a workflow step".[^1]
+Marc Brooker, whose homebrew project became Amazon's open decision model, put it more simply: they "make a perfect decider for a workflow step".[^1]
 
 They're the wrong tool for creating, summarising, rewriting or explaining, though Microsoft suggests pairing them: route or gate a request first, then send the approved ones to a generative model.[^2]
 
-They also do best on narrow questions. Vals AI's independent tests had Jev level with every system it tested on checking claims against a document, at a fraction of the cost, but last of twelve on a small slice of a legal benchmark that Vals says isn't representative.[^6]
+They also do best on narrow questions. Vals AI's independent tests had Jev level with every system it tested on checking claims against a document, at a fraction of the cost, but last of twelve on a legal benchmark slice that Vals says isn't representative.[^6]
 
 ## Popular decision models and the alternatives
 
