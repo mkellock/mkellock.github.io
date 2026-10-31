@@ -14,10 +14,10 @@
       <pubDate>Sat, 31 Oct 2026 09:00:00 +1100</pubDate>
       <dc:creator>Matt Kellock</dc:creator>
       <category>Security</category>
-      <description>Attackers now exploit flaws before a patch exists. The gaps I see most often sit with leadership, not tooling, and these are the fixes I'd make first.</description>
-      <enclosure url="https://kellock.com.au/images/cards/security-is-a-leadership-problem-0416a580.png" length="67318" type="image/png"/>
-      <media:content url="https://kellock.com.au/images/cards/security-is-a-leadership-problem-0416a580.png" medium="image" type="image/png" width="1200" height="630"/>
-      <content:encoded><![CDATA[<p><em>Attackers now exploit flaws before a patch exists. The gaps I see most often sit with leadership, not tooling, and these are the fixes I'd make first.</em></p>
+      <description>Security fails in the gaps between teams, deadlines and priorities. Leaders own those gaps, so leaders have to close them.</description>
+      <enclosure url="https://kellock.com.au/images/cards/security-is-a-leadership-problem-7b982b72.png" length="63544" type="image/png"/>
+      <media:content url="https://kellock.com.au/images/cards/security-is-a-leadership-problem-7b982b72.png" medium="image" type="image/png" width="1200" height="630"/>
+      <content:encoded><![CDATA[<p><em>Security fails in the gaps between teams, deadlines and priorities. Leaders own those gaps, so leaders have to close them.</em></p>
 <p><em>Last updated 31 October 2026. Views are my own, not my employer's.</em></p>
 <blockquote><p><strong>In short:</strong> Attackers now routinely exploit flaws before a patch exists, and this fortnight's critical vulnerabilities showed the strain that puts on organisations. The gaps I see most often sit with leadership, not tooling. Agree the process before the incident, make visibility the default, price security as revenue protection, own the neglected risks and let the teams who know the systems run their own war rooms.</p></blockquote>
 <p>The last couple of weeks have been a reminder of how quickly things move. Back-to-back vulnerabilities in PHP and in Brotli, a compression library buried in more systems than most people realise, had teams everywhere scrambling, and they got me thinking about how organisations respond to security incidents, and how AI is about to test that response like never before.</p>
