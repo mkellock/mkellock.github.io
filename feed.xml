@@ -15,8 +15,8 @@
       <dc:creator>Matt Kellock</dc:creator>
       <category>Security</category>
       <description>Security fails in the gaps between teams, deadlines and priorities. Leaders own those gaps, so leaders have to close them.</description>
-      <enclosure url="https://kellock.com.au/images/cards/security-is-a-leadership-problem-7b982b72.png" length="63544" type="image/png"/>
-      <media:content url="https://kellock.com.au/images/cards/security-is-a-leadership-problem-7b982b72.png" medium="image" type="image/png" width="1200" height="630"/>
+      <enclosure url="https://kellock.com.au/images/cards/security-is-a-leadership-problem-e22f47ac.png" length="82077" type="image/png"/>
+      <media:content url="https://kellock.com.au/images/cards/security-is-a-leadership-problem-e22f47ac.png" medium="image" type="image/png" width="1200" height="630"/>
       <content:encoded><![CDATA[<p><em>Security fails in the gaps between teams, deadlines and priorities. Leaders own those gaps, so leaders have to close them.</em></p>
 <p><em>Last updated 31 October 2026. Views are my own, not my employer's.</em></p>
 <blockquote><p><strong>In short:</strong> Attackers now routinely exploit flaws before a patch exists, and this fortnight's critical vulnerabilities showed the strain that puts on organisations. The gaps I see most often sit with leadership, not tooling. Agree the process before the incident, make visibility the default, price security as revenue protection, own the neglected risks and let the teams who know the systems run their own war rooms.</p></blockquote>
@@ -261,8 +261,8 @@
       <dc:creator>Matt Kellock</dc:creator>
       <category>Security</category>
       <description>The practical side of private by default: the steps I'd take, a 90-day starting plan, what to measure, and how it lines up with Australia's cyber strategy.</description>
-      <enclosure url="https://kellock.com.au/images/cards/private-by-default-playbook-0847bb9f.png" length="75844" type="image/png"/>
-      <media:content url="https://kellock.com.au/images/cards/private-by-default-playbook-0847bb9f.png" medium="image" type="image/png" width="1200" height="630"/>
+      <enclosure url="https://kellock.com.au/images/cards/private-by-default-playbook-b826482b.png" length="92130" type="image/png"/>
+      <media:content url="https://kellock.com.au/images/cards/private-by-default-playbook-b826482b.png" medium="image" type="image/png" width="1200" height="630"/>
       <content:encoded><![CDATA[<p><em>The practical side of private by default: the steps I'd take, a 90-day starting plan, what to measure, and how it lines up with Australia's cyber strategy.</em></p>
 <p><em>Companion to <a href="https://kellock.com.au/writing/agent-that-wouldnt-take-no/">The Agent That Wouldn't Take No for an Answer</a>. Last updated 2 October 2026. Views are my own, not my employer's.</em></p>
 <blockquote><p><strong>In short:</strong> Know everything you expose and who owns it. Serve the public only released data, from an isolated tier that can't read or write anything else. Put every other system behind well-maintained private access, segment so a breach can't spread, and watch for refusals followed by new attempts. Ninety days is enough to get visibility and guardrails in place.</p></blockquote>
@@ -333,8 +333,8 @@
       <dc:creator>Matt Kellock</dc:creator>
       <category>Security</category>
       <description>Opening debate at AppSec &amp; DevSecOps Melbourne 2026, arguing the negative: shift-left security stays foundational and AI strengthens it.</description>
-      <enclosure url="https://kellock.com.au/images/cards/shift-left-vs-ai-c387e042.png" length="83920" type="image/png"/>
-      <media:content url="https://kellock.com.au/images/cards/shift-left-vs-ai-c387e042.png" medium="image" type="image/png" width="1200" height="630"/>
+      <enclosure url="https://kellock.com.au/images/cards/shift-left-vs-ai-c46010c1.png" length="101931" type="image/png"/>
+      <media:content url="https://kellock.com.au/images/cards/shift-left-vs-ai-c46010c1.png" medium="image" type="image/png" width="1200" height="630"/>
       <content:encoded><![CDATA[<p><em>Opening debate at AppSec &amp; DevSecOps Melbourne 2026, arguing the negative: shift-left security stays foundational and AI strengthens it.</em></p>
 <p>AppSec and DevSecOps Melbourne 2026, run by Corinium at Crown Promenade, opened with a formal debate, &quot;Shift Left vs AI: Who Owns the Future of AppSec?&quot;, on the motion that shift-left security will no longer be the primary control model in enterprise software development lifecycles (SDLCs). Ibrahim Mohammed and I drew the negative, which meant arguing that shifting security left remains foundational and that AI strengthens it rather than replaces it.</p>
 <h2 id="shift-left-vs-ai-the-case">The case</h2>

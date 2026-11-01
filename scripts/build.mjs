@@ -41,14 +41,14 @@ const person = { '@type': 'Person', '@id': SITE + '/#person' };
 const website = { '@type': 'WebSite', '@id': SITE + '/#website' };
 const WEBSITE_NODE = { ...website, name: 'Matt Kellock', url: SITE + '/', inLanguage: 'en-AU', publisher: person };
 const personNode = image => ({
-  ...person, name: 'Matt Kellock', honorificSuffix: 'AACS CP',
+  ...person, name: 'Matt Kellock', honorificSuffix: 'MACS CP',
   jobTitle: 'Technology leader: platform engineering, security and governance',
   description: TAGLINE, url: SITE + '/about/', image: imageLd(image), email: 'mailto:matt@kellock.com.au', sameAs,
   address: { '@type': 'PostalAddress', addressLocality: 'Melbourne', addressRegion: 'Victoria', addressCountry: 'AU' },
   alumniOf: { '@type': 'CollegeOrUniversity', name: 'RMIT University' },
   memberOf: { '@type': 'Organization', name: 'Australian Computer Society' },
   hasCredential: [
-    { '@type': 'EducationalOccupationalCredential', name: 'Certified Professional (AACS CP)', recognizedBy: { '@type': 'Organization', name: 'Australian Computer Society' } },
+    { '@type': 'EducationalOccupationalCredential', name: 'Certified Professional (MACS CP)', recognizedBy: { '@type': 'Organization', name: 'Australian Computer Society' } },
     { '@type': 'EducationalOccupationalCredential', name: 'Bachelor of Information Technology', recognizedBy: { '@type': 'CollegeOrUniversity', name: 'RMIT University' } }
   ],
   knowsAbout: ['Platform engineering', 'DevSecOps', 'ISO 27001', 'Cloud migration', 'M&A technology integration', 'Technology governance', 'AI governance', 'Technology risk and audit']
@@ -147,7 +147,7 @@ async function card(key, data, alt) {
   return imageFor(rel, alt);
 }
 const eyebrow = p => [p.type, p.date, p.venue].filter(Boolean).join(' · ');
-const siteCard = await card('site', { kind: 'site', eyebrow: 'Melbourne, Australia · AACS CP', title: 'Matt Kellock', headline: HEADLINE, dek: TAGLINE },
+const siteCard = await card('site', { kind: 'site', eyebrow: 'Melbourne, Australia · MACS CP', title: 'Matt Kellock', headline: HEADLINE, dek: TAGLINE },
   'Matt Kellock: ' + HEADLINE);
 const postImage = async p => p.image
   ? imageFor(p.image, p.imageAlt || p.title)
